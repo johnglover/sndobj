@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: cvoc - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP73B0.TMP" with contents
+[
+/nologo /ML /W3 /GX /O2 /I "../../include" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "WIN" /Fp"Release/cvoc.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj-2.0.3\src\examples\cvoc.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP73B0.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP73B1.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/cvoc.pdb" /machine:I386 /out:"Release/cvoc.exe" /libpath:"../../lib" 
+".\Release\cvoc.obj"
+"\release version\SndObj-2.0.3\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP73B1.TMP"
+<h3>Output Window</h3>
+Compiling...
+cvoc.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+cvoc.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

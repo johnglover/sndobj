@@ -1,0 +1,51 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: granulator - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Release/granulator.res" /d "NDEBUG" "C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\granulator\granulator.rc"" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP641.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "NOPTHREAD" /D "WIN" /D "WIN32" /D "NDEBUG" /D "_MBCS" /Fp"Release/granulator.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\granulator\granulator.cpp"
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\granulator\granulatorDlg.cpp"
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\granulator\ProgDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP641.tmp" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP642.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "NOPTHREAD" /D "WIN" /D "WIN32" /D "NDEBUG" /D "_MBCS" /Fp"Release/granulator.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\granulator\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP642.tmp" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP643.tmp" with contents
+[
+SndObj.lib Winmm.lib /nologo /subsystem:windows /incremental:no /pdb:"Release/granulator.pdb" /machine:I386 /nodefaultlib:"libc" /out:"Release/granulator.exe" /libpath:"../../lib" /OPT:NOREF 
+".\Release\granulator.obj"
+".\Release\granulatorDlg.obj"
+".\Release\ProgDlg.obj"
+".\Release\StdAfx.obj"
+".\Release\granulator.res"
+]
+Creating command line "link.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP643.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+granulator.cpp
+granulatorDlg.cpp
+ProgDlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+granulator.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

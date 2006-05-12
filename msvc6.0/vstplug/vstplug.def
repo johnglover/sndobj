@@ -1,0 +1,3 @@
+LIBRARY			STRESON
+DESCRIPTION		'Streson Plugin for VstPC'
+EXPORTS			main

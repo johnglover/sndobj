@@ -1,0 +1,49 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: mfcapp2 - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x809 /fo"Release/mfcapp2.res" /d "NDEBUG" "C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp2\mfcapp2.rc"" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP9C9.tmp" with contents
+[
+/nologo /G6 /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/mfcapp2.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp2\mfcapp2.cpp"
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp2\mfcapp2Dlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP9C9.tmp" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP9CA.tmp" with contents
+[
+/nologo /G6 /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/mfcapp2.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp2\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP9CA.tmp" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP9CB.tmp" with contents
+[
+SndObj.lib Winmm.lib PthreadVC.lib /nologo /subsystem:windows /incremental:yes /pdb:"Release/mfcapp2.pdb" /machine:I386 /nodefaultlib:"libc" /out:"Release/mfcapp2.exe" /libpath:"../../lib" 
+".\Release\mfcapp2.obj"
+".\Release\mfcapp2Dlg.obj"
+".\Release\StdAfx.obj"
+".\Release\mfcapp2.res"
+"\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP9CB.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+mfcapp2.cpp
+mfcapp2Dlg.cpp
+Generating Code...
+Linking...
+
+
+
+<h3>Results</h3>
+mfcapp2.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

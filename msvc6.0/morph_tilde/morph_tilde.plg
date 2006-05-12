@@ -1,0 +1,278 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: SndObj - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+SndObj.lib - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: cvoc - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP8321.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/cvoc.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\cvoc.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP8321.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP8322.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/cvoc.pdb" /machine:I386 /out:"Release/cvoc.exe" /libpath:"../../lib" 
+".\Release\cvoc.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP8322.TMP"
+<h3>Output Window</h3>
+Compiling...
+cvoc.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+cvoc.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: example - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP9031.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/example.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\msvc6.0\example\example2.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP9031.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP9032.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/example.pdb" /machine:I386 /out:"Release/example.exe" /libpath:"../../lib" 
+".\Release\example2.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP9032.TMP"
+<h3>Output Window</h3>
+Compiling...
+example2.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+example.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: mfcapp - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Release/mfcapp.res" /d "NDEBUG" "D:\release version\SndObj\msvc6.0\mfcapp\mfcapp.rc"" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP90B3.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR"Release/" /Fp"Release/mfcapp.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\msvc6.0\mfcapp\mfcapp.cpp"
+"D:\release version\SndObj\msvc6.0\mfcapp\mfcappDlg.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP90B3.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP90B4.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR"Release/" /Fp"Release/mfcapp.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\msvc6.0\mfcapp\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP90B4.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP90B5.TMP" with contents
+[
+SndObj.lib Winmm.lib PthreadVC.lib /nologo /subsystem:windows /incremental:yes /pdb:"Release/mfcapp.pdb" /machine:I386 /nodefaultlib:"libc" /out:"Release/mfcapp.exe" /libpath:"../../lib" 
+".\Release\mfcapp.obj"
+".\Release\mfcappDlg.obj"
+".\Release\StdAfx.obj"
+".\Release\mfcapp.res"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP90B5.TMP"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+mfcapp.cpp
+mfcappDlg.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"Release/mfcapp.bsc"  ".\Release\StdAfx.sbr" ".\Release\mfcapp.sbr" ".\Release\mfcappDlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+mfcapp.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: midisynth - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP92A3.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/midisynth.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\midisynth.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP92A3.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP92A4.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/midisynth.pdb" /machine:I386 /out:"Release/midisynth.exe" /libpath:"../../lib" 
+".\Release\midisynth.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP92A4.TMP"
+<h3>Output Window</h3>
+Compiling...
+midisynth.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+midisynth.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: morph_tilde - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+
+
+
+<h3>Results</h3>
+morph~.dll - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: pluck - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP9392.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/pluck.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\pluck.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP9392.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP9393.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/pluck.pdb" /machine:I386 /out:"Release/pluck.exe" /libpath:"../../lib" 
+".\Release\pluck.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP9393.TMP"
+<h3>Output Window</h3>
+Compiling...
+pluck.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+pluck.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: schroeder - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPA0E5.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/schroeder.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\schroeder.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPA0E5.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSPA0E6.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/schroeder.pdb" /machine:I386 /out:"Release/schroeder.exe" /libpath:"../../lib" 
+".\Release\schroeder.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPA0E6.TMP"
+<h3>Output Window</h3>
+Compiling...
+schroeder.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+schroeder.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: sinus - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPA1E0.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/example.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\sinus.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPA1E0.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSPA1E1.TMP" with contents
+[
+PthreadVC.lib SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/example.pdb" /machine:I386 /out:"Release/sinus.exe" /libpath:"../../lib" 
+".\Release\sinus.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPA1E1.TMP"
+<h3>Output Window</h3>
+Compiling...
+sinus.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+sinus.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: sndapp - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPA282.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/example.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\example1.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPA282.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSPA283.TMP" with contents
+[
+PthreadVC.lib SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/example.pdb" /machine:I386 /out:"Release/example.exe" /libpath:"../../lib" 
+".\Release\example1.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPA283.TMP"
+<h3>Output Window</h3>
+Compiling...
+example1.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+example.exe - 0 error(s), 0 warning(s)
+<h3>
+--------------------Configuration: streson - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPA305.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/streson.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\streson.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPA305.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSPA306.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/streson.pdb" /machine:I386 /out:"Release/streson.exe" /libpath:"../../lib" 
+".\Release\streson.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPA306.TMP"
+<h3>Output Window</h3>
+Compiling...
+streson.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+streson.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

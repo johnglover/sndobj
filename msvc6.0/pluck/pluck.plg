@@ -1,0 +1,1114 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: SndObj - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP4003.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "..\include" /I "." /D "_LIB" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR"Release/" /Fp"Release/SndObj.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\rfftw\config.c"
+"D:\release version\SndObj\src\rfftw\executor.c"
+"D:\release version\SndObj\src\rfftw\fcr_1.c"
+"D:\release version\SndObj\src\rfftw\fcr_10.c"
+"D:\release version\SndObj\src\rfftw\fcr_11.c"
+"D:\release version\SndObj\src\rfftw\fcr_12.c"
+"D:\release version\SndObj\src\rfftw\fcr_128.c"
+"D:\release version\SndObj\src\rfftw\fcr_13.c"
+"D:\release version\SndObj\src\rfftw\fcr_14.c"
+"D:\release version\SndObj\src\rfftw\fcr_15.c"
+"D:\release version\SndObj\src\rfftw\fcr_16.c"
+"D:\release version\SndObj\src\rfftw\fcr_2.c"
+"D:\release version\SndObj\src\rfftw\fcr_3.c"
+"D:\release version\SndObj\src\rfftw\fcr_32.c"
+"D:\release version\SndObj\src\rfftw\fcr_4.c"
+"D:\release version\SndObj\src\rfftw\fcr_5.c"
+"D:\release version\SndObj\src\rfftw\fcr_6.c"
+"D:\release version\SndObj\src\rfftw\fcr_64.c"
+"D:\release version\SndObj\src\rfftw\fcr_7.c"
+"D:\release version\SndObj\src\rfftw\fcr_8.c"
+"D:\release version\SndObj\src\rfftw\fcr_9.c"
+"D:\release version\SndObj\src\rfftw\fftwnd.c"
+"D:\release version\SndObj\src\rfftw\fhb_10.c"
+"D:\release version\SndObj\src\rfftw\fhb_16.c"
+"D:\release version\SndObj\src\rfftw\fhb_2.c"
+"D:\release version\SndObj\src\rfftw\fhb_3.c"
+"D:\release version\SndObj\src\rfftw\fhb_32.c"
+"D:\release version\SndObj\src\rfftw\fhb_4.c"
+"D:\release version\SndObj\src\rfftw\fhb_5.c"
+"D:\release version\SndObj\src\rfftw\fhb_6.c"
+"D:\release version\SndObj\src\rfftw\fhb_7.c"
+"D:\release version\SndObj\src\rfftw\fhb_8.c"
+"D:\release version\SndObj\src\rfftw\fhb_9.c"
+"D:\release version\SndObj\src\rfftw\fhf_10.c"
+"D:\release version\SndObj\src\rfftw\fhf_16.c"
+"D:\release version\SndObj\src\rfftw\fhf_2.c"
+"D:\release version\SndObj\src\rfftw\fhf_3.c"
+"D:\release version\SndObj\src\rfftw\fhf_32.c"
+"D:\release version\SndObj\src\rfftw\fhf_4.c"
+"D:\release version\SndObj\src\rfftw\fhf_5.c"
+"D:\release version\SndObj\src\rfftw\fhf_6.c"
+"D:\release version\SndObj\src\rfftw\fhf_7.c"
+"D:\release version\SndObj\src\rfftw\fhf_8.c"
+"D:\release version\SndObj\src\rfftw\fhf_9.c"
+"D:\release version\SndObj\src\rfftw\fn_1.c"
+"D:\release version\SndObj\src\rfftw\fn_10.c"
+"D:\release version\SndObj\src\rfftw\fn_11.c"
+"D:\release version\SndObj\src\rfftw\fn_12.c"
+"D:\release version\SndObj\src\rfftw\fn_13.c"
+"D:\release version\SndObj\src\rfftw\fn_14.c"
+"D:\release version\SndObj\src\rfftw\fn_15.c"
+"D:\release version\SndObj\src\rfftw\fn_16.c"
+"D:\release version\SndObj\src\rfftw\fn_2.c"
+"D:\release version\SndObj\src\rfftw\fn_3.c"
+"D:\release version\SndObj\src\rfftw\fn_32.c"
+"D:\release version\SndObj\src\rfftw\fn_4.c"
+"D:\release version\SndObj\src\rfftw\fn_5.c"
+"D:\release version\SndObj\src\rfftw\fn_6.c"
+"D:\release version\SndObj\src\rfftw\fn_64.c"
+"D:\release version\SndObj\src\rfftw\fn_7.c"
+"D:\release version\SndObj\src\rfftw\fn_8.c"
+"D:\release version\SndObj\src\rfftw\fn_9.c"
+"D:\release version\SndObj\src\rfftw\fni_1.c"
+"D:\release version\SndObj\src\rfftw\fni_10.c"
+"D:\release version\SndObj\src\rfftw\fni_11.c"
+"D:\release version\SndObj\src\rfftw\fni_12.c"
+"D:\release version\SndObj\src\rfftw\fni_13.c"
+"D:\release version\SndObj\src\rfftw\fni_14.c"
+"D:\release version\SndObj\src\rfftw\fni_15.c"
+"D:\release version\SndObj\src\rfftw\fni_16.c"
+"D:\release version\SndObj\src\rfftw\fni_2.c"
+"D:\release version\SndObj\src\rfftw\fni_3.c"
+"D:\release version\SndObj\src\rfftw\fni_32.c"
+"D:\release version\SndObj\src\rfftw\fni_4.c"
+"D:\release version\SndObj\src\rfftw\fni_5.c"
+"D:\release version\SndObj\src\rfftw\fni_6.c"
+"D:\release version\SndObj\src\rfftw\fni_64.c"
+"D:\release version\SndObj\src\rfftw\fni_7.c"
+"D:\release version\SndObj\src\rfftw\fni_8.c"
+"D:\release version\SndObj\src\rfftw\fni_9.c"
+"D:\release version\SndObj\src\rfftw\frc_1.c"
+"D:\release version\SndObj\src\rfftw\frc_10.c"
+"D:\release version\SndObj\src\rfftw\frc_11.c"
+"D:\release version\SndObj\src\rfftw\frc_12.c"
+"D:\release version\SndObj\src\rfftw\frc_128.c"
+"D:\release version\SndObj\src\rfftw\frc_13.c"
+"D:\release version\SndObj\src\rfftw\frc_14.c"
+"D:\release version\SndObj\src\rfftw\frc_15.c"
+"D:\release version\SndObj\src\rfftw\frc_16.c"
+"D:\release version\SndObj\src\rfftw\frc_2.c"
+"D:\release version\SndObj\src\rfftw\frc_3.c"
+"D:\release version\SndObj\src\rfftw\frc_32.c"
+"D:\release version\SndObj\src\rfftw\frc_4.c"
+"D:\release version\SndObj\src\rfftw\frc_5.c"
+"D:\release version\SndObj\src\rfftw\frc_6.c"
+"D:\release version\SndObj\src\rfftw\frc_64.c"
+"D:\release version\SndObj\src\rfftw\frc_7.c"
+"D:\release version\SndObj\src\rfftw\frc_8.c"
+"D:\release version\SndObj\src\rfftw\frc_9.c"
+"D:\release version\SndObj\src\rfftw\ftw_10.c"
+"D:\release version\SndObj\src\rfftw\ftw_16.c"
+"D:\release version\SndObj\src\rfftw\ftw_2.c"
+"D:\release version\SndObj\src\rfftw\ftw_3.c"
+"D:\release version\SndObj\src\rfftw\ftw_32.c"
+"D:\release version\SndObj\src\rfftw\ftw_4.c"
+"D:\release version\SndObj\src\rfftw\ftw_5.c"
+"D:\release version\SndObj\src\rfftw\ftw_6.c"
+"D:\release version\SndObj\src\rfftw\ftw_64.c"
+"D:\release version\SndObj\src\rfftw\ftw_7.c"
+"D:\release version\SndObj\src\rfftw\ftw_8.c"
+"D:\release version\SndObj\src\rfftw\ftw_9.c"
+"D:\release version\SndObj\src\rfftw\ftwi_10.c"
+"D:\release version\SndObj\src\rfftw\ftwi_16.c"
+"D:\release version\SndObj\src\rfftw\ftwi_2.c"
+"D:\release version\SndObj\src\rfftw\ftwi_3.c"
+"D:\release version\SndObj\src\rfftw\ftwi_32.c"
+"D:\release version\SndObj\src\rfftw\ftwi_4.c"
+"D:\release version\SndObj\src\rfftw\ftwi_5.c"
+"D:\release version\SndObj\src\rfftw\ftwi_6.c"
+"D:\release version\SndObj\src\rfftw\ftwi_64.c"
+"D:\release version\SndObj\src\rfftw\ftwi_7.c"
+"D:\release version\SndObj\src\rfftw\ftwi_8.c"
+"D:\release version\SndObj\src\rfftw\ftwi_9.c"
+"D:\release version\SndObj\src\rfftw\generic.c"
+"D:\release version\SndObj\src\rfftw\malloc.c"
+"D:\release version\SndObj\src\rfftw\planner.c"
+"D:\release version\SndObj\src\rfftw\putils.c"
+"D:\release version\SndObj\src\rfftw\rader.c"
+"D:\release version\SndObj\src\rfftw\rconfig.c"
+"D:\release version\SndObj\src\rfftw\rexec.c"
+"D:\release version\SndObj\src\rfftw\rexec2.c"
+"D:\release version\SndObj\src\rfftw\rfftwf77.c"
+"D:\release version\SndObj\src\rfftw\rfftwnd.c"
+"D:\release version\SndObj\src\rfftw\rgeneric.c"
+"D:\release version\SndObj\src\rfftw\rplanner.c"
+"D:\release version\SndObj\src\rfftw\timer.c"
+"D:\release version\SndObj\src\rfftw\twiddle.c"
+"D:\release version\SndObj\src\rfftw\wisdom.c"
+"D:\release version\SndObj\src\rfftw\wisdomio.c"
+"D:\release version\SndObj\src\asio\asio.cpp"
+"D:\release version\SndObj\src\asio\asiodrivers.cpp"
+"D:\release version\SndObj\src\asio\asiolist.cpp"
+"D:\release version\SndObj\src\ADSR.cpp"
+"D:\release version\SndObj\src\Allpass.cpp"
+"D:\release version\SndObj\src\Ap.cpp"
+"D:\release version\SndObj\src\Balance.cpp"
+"D:\release version\SndObj\src\Bend.cpp"
+"D:\release version\SndObj\src\ButtBP.cpp"
+"D:\release version\SndObj\src\ButtBR.cpp"
+"D:\release version\SndObj\src\ButtHP.cpp"
+"D:\release version\SndObj\src\ButtLP.cpp"
+"D:\release version\SndObj\src\Buzz.cpp"
+"D:\release version\SndObj\src\Comb.cpp"
+"D:\release version\SndObj\src\Convol.cpp"
+"D:\release version\SndObj\src\DelayLine.cpp"
+"D:\release version\SndObj\src\FastOsc.cpp"
+"D:\release version\SndObj\src\FFT.cpp"
+"D:\release version\SndObj\src\Filter.cpp"
+"D:\release version\SndObj\src\Fir.cpp"
+"D:\release version\SndObj\src\Gain.cpp"
+"D:\release version\SndObj\src\HammingTable.cpp"
+"D:\release version\SndObj\src\HarmTable.cpp"
+"D:\release version\SndObj\src\Hilb.cpp"
+"D:\release version\SndObj\src\HiPass.cpp"
+"D:\release version\SndObj\src\IADSR.cpp"
+"D:\release version\SndObj\src\IFFT.cpp"
+"D:\release version\SndObj\src\IFGram.cpp"
+"D:\release version\SndObj\src\Interp.cpp"
+"D:\release version\SndObj\src\Lookup.cpp"
+"D:\release version\SndObj\src\Lookupi.cpp"
+"D:\release version\SndObj\src\Loop.cpp"
+"D:\release version\SndObj\src\LoPassTable.cpp"
+"D:\release version\SndObj\src\LowPass.cpp"
+"D:\release version\SndObj\src\Lp.cpp"
+"D:\release version\SndObj\src\MidiIn.cpp"
+"D:\release version\SndObj\src\MidiMap.cpp"
+"D:\release version\SndObj\src\Mix.cpp"
+"D:\release version\SndObj\src\NoteTable.cpp"
+"D:\release version\SndObj\src\Osc.cpp"
+"D:\release version\SndObj\src\Osci.cpp"
+"D:\release version\SndObj\src\Oscil.cpp"
+"D:\release version\SndObj\src\Oscili.cpp"
+"D:\release version\SndObj\src\Oscilt.cpp"
+"D:\release version\SndObj\src\Pan.cpp"
+"D:\release version\SndObj\src\Phase.cpp"
+"D:\release version\SndObj\src\PhOscili.cpp"
+"D:\release version\SndObj\src\Pitch.cpp"
+"D:\release version\SndObj\src\PlnTable.cpp"
+"D:\release version\SndObj\src\Pluck.cpp"
+"D:\release version\SndObj\src\PVA.cpp"
+"D:\release version\SndObj\src\PVMorph.cpp"
+"D:\release version\SndObj\src\PVRead.cpp"
+"D:\release version\SndObj\src\PVS.cpp"
+"D:\release version\SndObj\src\Rand.cpp"
+"D:\release version\SndObj\src\Randh.cpp"
+"D:\release version\SndObj\src\Randi.cpp"
+"D:\release version\SndObj\src\Reson.cpp"
+"D:\release version\SndObj\src\Ring.cpp"
+"D:\release version\SndObj\src\SinAnal.cpp"
+"D:\release version\SndObj\src\SinSyn.cpp"
+"D:\release version\SndObj\src\SndAiff.cpp"
+"D:\release version\SndObj\src\SndASIO.cpp"
+"D:\release version\SndObj\src\SndBuffer.cpp"
+"D:\release version\SndObj\src\SndFIO.cpp"
+"D:\release version\SndObj\src\SndIn.cpp"
+"D:\release version\SndObj\src\SndIO.cpp"
+"D:\release version\SndObj\src\SndMidi.cpp"
+"D:\release version\SndObj\src\SndMidiIn.cpp"
+"D:\release version\SndObj\src\SndObj.cpp"
+"D:\release version\SndObj\src\SndPVOCEX.cpp"
+"D:\release version\SndObj\src\SndRead.cpp"
+"D:\release version\SndObj\src\SndRTIO.cpp"
+"D:\release version\SndObj\src\SndSinIO.cpp"
+"D:\release version\SndObj\src\SndTable.cpp"
+"D:\release version\SndObj\src\SndThread.cpp"
+"D:\release version\SndObj\src\SndWave.cpp"
+"D:\release version\SndObj\src\SndWaveX.cpp"
+"D:\release version\SndObj\src\SpecCart.cpp"
+"D:\release version\SndObj\src\SpecIn.cpp"
+"D:\release version\SndObj\src\SpecInterp.cpp"
+"D:\release version\SndObj\src\SpecMult.cpp"
+"D:\release version\SndObj\src\SpecPolar.cpp"
+"D:\release version\SndObj\src\SpecSplit.cpp"
+"D:\release version\SndObj\src\SpecThresh.cpp"
+"D:\release version\SndObj\src\SpecVoc.cpp"
+"D:\release version\SndObj\src\StringFlt.cpp"
+"D:\release version\SndObj\src\SyncGrain.cpp"
+"D:\release version\SndObj\src\Tap.cpp"
+"D:\release version\SndObj\src\Tapi.cpp"
+"D:\release version\SndObj\src\TpTz.cpp"
+"D:\release version\SndObj\src\TrisegTable.cpp"
+"D:\release version\SndObj\src\Unit.cpp"
+"D:\release version\SndObj\src\UsrDefTable.cpp"
+"D:\release version\SndObj\src\UsrHarmTable.cpp"
+"D:\release version\SndObj\src\VDelay.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP4003.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP4004.TMP" with contents
+[
+/nologo /out:"Release\SndObj.lib" 
+".\Release\config.obj"
+".\Release\executor.obj"
+".\Release\fcr_1.obj"
+".\Release\fcr_10.obj"
+".\Release\fcr_11.obj"
+".\Release\fcr_12.obj"
+".\Release\fcr_128.obj"
+".\Release\fcr_13.obj"
+".\Release\fcr_14.obj"
+".\Release\fcr_15.obj"
+".\Release\fcr_16.obj"
+".\Release\fcr_2.obj"
+".\Release\fcr_3.obj"
+".\Release\fcr_32.obj"
+".\Release\fcr_4.obj"
+".\Release\fcr_5.obj"
+".\Release\fcr_6.obj"
+".\Release\fcr_64.obj"
+".\Release\fcr_7.obj"
+".\Release\fcr_8.obj"
+".\Release\fcr_9.obj"
+".\Release\fftwnd.obj"
+".\Release\fhb_10.obj"
+".\Release\fhb_16.obj"
+".\Release\fhb_2.obj"
+".\Release\fhb_3.obj"
+".\Release\fhb_32.obj"
+".\Release\fhb_4.obj"
+".\Release\fhb_5.obj"
+".\Release\fhb_6.obj"
+".\Release\fhb_7.obj"
+".\Release\fhb_8.obj"
+".\Release\fhb_9.obj"
+".\Release\fhf_10.obj"
+".\Release\fhf_16.obj"
+".\Release\fhf_2.obj"
+".\Release\fhf_3.obj"
+".\Release\fhf_32.obj"
+".\Release\fhf_4.obj"
+".\Release\fhf_5.obj"
+".\Release\fhf_6.obj"
+".\Release\fhf_7.obj"
+".\Release\fhf_8.obj"
+".\Release\fhf_9.obj"
+".\Release\fn_1.obj"
+".\Release\fn_10.obj"
+".\Release\fn_11.obj"
+".\Release\fn_12.obj"
+".\Release\fn_13.obj"
+".\Release\fn_14.obj"
+".\Release\fn_15.obj"
+".\Release\fn_16.obj"
+".\Release\fn_2.obj"
+".\Release\fn_3.obj"
+".\Release\fn_32.obj"
+".\Release\fn_4.obj"
+".\Release\fn_5.obj"
+".\Release\fn_6.obj"
+".\Release\fn_64.obj"
+".\Release\fn_7.obj"
+".\Release\fn_8.obj"
+".\Release\fn_9.obj"
+".\Release\fni_1.obj"
+".\Release\fni_10.obj"
+".\Release\fni_11.obj"
+".\Release\fni_12.obj"
+".\Release\fni_13.obj"
+".\Release\fni_14.obj"
+".\Release\fni_15.obj"
+".\Release\fni_16.obj"
+".\Release\fni_2.obj"
+".\Release\fni_3.obj"
+".\Release\fni_32.obj"
+".\Release\fni_4.obj"
+".\Release\fni_5.obj"
+".\Release\fni_6.obj"
+".\Release\fni_64.obj"
+".\Release\fni_7.obj"
+".\Release\fni_8.obj"
+".\Release\fni_9.obj"
+".\Release\frc_1.obj"
+".\Release\frc_10.obj"
+".\Release\frc_11.obj"
+".\Release\frc_12.obj"
+".\Release\frc_128.obj"
+".\Release\frc_13.obj"
+".\Release\frc_14.obj"
+".\Release\frc_15.obj"
+".\Release\frc_16.obj"
+".\Release\frc_2.obj"
+".\Release\frc_3.obj"
+".\Release\frc_32.obj"
+".\Release\frc_4.obj"
+".\Release\frc_5.obj"
+".\Release\frc_6.obj"
+".\Release\frc_64.obj"
+".\Release\frc_7.obj"
+".\Release\frc_8.obj"
+".\Release\frc_9.obj"
+".\Release\ftw_10.obj"
+".\Release\ftw_16.obj"
+".\Release\ftw_2.obj"
+".\Release\ftw_3.obj"
+".\Release\ftw_32.obj"
+".\Release\ftw_4.obj"
+".\Release\ftw_5.obj"
+".\Release\ftw_6.obj"
+".\Release\ftw_64.obj"
+".\Release\ftw_7.obj"
+".\Release\ftw_8.obj"
+".\Release\ftw_9.obj"
+".\Release\ftwi_10.obj"
+".\Release\ftwi_16.obj"
+".\Release\ftwi_2.obj"
+".\Release\ftwi_3.obj"
+".\Release\ftwi_32.obj"
+".\Release\ftwi_4.obj"
+".\Release\ftwi_5.obj"
+".\Release\ftwi_6.obj"
+".\Release\ftwi_64.obj"
+".\Release\ftwi_7.obj"
+".\Release\ftwi_8.obj"
+".\Release\ftwi_9.obj"
+".\Release\generic.obj"
+".\Release\malloc.obj"
+".\Release\planner.obj"
+".\Release\putils.obj"
+".\Release\rader.obj"
+".\Release\rconfig.obj"
+".\Release\rexec.obj"
+".\Release\rexec2.obj"
+".\Release\rfftwf77.obj"
+".\Release\rfftwnd.obj"
+".\Release\rgeneric.obj"
+".\Release\rplanner.obj"
+".\Release\timer.obj"
+".\Release\twiddle.obj"
+".\Release\wisdom.obj"
+".\Release\wisdomio.obj"
+".\Release\asio.obj"
+".\Release\asiodrivers.obj"
+".\Release\asiolist.obj"
+".\Release\ADSR.obj"
+".\Release\Allpass.obj"
+".\Release\Ap.obj"
+".\Release\Balance.obj"
+".\Release\Bend.obj"
+".\Release\ButtBP.obj"
+".\Release\ButtBR.obj"
+".\Release\ButtHP.obj"
+".\Release\ButtLP.obj"
+".\Release\Buzz.obj"
+".\Release\Comb.obj"
+".\Release\Convol.obj"
+".\Release\DelayLine.obj"
+".\Release\FastOsc.obj"
+".\Release\FFT.obj"
+".\Release\Filter.obj"
+".\Release\Fir.obj"
+".\Release\Gain.obj"
+".\Release\HammingTable.obj"
+".\Release\HarmTable.obj"
+".\Release\Hilb.obj"
+".\Release\HiPass.obj"
+".\Release\IADSR.obj"
+".\Release\IFFT.obj"
+".\Release\IFGram.obj"
+".\Release\Interp.obj"
+".\Release\Lookup.obj"
+".\Release\Lookupi.obj"
+".\Release\Loop.obj"
+".\Release\LoPassTable.obj"
+".\Release\LowPass.obj"
+".\Release\Lp.obj"
+".\Release\MidiIn.obj"
+".\Release\MidiMap.obj"
+".\Release\Mix.obj"
+".\Release\NoteTable.obj"
+".\Release\Osc.obj"
+".\Release\Osci.obj"
+".\Release\Oscil.obj"
+".\Release\Oscili.obj"
+".\Release\Oscilt.obj"
+".\Release\Pan.obj"
+".\Release\Phase.obj"
+".\Release\PhOscili.obj"
+".\Release\Pitch.obj"
+".\Release\PlnTable.obj"
+".\Release\Pluck.obj"
+".\Release\PVA.obj"
+".\Release\PVMorph.obj"
+".\Release\PVRead.obj"
+".\Release\PVS.obj"
+".\Release\Rand.obj"
+".\Release\Randh.obj"
+".\Release\Randi.obj"
+".\Release\Reson.obj"
+".\Release\Ring.obj"
+".\Release\SinAnal.obj"
+".\Release\SinSyn.obj"
+".\Release\SndAiff.obj"
+".\Release\SndASIO.obj"
+".\Release\SndBuffer.obj"
+".\Release\SndFIO.obj"
+".\Release\SndIn.obj"
+".\Release\SndIO.obj"
+".\Release\SndMidi.obj"
+".\Release\SndMidiIn.obj"
+".\Release\SndObj.obj"
+".\Release\SndPVOCEX.obj"
+".\Release\SndRead.obj"
+".\Release\SndRTIO.obj"
+".\Release\SndSinIO.obj"
+".\Release\SndTable.obj"
+".\Release\SndThread.obj"
+".\Release\SndWave.obj"
+".\Release\SndWaveX.obj"
+".\Release\SpecCart.obj"
+".\Release\SpecIn.obj"
+".\Release\SpecInterp.obj"
+".\Release\SpecMult.obj"
+".\Release\SpecPolar.obj"
+".\Release\SpecSplit.obj"
+".\Release\SpecThresh.obj"
+".\Release\SpecVoc.obj"
+".\Release\StringFlt.obj"
+".\Release\SyncGrain.obj"
+".\Release\Tap.obj"
+".\Release\Tapi.obj"
+".\Release\TpTz.obj"
+".\Release\TrisegTable.obj"
+".\Release\Unit.obj"
+".\Release\UsrDefTable.obj"
+".\Release\UsrHarmTable.obj"
+".\Release\VDelay.obj"
+]
+Creating command line "link.exe -lib @C:\WINDOWS\TEMP\RSP4004.TMP"
+<h3>Output Window</h3>
+Compiling...
+config.c
+executor.c
+fcr_1.c
+fcr_10.c
+fcr_11.c
+fcr_12.c
+fcr_128.c
+fcr_13.c
+fcr_14.c
+fcr_15.c
+fcr_16.c
+fcr_2.c
+fcr_3.c
+fcr_32.c
+fcr_4.c
+fcr_5.c
+fcr_6.c
+fcr_64.c
+fcr_7.c
+fcr_8.c
+fcr_9.c
+fftwnd.c
+fhb_10.c
+fhb_16.c
+fhb_2.c
+fhb_3.c
+fhb_32.c
+fhb_4.c
+fhb_5.c
+fhb_6.c
+fhb_7.c
+fhb_8.c
+fhb_9.c
+fhf_10.c
+fhf_16.c
+fhf_2.c
+fhf_3.c
+fhf_32.c
+fhf_4.c
+fhf_5.c
+fhf_6.c
+fhf_7.c
+fhf_8.c
+fhf_9.c
+fn_1.c
+fn_10.c
+fn_11.c
+fn_12.c
+fn_13.c
+fn_14.c
+fn_15.c
+fn_16.c
+fn_2.c
+fn_3.c
+fn_32.c
+fn_4.c
+fn_5.c
+fn_6.c
+fn_64.c
+fn_7.c
+fn_8.c
+fn_9.c
+fni_1.c
+fni_10.c
+fni_11.c
+fni_12.c
+fni_13.c
+fni_14.c
+fni_15.c
+fni_16.c
+fni_2.c
+fni_3.c
+fni_32.c
+fni_4.c
+fni_5.c
+fni_6.c
+fni_64.c
+fni_7.c
+fni_8.c
+fni_9.c
+frc_1.c
+frc_10.c
+frc_11.c
+frc_12.c
+frc_128.c
+frc_13.c
+frc_14.c
+frc_15.c
+frc_16.c
+frc_2.c
+frc_3.c
+frc_32.c
+frc_4.c
+frc_5.c
+frc_6.c
+frc_64.c
+frc_7.c
+frc_8.c
+frc_9.c
+ftw_10.c
+ftw_16.c
+ftw_2.c
+ftw_3.c
+ftw_32.c
+ftw_4.c
+ftw_5.c
+ftw_6.c
+ftw_64.c
+ftw_7.c
+ftw_8.c
+ftw_9.c
+ftwi_10.c
+ftwi_16.c
+ftwi_2.c
+ftwi_3.c
+ftwi_32.c
+ftwi_4.c
+ftwi_5.c
+ftwi_6.c
+ftwi_64.c
+ftwi_7.c
+ftwi_8.c
+ftwi_9.c
+generic.c
+malloc.c
+planner.c
+putils.c
+rader.c
+D:\release version\SndObj\src\rfftw\rader.c(93) : warning C4244: 'initializing' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\rader.c(117) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\rader.c(119) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+rconfig.c
+rexec.c
+rexec2.c
+rfftwf77.c
+rfftwnd.c
+rgeneric.c
+D:\release version\SndObj\src\rfftw\rgeneric.c(147) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+rplanner.c
+timer.c
+twiddle.c
+D:\release version\SndObj\src\rfftw\twiddle.c(75) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\twiddle.c(76) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\twiddle.c(98) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\twiddle.c(99) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\twiddle.c(132) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+D:\release version\SndObj\src\rfftw\twiddle.c(133) : warning C4244: '=' : conversion from 'double ' to 'float ', possible loss of data
+wisdom.c
+wisdomio.c
+asio.cpp
+asiodrivers.cpp
+asiolist.cpp
+ADSR.cpp
+Allpass.cpp
+Ap.cpp
+Balance.cpp
+Bend.cpp
+ButtBP.cpp
+ButtBR.cpp
+ButtHP.cpp
+ButtLP.cpp
+Buzz.cpp
+Comb.cpp
+Convol.cpp
+DelayLine.cpp
+FastOsc.cpp
+FFT.cpp
+Filter.cpp
+Fir.cpp
+Gain.cpp
+HammingTable.cpp
+HarmTable.cpp
+Hilb.cpp
+HiPass.cpp
+IADSR.cpp
+IFFT.cpp
+IFGram.cpp
+Interp.cpp
+Lookup.cpp
+Lookupi.cpp
+Loop.cpp
+LoPassTable.cpp
+LowPass.cpp
+Lp.cpp
+MidiIn.cpp
+MidiMap.cpp
+Mix.cpp
+NoteTable.cpp
+Osc.cpp
+Osci.cpp
+Oscil.cpp
+Oscili.cpp
+Oscilt.cpp
+Pan.cpp
+Phase.cpp
+PhOscili.cpp
+Pitch.cpp
+PlnTable.cpp
+Pluck.cpp
+PVA.cpp
+PVMorph.cpp
+PVRead.cpp
+PVS.cpp
+Rand.cpp
+Randh.cpp
+Randi.cpp
+Reson.cpp
+Ring.cpp
+SinAnal.cpp
+SinSyn.cpp
+SndAiff.cpp
+SndASIO.cpp
+SndBuffer.cpp
+SndFIO.cpp
+SndIn.cpp
+SndIO.cpp
+SndMidi.cpp
+SndMidiIn.cpp
+SndObj.cpp
+SndPVOCEX.cpp
+SndRead.cpp
+SndRTIO.cpp
+SndSinIO.cpp
+SndTable.cpp
+SndThread.cpp
+SndWave.cpp
+SndWaveX.cpp
+SpecCart.cpp
+SpecIn.cpp
+SpecInterp.cpp
+SpecMult.cpp
+SpecPolar.cpp
+SpecSplit.cpp
+SpecThresh.cpp
+SpecVoc.cpp
+StringFlt.cpp
+SyncGrain.cpp
+Tap.cpp
+Tapi.cpp
+TpTz.cpp
+TrisegTable.cpp
+Unit.cpp
+UsrDefTable.cpp
+UsrHarmTable.cpp
+VDelay.cpp
+Creating library...
+Creating temporary file "C:\WINDOWS\TEMP\RSPE1C4.TMP" with contents
+[
+/nologo /o"Release/SndObj.bsc" 
+".\Release\config.sbr"
+".\Release\executor.sbr"
+".\Release\fcr_1.sbr"
+".\Release\fcr_10.sbr"
+".\Release\fcr_11.sbr"
+".\Release\fcr_12.sbr"
+".\Release\fcr_128.sbr"
+".\Release\fcr_13.sbr"
+".\Release\fcr_14.sbr"
+".\Release\fcr_15.sbr"
+".\Release\fcr_16.sbr"
+".\Release\fcr_2.sbr"
+".\Release\fcr_3.sbr"
+".\Release\fcr_32.sbr"
+".\Release\fcr_4.sbr"
+".\Release\fcr_5.sbr"
+".\Release\fcr_6.sbr"
+".\Release\fcr_64.sbr"
+".\Release\fcr_7.sbr"
+".\Release\fcr_8.sbr"
+".\Release\fcr_9.sbr"
+".\Release\fftwnd.sbr"
+".\Release\fhb_10.sbr"
+".\Release\fhb_16.sbr"
+".\Release\fhb_2.sbr"
+".\Release\fhb_3.sbr"
+".\Release\fhb_32.sbr"
+".\Release\fhb_4.sbr"
+".\Release\fhb_5.sbr"
+".\Release\fhb_6.sbr"
+".\Release\fhb_7.sbr"
+".\Release\fhb_8.sbr"
+".\Release\fhb_9.sbr"
+".\Release\fhf_10.sbr"
+".\Release\fhf_16.sbr"
+".\Release\fhf_2.sbr"
+".\Release\fhf_3.sbr"
+".\Release\fhf_32.sbr"
+".\Release\fhf_4.sbr"
+".\Release\fhf_5.sbr"
+".\Release\fhf_6.sbr"
+".\Release\fhf_7.sbr"
+".\Release\fhf_8.sbr"
+".\Release\fhf_9.sbr"
+".\Release\fn_1.sbr"
+".\Release\fn_10.sbr"
+".\Release\fn_11.sbr"
+".\Release\fn_12.sbr"
+".\Release\fn_13.sbr"
+".\Release\fn_14.sbr"
+".\Release\fn_15.sbr"
+".\Release\fn_16.sbr"
+".\Release\fn_2.sbr"
+".\Release\fn_3.sbr"
+".\Release\fn_32.sbr"
+".\Release\fn_4.sbr"
+".\Release\fn_5.sbr"
+".\Release\fn_6.sbr"
+".\Release\fn_64.sbr"
+".\Release\fn_7.sbr"
+".\Release\fn_8.sbr"
+".\Release\fn_9.sbr"
+".\Release\fni_1.sbr"
+".\Release\fni_10.sbr"
+".\Release\fni_11.sbr"
+".\Release\fni_12.sbr"
+".\Release\fni_13.sbr"
+".\Release\fni_14.sbr"
+".\Release\fni_15.sbr"
+".\Release\fni_16.sbr"
+".\Release\fni_2.sbr"
+".\Release\fni_3.sbr"
+".\Release\fni_32.sbr"
+".\Release\fni_4.sbr"
+".\Release\fni_5.sbr"
+".\Release\fni_6.sbr"
+".\Release\fni_64.sbr"
+".\Release\fni_7.sbr"
+".\Release\fni_8.sbr"
+".\Release\fni_9.sbr"
+".\Release\frc_1.sbr"
+".\Release\frc_10.sbr"
+".\Release\frc_11.sbr"
+".\Release\frc_12.sbr"
+".\Release\frc_128.sbr"
+".\Release\frc_13.sbr"
+".\Release\frc_14.sbr"
+".\Release\frc_15.sbr"
+".\Release\frc_16.sbr"
+".\Release\frc_2.sbr"
+".\Release\frc_3.sbr"
+".\Release\frc_32.sbr"
+".\Release\frc_4.sbr"
+".\Release\frc_5.sbr"
+".\Release\frc_6.sbr"
+".\Release\frc_64.sbr"
+".\Release\frc_7.sbr"
+".\Release\frc_8.sbr"
+".\Release\frc_9.sbr"
+".\Release\ftw_10.sbr"
+".\Release\ftw_16.sbr"
+".\Release\ftw_2.sbr"
+".\Release\ftw_3.sbr"
+".\Release\ftw_32.sbr"
+".\Release\ftw_4.sbr"
+".\Release\ftw_5.sbr"
+".\Release\ftw_6.sbr"
+".\Release\ftw_64.sbr"
+".\Release\ftw_7.sbr"
+".\Release\ftw_8.sbr"
+".\Release\ftw_9.sbr"
+".\Release\ftwi_10.sbr"
+".\Release\ftwi_16.sbr"
+".\Release\ftwi_2.sbr"
+".\Release\ftwi_3.sbr"
+".\Release\ftwi_32.sbr"
+".\Release\ftwi_4.sbr"
+".\Release\ftwi_5.sbr"
+".\Release\ftwi_6.sbr"
+".\Release\ftwi_64.sbr"
+".\Release\ftwi_7.sbr"
+".\Release\ftwi_8.sbr"
+".\Release\ftwi_9.sbr"
+".\Release\generic.sbr"
+".\Release\malloc.sbr"
+".\Release\planner.sbr"
+".\Release\putils.sbr"
+".\Release\rader.sbr"
+".\Release\rconfig.sbr"
+".\Release\rexec.sbr"
+".\Release\rexec2.sbr"
+".\Release\rfftwf77.sbr"
+".\Release\rfftwnd.sbr"
+".\Release\rgeneric.sbr"
+".\Release\rplanner.sbr"
+".\Release\timer.sbr"
+".\Release\twiddle.sbr"
+".\Release\wisdom.sbr"
+".\Release\wisdomio.sbr"
+".\Release\asio.sbr"
+".\Release\asiodrivers.sbr"
+".\Release\asiolist.sbr"
+".\Release\ADSR.sbr"
+".\Release\Allpass.sbr"
+".\Release\Ap.sbr"
+".\Release\Balance.sbr"
+".\Release\Bend.sbr"
+".\Release\ButtBP.sbr"
+".\Release\ButtBR.sbr"
+".\Release\ButtHP.sbr"
+".\Release\ButtLP.sbr"
+".\Release\Buzz.sbr"
+".\Release\Comb.sbr"
+".\Release\Convol.sbr"
+".\Release\DelayLine.sbr"
+".\Release\FastOsc.sbr"
+".\Release\FFT.sbr"
+".\Release\Filter.sbr"
+".\Release\Fir.sbr"
+".\Release\Gain.sbr"
+".\Release\HammingTable.sbr"
+".\Release\HarmTable.sbr"
+".\Release\Hilb.sbr"
+".\Release\HiPass.sbr"
+".\Release\IADSR.sbr"
+".\Release\IFFT.sbr"
+".\Release\IFGram.sbr"
+".\Release\Interp.sbr"
+".\Release\Lookup.sbr"
+".\Release\Lookupi.sbr"
+".\Release\Loop.sbr"
+".\Release\LoPassTable.sbr"
+".\Release\LowPass.sbr"
+".\Release\Lp.sbr"
+".\Release\MidiIn.sbr"
+".\Release\MidiMap.sbr"
+".\Release\Mix.sbr"
+".\Release\NoteTable.sbr"
+".\Release\Osc.sbr"
+".\Release\Osci.sbr"
+".\Release\Oscil.sbr"
+".\Release\Oscili.sbr"
+".\Release\Oscilt.sbr"
+".\Release\Pan.sbr"
+".\Release\Phase.sbr"
+".\Release\PhOscili.sbr"
+".\Release\Pitch.sbr"
+".\Release\PlnTable.sbr"
+".\Release\Pluck.sbr"
+".\Release\PVA.sbr"
+".\Release\PVMorph.sbr"
+".\Release\PVRead.sbr"
+".\Release\PVS.sbr"
+".\Release\Rand.sbr"
+".\Release\Randh.sbr"
+".\Release\Randi.sbr"
+".\Release\Reson.sbr"
+".\Release\Ring.sbr"
+".\Release\SinAnal.sbr"
+".\Release\SinSyn.sbr"
+".\Release\SndAiff.sbr"
+".\Release\SndASIO.sbr"
+".\Release\SndBuffer.sbr"
+".\Release\SndFIO.sbr"
+".\Release\SndIn.sbr"
+".\Release\SndIO.sbr"
+".\Release\SndMidi.sbr"
+".\Release\SndMidiIn.sbr"
+".\Release\SndObj.sbr"
+".\Release\SndPVOCEX.sbr"
+".\Release\SndRead.sbr"
+".\Release\SndRTIO.sbr"
+".\Release\SndSinIO.sbr"
+".\Release\SndTable.sbr"
+".\Release\SndThread.sbr"
+".\Release\SndWave.sbr"
+".\Release\SndWaveX.sbr"
+".\Release\SpecCart.sbr"
+".\Release\SpecIn.sbr"
+".\Release\SpecInterp.sbr"
+".\Release\SpecMult.sbr"
+".\Release\SpecPolar.sbr"
+".\Release\SpecSplit.sbr"
+".\Release\SpecThresh.sbr"
+".\Release\SpecVoc.sbr"
+".\Release\StringFlt.sbr"
+".\Release\SyncGrain.sbr"
+".\Release\Tap.sbr"
+".\Release\Tapi.sbr"
+".\Release\TpTz.sbr"
+".\Release\TrisegTable.sbr"
+".\Release\Unit.sbr"
+".\Release\UsrDefTable.sbr"
+".\Release\UsrHarmTable.sbr"
+".\Release\VDelay.sbr"]
+Creating command line "bscmake.exe @C:\WINDOWS\TEMP\RSPE1C4.TMP"
+Creating browse info file...
+<h3>Output Window</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPF010.BAT" with contents
+[
+@echo off
+copy release\SndObj.lib ..\lib\SndObj.lib
+copy ..\src\*.h ..\include\SndObj
+]
+Creating command line "C:\WINDOWS\TEMP\RSPF010.BAT"
+copying files
+        1 file(s) copied
+..\src\ADSR.h
+..\src\Allpass.h
+..\src\AudioDefs.h
+..\src\Balance.h
+..\src\Bend.h
+..\src\ButtBP.h
+..\src\ButtBR.h
+..\src\ButtHP.h
+..\src\ButtLP.h
+..\src\Buzz.h
+..\src\Comb.h
+..\src\DelayLine.h
+..\src\Filter.h
+..\src\Gain.h
+..\src\HammingTable.h
+..\src\HarmTable.h
+..\src\IADSR.h
+..\src\Interp.h
+..\src\Lookup.h
+..\src\Lookupi.h
+..\src\Loop.h
+..\src\MidiIn.h
+..\src\Mix.h
+..\src\NoteTable.h
+..\src\Oscil.h
+..\src\Oscili.h
+..\src\Oscilt.h
+..\src\Pan.h
+..\src\Phase.h
+..\src\Pitch.h
+..\src\PlnTable.h
+..\src\Pluck.h
+..\src\Rand.h
+..\src\Randh.h
+..\src\Reson.h
+..\src\Ring.h
+..\src\SndAiff.h
+..\src\SndBuffer.h
+..\src\SndFIO.h
+..\src\SndIO.h
+..\src\SndIn.h
+..\src\SndMidi.h
+..\src\SndMidiIn.h
+..\src\SndObj.h
+..\src\SndRTIO.h
+..\src\SndTable.h
+..\src\SndThread.h
+..\src\SndWave.h
+..\src\StringFlt.h
+..\src\Table.h
+..\src\Tap.h
+..\src\Tapi.h
+..\src\TrisegTable.h
+..\src\Unit.h
+..\src\UsrDefTable.h
+..\src\UsrHarmTable.h
+..\src\VDelay.h
+..\src\Ap.h
+..\src\Hilb.h
+..\src\Lp.h
+..\src\SyncGrain.h
+..\src\SndASIO.h
+..\src\Randi.h
+..\src\SpecMult.h
+..\src\SpecInterp.h
+..\src\SpecPolar.h
+..\src\SpecSplit.h
+..\src\PhOscili.h
+..\src\MidiMap.h
+..\src\HiPass.h
+..\src\LowPass.h
+..\src\PVA.h
+..\src\PVS.h
+..\src\TpTz.h
+..\src\Fir.h
+..\src\LoPassTable.h
+..\src\FFT.h
+..\src\IFFT.h
+..\src\FFT_alt.h
+..\src\IFFT_alt.h
+..\src\SpecCart.h
+..\src\SpecCombine.h
+..\src\SpecVoc.h
+..\src\Convol.h
+..\src\IFGram.h
+..\src\FastOsc.h
+..\src\Osc.h
+..\src\Osci.h
+..\src\SinAnal.h
+..\src\SinSyn.h
+..\src\SndWaveX.h
+..\src\SndPVOCEX.h
+..\src\SndSinIO.h
+..\src\SpecIn.h
+..\src\SndRead.h
+..\src\PVRead.h
+..\src\SpecThresh.h
+..\src\PVMorph.h
+       98 file(s) copied
+<h3>
+--------------------Configuration: pluck - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSPF090.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_CONSOLE" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /Fp"Release/pluck.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj\src\examples\pluck.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSPF090.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSPF091.TMP" with contents
+[
+SndObj.lib Winmm.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/pluck.pdb" /machine:I386 /out:"Release/pluck.exe" /libpath:"../../lib" 
+".\Release\pluck.obj"
+"\release version\SndObj\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSPF091.TMP"
+<h3>Output Window</h3>
+Compiling...
+pluck.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+pluck.exe - 0 error(s), 10 warning(s)
+</pre>
+</body>
+</html>

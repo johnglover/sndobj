@@ -1,0 +1,34 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: vstplug - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WINDOWS\TEMP\RSP4244.TMP" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "WIN" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "VSTPLUG_EXPORTS" /Fp"Release/vstplug.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\release version\SndObj-2.6\msvc6.0\vstplug\AudioEffect.cpp"
+"D:\release version\SndObj-2.6\msvc6.0\vstplug\audioeffectx.cpp"
+"D:\release version\SndObj-2.6\msvc6.0\vstplug\vstplug.cpp"
+"D:\release version\SndObj-2.6\msvc6.0\vstplug\vstplugMain.cpp"
+]
+Creating command line "cl.exe @C:\WINDOWS\TEMP\RSP4244.TMP" 
+Creating temporary file "C:\WINDOWS\TEMP\RSP4245.TMP" with contents
+[
+SndObj.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/streson.pdb" /machine:I386 /def:".\vstplug.def" /out:"Release/streson.dll" /implib:"Release/streson.lib" /libpath:"../../lib" 
+".\Release\AudioEffect.obj"
+".\Release\audioeffectx.obj"
+".\Release\vstplug.obj"
+".\Release\vstplugMain.obj"
+]
+Creating command line "link.exe @C:\WINDOWS\TEMP\RSP4245.TMP"
+<h3>Output Window</h3>
+Compiling...
+AudioEffect.cpp
+audioeffectx.cpp
+
+</pre>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: mfcapp - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating command line "rc.exe /l 0x409 /fo"Release/mfcapp.res" /d "NDEBUG" "C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp\mfcapp.rc"" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8D8.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR"Release/" /Fp"Release/mfcapp.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp\mfcapp.cpp"
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp\mfcappDlg.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8D8.tmp" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8D9.tmp" with contents
+[
+/nologo /MT /W3 /GX /O2 /I "../../include" /I ".." /D "_WINDOWS" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR"Release/" /Fp"Release/mfcapp.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
+"C:\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\mfcapp\StdAfx.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8D9.tmp" 
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8DA.tmp" with contents
+[
+SndObj.lib Winmm.lib PthreadVC.lib /nologo /subsystem:windows /incremental:yes /pdb:"Release/mfcapp.pdb" /machine:I386 /nodefaultlib:"libc" /out:"Release/mfcapp.exe" /libpath:"../../lib" 
+".\Release\mfcapp.obj"
+".\Release\mfcappDlg.obj"
+".\Release\StdAfx.obj"
+".\Release\mfcapp.res"
+"\Documents and Settings\vlazzarini\release version\SndObj-2.6-1\msvc6.0\Release\SndObj.lib"
+]
+Creating command line "link.exe @C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8DA.tmp"
+<h3>Output Window</h3>
+Compiling resources...
+Compiling...
+StdAfx.cpp
+Compiling...
+mfcapp.cpp
+mfcappDlg.cpp
+Generating Code...
+Linking...
+Creating command line "bscmake.exe /nologo /o"Release/mfcapp.bsc"  ".\Release\StdAfx.sbr" ".\Release\mfcapp.sbr" ".\Release\mfcappDlg.sbr""
+Creating browse info file...
+<h3>Output Window</h3>
+Creating temporary file "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8DC.bat" with contents
+[
+@echo off
+copy release\*.exe ..\bin
+]
+Creating command line "C:\DOCUME~1\VLAZZA~1\LOCALS~1\Temp\RSP8DC.bat"
+copying files
+release\mfcapp.exe
+        1 file(s) copied.
+
+
+
+<h3>Results</h3>
+mfcapp.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

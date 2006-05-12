@@ -1,0 +1,120 @@
+##############################################################
+#    SndObj 2.5 multiplatform Makefile                       #
+#    makes:     lib (library)                                #
+##############################################################
+
+# Choose the compiler 
+# On Linux or Cygwin use gnu gcc  (CC = gcc)
+# On Irix use MipsPRO if you have it (CC = CC)
+
+CC	=	gcc
+
+#  Choose one of the options for REALTIME audio & midi:
+#  for RT on CYGWIN: -DWIN
+#  for RT on Linux (etc...) with OSS: -DOSS 
+#  for RT on Linux with ALSA: -DALSA
+#  for RT on Irix: -DSGI 
+#  for RT on  Mac OS X: -DMACOSX 
+#   -I/system/library/Frameworks/CoreAudio.framework/Headers
+#  for other OSs: realtime not supported (leave it blank)
+
+RTDEFS = 
+
+#############################################################
+# DO NOT EDIT BELOW THIS LINE ################################
+##############################################################
+
+libDir  =   ../lib
+Bin	    =	../bin
+iDir    =   ../include
+
+LIBNAME = $(libDir)/libsndobj.a
+
+# Flags for includes and libraries
+
+CFLAGS =    -O2 -I$(iDir) $(RTDEFS) 
+LFLAGS =    -O2  
+
+# Core Library object files
+
+SNDOBJS = Oscil.o Oscilt.o Oscili.o \
+PhOscili.o ADSR.o IADSR.o Buzz.o \
+Balance.o DelayLine.o Tap.o Tapi.o \
+Comb.o Allpass.o StringFlt.o Pluck.o \
+VDelay.o Pitch.o Loop.o Filter.o \
+Reson.o Lp.o ButtBP.o ButtBR.o \
+ButtHP.o ButtLP.o Mix.o Pan.o \
+Gain.o SyncGrain.o Interp.o Phase.o \
+Lookup.o Lookupi.o Ring.o Rand.o \
+Randh.o Randi.o Unit.o Ap.o \
+Hilb.o SndIn.o SndObj.o MidiIn.o \
+MidiMap.o Bend.o Fir.o FFT.o \
+IFFT.o Convol.o FastOsc.o Osc.o \
+Osci.o PVA.o IFGram.o HiPass.o \
+LowPass.o TpTz.o PVS.o PVMorph.o \
+PVFilter.o PVMask.o PVMix.o \
+PVTransp.o PVBlur.o PVRead.o \
+SinAnal.o SinSyn.o AdSyn.o \
+SndRead.o SpecIn.o SpecMult.o \
+SpecCart.o SpecCombine.o SpecInterp.o \
+SpecPolar.o SpecSplit.o SpecThresh.o \
+SpecVoc.o
+
+SNDIOBJS = SndIO.o SndRTIO.o SndFIO.o \
+SndWave.o SndAiff.o SndBuffer.o \
+SndMidi.o SndMidiIn.o SndWaveX.o \
+SndPVOCEX.o SndSinIO.o  SndCoreAudio.o
+
+TABLEOBJS = HarmTable.o UsrHarmTable.o \
+TrisegTable.o SndTable.o PlnTable.o \
+HammingTable.o NoteTable.o UsrDefTable.o \
+LoPassTable.o ImpulseTable.o \
+SpecEnvTable.o  EnvTable.o PVEnvTable.o PVTable.o
+SNDTHROBJ = SndThread.o 
+
+# fftw library v-2.1.3
+FFTWOBJS = \
+config.o  fcr_9.o fhf_6.o fn_8.o  frc_1.o  ftw_16.o ftwi_7.o \
+executor.o fftwnd.o fhf_7.o fn_9.o  frc_10.o ftw_2.o  ftwi_8.o \
+fcr_1.o fhb_10.o fhf_8.o fni_1.o frc_11.o ftw_3.o  ftwi_9.o \
+fcr_10.o  fhb_16.o fhf_9.o fni_10.o frc_12.o ftw_32.o generic.o \
+fcr_11.o  fhb_2.o fn_1.o fni_11.o frc_128.o ftw_4.o  malloc.o \
+fcr_12.o  fhb_3.o fn_10.o fni_12.o frc_13.o ftw_5.o  planner.o \
+fcr_128.o fhb_32.o fn_11.o fni_13.o frc_14.o ftw_6.o  putils.o \
+fcr_13.o  fhb_4.o fn_12.o fni_14.o frc_15.o ftw_64.o rader.o \
+fcr_14.o  fhb_5.o fn_13.o fni_15.o frc_16.o ftw_7.o  rconfig.o \
+fcr_15.o  fhb_6.o fn_14.o fni_16.o frc_2.o  ftw_8.o  rexec.o \
+fcr_16.o  fhb_7.o fn_15.o fni_2.o frc_3.o  ftw_9.o  rexec2.o \
+fcr_2.o fhb_8.o fn_16.o fni_3.o frc_32.o ftwi_10.o rfftwf77.o \
+fcr_3.o fhb_9.o fn_2.o fni_32.o frc_4.o  ftwi_16.o rfftwnd.o \
+fcr_32.o  fhf_10.o fn_3.o fni_4.o frc_5.o  ftwi_2.o rgeneric.o \
+fcr_4.o fhf_16.o fn_32.o fni_5.o frc_6.o  ftwi_3.o rplanner.o \
+fcr_5.o fhf_2.o fn_4.o fni_6.o frc_64.o ftwi_32.o timer.o \
+fcr_6.o fhf_3.o fn_5.o fni_64.o frc_7.o  ftwi_4.o twiddle.o \
+fcr_64.o  fhf_32.o fn_6.o fni_7.o frc_8.o  ftwi_5.o wisdom.o \
+fcr_7.o fhf_4.o fn_64.o fni_8.o frc_9.o  ftwi_6.o wisdomio.o \
+fcr_8.o fhf_5.o fn_7.o fni_9.o ftw_10.o ftwi_64.o 
+
+LIBOBJS = $(SNDOBJS) $(SNDIOBJS) $(TABLEOBJS) $(SNDTHROBJ) 
+
+all: AudioDefs lib 
+
+AudioDefs: AudioDefs.h *.h
+		cp *.h $(iDir)/SndObj
+
+lib: $(LIBNAME) 
+
+clean: 
+	rm *.o
+	rm $(LIBNAME)
+
+$(LIBNAME):  $(FFTWOBJS) $(LIBOBJS)
+	ar -rcs $@ *.o
+
+$(FFTWOBJS): %.o: rfftw/%.c 
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIBOBJS): %.o: %.cpp 
+	$(CC) $(CFLAGS) -c $< -o $@
+
+

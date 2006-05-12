@@ -1,0 +1,218 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "SndObj"=".\SndObj.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "cvoc"=".\cvoc\cvoc.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "example"=".\example\example.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "granulator"=".\granulator\granulator.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "mfcapp"=".\mfcapp\mfcapp.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "mfcapp2"=".\mfcapp2\mfcapp2.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "midisynth"=".\midisynth\midisynth.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "morph_tilde"=".\morph_tilde\morph_tilde.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "pluck"=".\pluck\pluck.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "schroeder"=".\schroeder\schroeder.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "sinus"=".\sinus\sinus.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "sndapp"=".\sndapp\sndapp.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "streson"=".\streson\streson.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name SndObj
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "vstplug"=".\vstplug\vstplug.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

@@ -1,0 +1,29 @@
+The Sound Object Library 
+
+Build instructions
+
+1. Requirements
+   a. ANSI C/C++ compilers (such as gcc/g++)
+   b. Python (www.python.org)
+   c. Scons  (www.scons.org)
+   d. For realtime audio: 
+      On Linux either OSS (www.4front-tech.com) 
+               or AlSA (www.alsa-project.org), 
+               and/or JACK (jack.sf.net)
+      On Windows, OSX and SGI, the library
+      uses the supplied system audio drivers.   
+
+2. On the top-level directory, run 'scons'. If on
+   Linux and using OSS, add option OSS=true
+   
+3. For more options, including install directory
+   prefix, etc, try 'scons -H' (basic options)
+   and 'scons -h' (SndObj-specific options)
+
+The build system has been tested on Linux, OSX and
+Windows (under MSVC)
+
+Thanks to Tim Blechmann for the original 
+SConstruct code.
+
+VL, 2006

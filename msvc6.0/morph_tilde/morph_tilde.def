@@ -1,0 +1,4 @@
+LIBRARY morph~
+DESCRIPTION "morph_tilde"
+EXPORTS
+   morph_tilde_setup @1
