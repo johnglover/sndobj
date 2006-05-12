@@ -206,10 +206,10 @@ if not getPlatform() == 'win':
 
   incdest = env['prefix'] + '/include/SndObj/'
   print "installing headers in %s " % incdest
-  headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
-  for header in headers:
-	env.Execute(Chmod(header, 0555))
-	env.Install(incdest, header)
+  # headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
+  # for header in headers:
+  #	env.Execute(Chmod(header, 0555))
+  #	env.Install(incdest, header)
   env.Alias('install', env['prefix'])
 
 ####################################################################
