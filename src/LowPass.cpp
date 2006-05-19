@@ -4,10 +4,8 @@
 
 //*************************************************************//
 // LowPass.cpp : implementation of a Low Pass filter dervied from 
-//               Filter Base Class  //
-//                                													                            //
-//         Rory Walsh May 2003   													                    //
-//                                          												                    //
+//               Filter Base Class  
+//         Rory Walsh May 2003   			
 //*************************************************************//
 #include "LowPass.h"
 
