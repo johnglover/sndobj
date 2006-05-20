@@ -235,7 +235,6 @@ int
    int i,j,k;
    jack_default_audio_sample_t *sigin;
    jack_default_audio_sample_t *sigout;
-
    for(i=0; i < m_channels; i++){
      if(m_mode != SND_OUTPUT)
      sigin = (jack_default_audio_sample_t *)
@@ -247,14 +246,16 @@ int
      for(j=i, k=0; j < m_items; j+=m_channels, k++){
        if(m_mode != SND_OUTPUT)
        m_inbuff[m_curbuff][j] = sigin[k];
-       if(m_mode != SND_INPUT)
+       if(m_mode != SND_INPUT){
        sigout[k] = m_outbuff[m_curbuff][j];
+       m_outbuff[m_curbuff][j] = 0.f;
+       }
      }
    }
    m_outused[m_curbuff] =  m_inused[m_curbuff] = true;
    m_curbuff++;
    m_curbuff %= m_buffno;
-   
+
   return 0;
  }
 
@@ -289,6 +290,7 @@ SndJackIO::Read(){
      while(!m_inused[m_incurbuff]) usleep(100);
      for(m_vecpos=0; m_vecpos  < m_vecsize*m_channels;m_vecpos++){
        m_output[m_vecpos] = m_inbuff[m_incurbuff][m_incount];
+       m_inbuff[m_incurbuff][m_incount] = 0.f;
        m_incount++;
        if(m_incount == m_items){
 	 m_inused[m_incurbuff] = false;

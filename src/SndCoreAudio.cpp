@@ -5,6 +5,7 @@
 #ifdef MACOSX
 #include "SndCoreAudio.h"
 
+
 OSStatus SndObj_IOProcEntry(AudioDeviceID indev,
 const AudioTimeStamp *inN, const AudioBufferList *input,
 const AudioTimeStamp *inT, AudioBufferList *output,
@@ -30,7 +31,7 @@ AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
                      &psize, &m_dev);
 }
 else m_dev = dev;
-
+ m_sleept = 50;
 m_bufframes = bufframes;
 m_buffsize = bufframes*sizeof(float)*m_channels;
 m_buffitems = bufframes*m_channels;
@@ -158,6 +159,7 @@ float *obufp = cdata->m_outbuffs[buff];
 for(int i = 0; i < items; i++){
       outp[i]  = obufp[i];
       ibufp[i] = inp[i];
+      obufp[i] = 0;
       }
       
 cdata->m_outused[buff] = cdata->m_inused[buff] = true;      
@@ -184,7 +186,7 @@ int i;
             m_outcurbuff++;
             m_outcurbuff %= m_buffnos;
             m_outcount = 0; 
-            while(!m_outused[m_outcurbuff]) usleep(100);
+            while(!m_outused[m_outcurbuff]) usleep(m_sleept);
                   }
   } // for
   
@@ -198,17 +200,19 @@ short
 SndCoreAudio::Read(){
 
  if(!m_error){
- while(!m_inused[m_incurbuff]) usleep(100);
  
  for(m_vecpos = 0; m_vecpos < m_vecsize*m_channels; 
               m_vecpos++){
+   // while(!m_inused[m_incurbuff]) usleep(100);
       m_output[m_vecpos] = m_inbuffs[m_incurbuff][m_incount]*m_norm;
+      m_inbuffs[m_incurbuff][m_incount] = 0.f;
       m_incount++;
       if(m_incount == m_buffitems){           
             m_inused[m_incurbuff] = false;  
             m_incurbuff++;
             m_incurbuff %= m_buffnos;
             m_incount = 0;
+            while(!m_inused[m_incurbuff]) usleep(m_sleept);
        }
   } // for
   return 1;
