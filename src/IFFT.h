@@ -48,10 +48,10 @@ void inline ifft(float* signal);
 
 public:
 
-IFFT::IFFT();
-IFFT::IFFT(Table* window, SndObj* input, int fftsize = DEF_FFTSIZE, 
+IFFT();
+IFFT(Table* window, SndObj* input, int fftsize = DEF_FFTSIZE, 
 		   int hopsize=DEF_VECSIZE, float sr=DEF_SR);
-IFFT::~IFFT();
+~IFFT();
 
 
 	int GetFFTSize() { return m_fftsize; }

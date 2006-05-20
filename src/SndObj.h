@@ -228,8 +228,9 @@ SndObj operator=(SndObj obj){
 
  SndObj(SndObj* input, int vecsize = DEF_VECSIZE, float sr = DEF_SR);
  SndObj();
+#ifndef SWIGPYTHON 
  SndObj(SndObj& obj);
-
+#endif
 
  virtual ~SndObj();
  virtual char* ErrorMessage();

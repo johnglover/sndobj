@@ -19,7 +19,7 @@
  */
 
 /* fftw.h -- system-wide definitions */
-/* $Id: fftw.h,v 1.1 2006/05/12 15:15:02 veplaini Exp $ */
+/* $Id: fftw.h,v 1.2 2006/05/20 14:46:49 veplaini Exp $ */
 
 #ifndef FFTW_H
 #define FFTW_H
@@ -145,7 +145,9 @@ typedef struct {
 #    define DL_IMPORT(type) type
 #  endif
 #else
+#ifndef SWIGPYTHON
 #  define DL_IMPORT(type) type
+#endif
 #endif
 
 extern DL_IMPORT(const char *) fftw_version;

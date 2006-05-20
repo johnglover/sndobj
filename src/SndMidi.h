@@ -11,6 +11,7 @@
 #ifndef _SNDMIDI_H 
 #define _SNDMIDI_H
 
+
 #include "SndIO.h"
 
 #if defined(OSS) || defined (SGI) 
@@ -142,5 +143,6 @@ bool NewMessage(short channel){
 	char* ErrorMessage();
 
 };
+
 
 #endif

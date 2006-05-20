@@ -12,6 +12,8 @@
 #ifndef _SNDMIDIIN_H
 #define _SNDMIDIIN_H
 
+
+
 #include "SndMidi.h" 
 
 #ifdef OSS
@@ -73,6 +75,7 @@ short Read();
 char* ErrorMessage();
 
 };
+
 
 #endif
 

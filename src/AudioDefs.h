@@ -4,7 +4,8 @@
 
 // AudioDefs.h  SndObj Library Defines & Headers
 // Base Classes
- 
+
+
 #ifndef NOPTHREAD
 #include "SndThread.h" // needs pthread library
 #endif  
@@ -147,3 +148,4 @@
 #include "PVEnvTable.h"      // PV envelope
 #include "PVTable.h"         // PV  frame
 #include "ImpulseTable.h"    // linear FIR coeffs 
+

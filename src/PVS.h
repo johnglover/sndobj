@@ -27,14 +27,14 @@ void inline pvsynthesis(float* signal);
 
 public:
 
-PVS::PVS();
-PVS::PVS(Table* window, SndObj* input, int fftsize=DEF_FFTSIZE,
+PVS();
+PVS(Table* window, SndObj* input, int fftsize=DEF_FFTSIZE,
 		   int hopsize=DEF_VECSIZE, float sr=DEF_SR);
-PVS::~PVS();
+~PVS();
 
  
 	int Set(char* mess, float value);
-    void SetFFTSize(int fftsize);
+        void SetFFTSize(int fftsize);
 	void SetHopSize(int hopsize);
 
 short DoProcess();

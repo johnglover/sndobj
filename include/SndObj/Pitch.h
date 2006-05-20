@@ -29,7 +29,7 @@ class Pitch : public DelayLine
        Pitch();           
        Pitch(float delaytime, SndObj* InObj, 
 		   float pitch = 1.f, int vecsize=DEF_VECSIZE, float sr=DEF_SR); 
-	   Pitch(float delaytime, SndObj* InObj, int semitones = 0,
+       Pitch(float delaytime, SndObj* InObj, int semitones = 0,
 		   int vecsize=DEF_VECSIZE, float sr=DEF_SR);
     
        ~Pitch();

@@ -40,7 +40,8 @@ opt.AddOptions(
 	('flags', 'additional compile flags', ""),
 	('prefix', 'install prefix', '/usr/local'), 
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
-        BoolOption('nostaticlib', 'do not build static library', True)
+        BoolOption('nostaticlib', 'do not build static library', True),
+        BoolOption('pythonmodule', 'build python module', False)
 	)
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -90,7 +91,7 @@ if getPlatform() == 'macosx':
         print "OS is MacOSX"
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="MACOSX")
-	env.Append(CPPPATH="/system/library/Frameworks/CoreAudio.framework/Headers")
+	env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
         env.Append(LINKFLAGS= ['-framework', 'coreaudio'])
         jackFound = configure.CheckHeader("jack/jack.h", language = "C")
         if jackFound:
@@ -109,6 +110,9 @@ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        rtio = False
 
+swigcheck = 'swig' in env['TOOLS']
+print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
+pysndobj = env.Copy()
 ######################################################################
 #
 # sources
@@ -211,6 +215,28 @@ if not getPlatform() == 'win':
   #	env.Execute(Chmod(header, 0555))
   #	env.Install(incdest, header)
   env.Alias('install', env['prefix'])
+
+####################################################################
+# Python module
+
+if swigcheck and env['pythonmodule']: 
+  pysndobj.Append(SWIGFLAGS=['-c++', '-python'])
+  pysndobj.Append(LIBPATH='./lib')
+  pysndobj.Append(LIBS= ['sndobj'])
+  if getPlatform() == 'macosx':
+    pysndobj.Prepend(CPPPATH=["-Iinclude", "/System/Library/Frameworks/Python.framework/Headers"])
+    pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
+    pymod = pysndobj.Program('_sndobj.so', 'src/AudioDefs.i')
+    pysndobj.Command('sndobj.py', '', 'cp src/sndobj.py .')
+    pysndobj.Command('sndobj.pyc', '', 'cp src/sndobj.pyc .')
+  if getPlatform() == 'linux':
+    pysndobj.Prepend(CPPPATH=["-Iinclude", "/usr/lib/python"])
+    pysrcs = pysndobj.SharedObject('src/AudioDefs.i')
+    pymod = pysndobj.SharedLibrary('lib/snobj', 'src/AudioDefs.', SHLIBPREFIX='_')
+    pysndobj.Command('sndobj.py', '', 'cp src/sndobj.py .')
+    pysndobj.Command('sndobj.pyc', '', 'cp src/sndobj.pyc .')
+
+  Depends(pymod,sndobjlib)
 
 ####################################################################
 #
