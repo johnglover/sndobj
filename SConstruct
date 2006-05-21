@@ -228,19 +228,18 @@ if not getPlatform() == 'win':
 # Python module
 
 if swigcheck and env['pythonmodule']:
-  swigdef.append(['-c++', '-python'])
+  swigdef.append(['-c++', '-python','-Isrc', '-Iinclude', '-v'])
   pysndobj.Append(SWIGFLAGS=swigdef)
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(LIBS= ['sndobj'])
   if getPlatform() == 'macosx':
-    pysndobj.Prepend(CPPPATH=["/System/Library/Frameworks/Python.framework/Headers"])
+    pysndobj.Prepend(CPPPATH=["/System/Library/Frameworks/Python.framework/Headers", 'src'])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
-    pymod = pysndobj.Program('_sndobj.so', 'src/AudioDefs.i')
+    pymod = pysndobj.Program('python/_sndobj.so', 'python/AudioDefs.i')
+    pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
   if getPlatform() == 'linux':
     pysndobj.Prepend(CPPPATH=["/usr/lib/python"])
-    pysrcs = pysndobj.SharedObject('src/AudioDefs.i')
-    pymod = pysndobj.SharedLibrary('lib/snobj', 'src/AudioDefs.', SHLIBPREFIX='_')
-
+    pymod = pysndobj.SharedLibrary('python/sndobj', 'python/AudioDefs.i', SHLIBPREFIX='_')
   Depends(pymod,sndobjlib)
 
 ####################################################################

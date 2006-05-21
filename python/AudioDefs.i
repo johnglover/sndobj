@@ -1,10 +1,8 @@
-
 // Copyright (c)Victor Lazzarini, 1997-2004
 // See License.txt for a disclaimer of all warranties
 // and licensing information
 
-// AudioDefs.h  SndObj Library Defines & Headers
-// Base Classes
+// AudioDefs.i  SndObj Wrapper Interface
 
 %module sndobj
 %{
@@ -13,6 +11,7 @@
 #include "SndThread.h" // needs pthread library
 #endif  
 
+// Base Classes
 #include "SndObj.h"
 #include "SndIO.h" 
 #include "Table.h"

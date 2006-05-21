@@ -21,6 +21,8 @@ AudioDeviceID m_dev;
 float** m_inbuffs;
 float** m_outbuffs;
 
+ int m_sleept;
+
 AudioStreamBasicDescription m_format;
 unsigned int m_bufframes;
 unsigned int m_buffsize;
@@ -47,6 +49,7 @@ ADIOProc(const AudioBufferList *input, AudioBufferList *output, SndCoreAudio* cd
 
 short Read();
 short Write();
+ void SetSleepTime(int t) { m_sleept = t; }
 char* ErrorMessage();
 
 
