@@ -41,7 +41,8 @@ opt.AddOptions(
 	('prefix', 'install prefix', '/usr/local'), 
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
-        BoolOption('pythonmodule', 'build python module', False)
+        BoolOption('pythonmodule', 'build python module', False),
+        ('install_name', 'on OSX, the dynamic library full install pathname', 'lib/libsndobj.dylib')
 	)
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -114,9 +115,11 @@ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        rtio = False
 
+env.Append(CPPPATH= Split('./include'))
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
+examples = env.Copy()
 ######################################################################
 #
 # sources
@@ -192,7 +195,8 @@ if not env['PLATFORM'] == 'win32':
 else:
    flags = "-GX -GB -O2" + env['flags']
 
-env.Append(CPPPATH= Split('./include'))
+if getPlatform() == 'macosx':
+   env.Append(LINKFLAGS=['-install_name', env['install_name']])
 if getPlatform() != 'win':
   sndobjlib = env.SharedLibrary('lib/sndobj', sources, CCFLAGS=flags)
   Depends(sndobjlib, hdrs)
@@ -229,11 +233,11 @@ if swigcheck and env['pythonmodule']:
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(LIBS= ['sndobj'])
   if getPlatform() == 'macosx':
-    pysndobj.Prepend(CPPPATH=["-Iinclude", "/System/Library/Frameworks/Python.framework/Headers"])
+    pysndobj.Prepend(CPPPATH=["/System/Library/Frameworks/Python.framework/Headers"])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
     pymod = pysndobj.Program('_sndobj.so', 'src/AudioDefs.i')
   if getPlatform() == 'linux':
-    pysndobj.Prepend(CPPPATH=["-Iinclude", "/usr/lib/python"])
+    pysndobj.Prepend(CPPPATH=["/usr/lib/python"])
     pysrcs = pysndobj.SharedObject('src/AudioDefs.i')
     pymod = pysndobj.SharedLibrary('lib/snobj', 'src/AudioDefs.', SHLIBPREFIX='_')
 
@@ -243,7 +247,7 @@ if swigcheck and env['pythonmodule']:
 #
 # example programs
 
-examples = env.Copy()
+
 examples.Append(LIBPATH='./lib')
 examples.Append(LIBS= ['sndobj'])
 if getPlatform() == 'linux' and env['alsa']:

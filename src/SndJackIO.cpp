@@ -286,8 +286,7 @@ short
 
 short 
 SndJackIO::Read(){
-   if(!m_error){
-     while(!m_inused[m_incurbuff]) usleep(100);
+   if(!m_error){    
      for(m_vecpos=0; m_vecpos  < m_vecsize*m_channels;m_vecpos++){
        m_output[m_vecpos] = m_inbuff[m_incurbuff][m_incount];
        m_inbuff[m_incurbuff][m_incount] = 0.f;
@@ -297,6 +296,7 @@ SndJackIO::Read(){
          m_incurbuff++;
 	 m_incurbuff %= m_buffno;
 	 m_incount = 0;
+         while(!m_inused[m_incurbuff]) usleep(100);
        }
      }
      return 1;

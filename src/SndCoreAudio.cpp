@@ -118,11 +118,13 @@ if(!(m_outbuffs[i] = new float[m_bufframes*m_channels])){
 m_error = 25;
 return;
 }
-m_inused[i] = m_outused[i] = true;
+ memset(m_outbuffs[i], 0, m_bufframes*m_channels*sizeof(float));
+ memset(m_inbuffs[i], 0, m_bufframes*m_channels*sizeof(float));
+m_inused[i] = m_outused[i] = false;
 }
 
 m_incurbuff = m_outcurbuff = m_iocurbuff = 0;
-m_incount = m_outcount = 0;
+m_incount = m_outcount = m_buffitems;
 
 AudioDeviceAddIOProc(m_dev, SndObj_IOProcEntry, this);
 AudioDeviceStart(m_dev, SndObj_IOProcEntry);
@@ -164,7 +166,7 @@ for(int i = 0; i < items; i++){
       
 cdata->m_outused[buff] = cdata->m_inused[buff] = true;      
 buff++;
-buff %= cdata->m_buffnos;
+ if(buff == cdata->m_buffnos) buff=0;
 cdata->m_iocurbuff = buff;
 
 return 0;
@@ -175,19 +177,20 @@ SndCoreAudio::Write(){
  if(!m_error){
 int i;
  for(m_vecpos = 0; m_vecpos < m_vecsize; 
-              m_vecpos++){ 
+              m_vecpos++){
+      if(m_outcount == m_buffitems){           
+            m_outused[m_outcurbuff] = false;  
+            m_outcurbuff++;
+            if(m_outcurbuff == m_buffnos) m_outcurbuff=0;
+            m_outcount = 0; 
+            while(!m_outused[m_outcurbuff]) usleep(m_sleept);
+                  }
       for(i = 0; i < m_channels; i++){
         m_outbuffs[m_outcurbuff][m_outcount+i] = (m_IOobjs[i] ?
            m_IOobjs[i]->Output(m_vecpos)/m_norm: 0.f);
            } 
       m_outcount+=m_channels;
-      if(m_outcount == m_buffitems){           
-            m_outused[m_outcurbuff] = false;  
-            m_outcurbuff++;
-            m_outcurbuff %= m_buffnos;
-            m_outcount = 0; 
-            while(!m_outused[m_outcurbuff]) usleep(m_sleept);
-                  }
+      
   } // for
   
   return 1;
@@ -203,17 +206,17 @@ SndCoreAudio::Read(){
  
  for(m_vecpos = 0; m_vecpos < m_vecsize*m_channels; 
               m_vecpos++){
-   // while(!m_inused[m_incurbuff]) usleep(100);
-      m_output[m_vecpos] = m_inbuffs[m_incurbuff][m_incount]*m_norm;
-      m_inbuffs[m_incurbuff][m_incount] = 0.f;
-      m_incount++;
-      if(m_incount == m_buffitems){           
+    if(m_incount == m_buffitems){           
             m_inused[m_incurbuff] = false;  
             m_incurbuff++;
-            m_incurbuff %= m_buffnos;
+            if(m_incurbuff == m_buffnos) m_incurbuff = 0;
             m_incount = 0;
             while(!m_inused[m_incurbuff]) usleep(m_sleept);
        }
+      m_output[m_vecpos] = m_inbuffs[m_incurbuff][m_incount]*m_norm;
+      m_inbuffs[m_incurbuff][m_incount] = 0.f;
+      m_incount++;
+      
   } // for
   return 1;
  } // if no error
