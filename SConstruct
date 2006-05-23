@@ -1,4 +1,3 @@
-
 ######################################################################
 #
 # scons build system for SndObj
@@ -34,15 +33,16 @@ def getPlatform():
 
 opt = Options(['options.cache'])
 opt.AddOptions(
-	BoolOption('alsa', 'On linux, build with alsa support', True),
+	BoolOption('alsa', 'on linux, build with alsa support', True),
 	BoolOption('oss',  'on unix or linux, build with OSS support', False),
         BoolOption('jack', 'on linux or OSX, build with Jack support', True),
 	('flags', 'additional compile flags', ""),
-	('prefix', 'install prefix', '/usr/local'), 
+	('prefix', 'on linux, install prefix', '/usr/local'), 
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
-        ('install_name', 'on OSX, the dynamic library full install pathname', 'lib/libsndobj.dylib')
+        ('install_name', 'on OSX, the dynamic library full install pathname', 'lib/libsndobj.dylib'),
+        ('pythonpath', 'python install path', '')
 	)
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -71,6 +71,8 @@ if getPlatform() == 'linux':
           env.Append(CPPDEFINES=Split('JACK'))
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
+        if env['pythonpath'] == '':
+          pythonpath = '/usr/lib/python'
 
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
@@ -81,6 +83,8 @@ if getPlatform() == 'win':
         env.Append(LIBPATH=['lib'])
         rtio = True
         jackFound = False
+        if env['pythonpath'] == '':
+          pythonpath = 'c:\\Python23'
 
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
@@ -104,6 +108,8 @@ if getPlatform() == 'macosx':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         rtio = True
+        if env['pythonpath'] == '':
+          pythonpath = '/System/Library/Frameworks/Python.framework'
 
 if getPlatform() == 'sgi':
         print "OS is SGI/Irix..."
@@ -115,11 +121,17 @@ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        rtio = False
 
+if not env['PLATFORM'] == 'win32':
+   flags = "-O3 " + env['flags']
+else:
+   flags = "-GX -GB -O2" + env['flags']
+
 env.Append(CPPPATH= Split('./include'))
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
 examples = env.Copy()
+
 ######################################################################
 #
 # sources
@@ -190,41 +202,43 @@ sources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
 ######################################################################
 #
 # build
-if not env['PLATFORM'] == 'win32':
-   flags = "-O3 " + env['flags']
-else:
-   flags = "-GX -GB -O2" + env['flags']
 
 if getPlatform() == 'macosx':
    env.Append(LINKFLAGS=['-install_name', env['install_name']])
 if getPlatform() != 'win':
   sndobjlib = env.SharedLibrary('lib/sndobj', sources, CCFLAGS=flags)
+  if not env['nostaticlib']:
+    sndobjliba =  env.Library('lib/sndobj',sources, CCFLAGS=flags)
+    Depends(sndobjliba, hdrs)
   Depends(sndobjlib, hdrs)
-if not env['nostaticlib']:
-  sndobjliba =  env.Library('lib/sndobj',sources, CCFLAGS=flags)
-  Depends(sndobjliba, hdrs)
+else:
+  sndobjlib = Library('lib/sndobj', sources, CCFLAGS=flags)
+  Depends(sndobjlib, hdrs)
+
 
 ######################################################################
 #
 # install
 
-if not getPlatform() == 'win':
+if getPlatform() != 'win':
   libdest = env['prefix']+'/lib'
-  print "installing dynamic module libsndobj.so in %s" % libdest
+  print "installing dynamic SndObj module in %s" % libdest
   env.Install(libdest, sndobjlib)
   if not env['nostaticlib']:
-	print "installing static library libsndobj.a in %s" % libdest
+	print "installing static SndObj library in %s" % libdest
 	env.Install(libdest, sndobjliba)
-
   incdest = env['prefix'] + '/include/SndObj/'
   print "installing headers in %s " % incdest
-  # headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
-  # for header in headers:
-  #	env.Execute(Chmod(header, 0555))
-  #	env.Install(incdest, header)
-  env.Alias('install', env['prefix'])
+  headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
+  for header in headers:
+    #	env.Execute(Chmod(header, 0555)
+    if(header != './include/SndObj/CVS'):
+  	env.Install(incdest, header)
+
+env.Alias('install', env['prefix'])
 
 ####################################################################
+# 
 # Python module
 
 if swigcheck and env['pythonmodule']:
@@ -233,14 +247,25 @@ if swigcheck and env['pythonmodule']:
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(LIBS= ['sndobj'])
   if getPlatform() == 'macosx':
-    pysndobj.Prepend(CPPPATH=["/System/Library/Frameworks/Python.framework/Headers", 'src'])
+    pysndobj.Prepend(CPPPATH=["%s/Headers" % pythonpath, 'src'])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
-    pymod = pysndobj.Program('python/_sndobj.so', 'python/AudioDefs.i')
-    pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
+    pymod = pysndobj.Program('python/_sndobj.so', pywrap)
+    if env['install_name'] == 'lib/libsndobj.dylib':
+       pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
+    else:
+       pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
+    Depends(pymod, sndobjlib)
   if getPlatform() == 'linux':
-    pysndobj.Prepend(CPPPATH=["/usr/lib/python"])
-    pymod = pysndobj.SharedLibrary('python/sndobj', 'python/AudioDefs.i', SHLIBPREFIX='_')
-  Depends(pymod,sndobjlib)
+    pysndobj.Prepend(CPPPATH=pythonpath)
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
+    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
+    Depends(pymod,sndobjlib)
+  if getPlatform() == 'win':
+    pysndobj.Prepend(CPPPATH=pythonpath)
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
+    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
+    Depends(pymod,sndobjlib)
 
 ####################################################################
 #
