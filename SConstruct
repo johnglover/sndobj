@@ -37,12 +37,12 @@ opt.AddOptions(
 	BoolOption('oss',  'on unix or linux, build with OSS support', False),
         BoolOption('jack', 'on linux or OSX, build with Jack support', True),
 	('flags', 'additional compile flags', ""),
-	('prefix', 'on linux, install prefix', '/usr/local'), 
+	('prefix', 'install prefix of headers, static lib and shared lib (not on OSX: see install_name option)', '/usr/local'), 
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
         ('install_name', 'on OSX, the dynamic library full install pathname', 'lib/libsndobj.dylib'),
-        ('pythonpath', 'python install path', '')
+        ('pythonpath', 'python install path (defaults to usual places)', '')
 	)
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -203,17 +203,18 @@ sources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
 #
 # build
 
-if getPlatform() == 'macosx':
-   env.Append(LINKFLAGS=['-install_name', env['install_name']])
 if getPlatform() != 'win':
-  sndobjlib = env.SharedLibrary('lib/sndobj', sources, CCFLAGS=flags)
+  if getPlatform() == 'macosx':
+   env.Append(LINKFLAGS=['-install_name', env['install_name']])
+   sndobjlib = env.SharedLibrary(env['install_name'], sources, CCFLAGS=flags)
+  else:
+   sndobjlib = env.SharedLibrary('lib/sndobj', sources, CCFLAGS=flags)
   if not env['nostaticlib']:
     sndobjliba =  env.Library('lib/sndobj',sources, CCFLAGS=flags)
     Depends(sndobjliba, hdrs)
-  Depends(sndobjlib, hdrs)
 else:
   sndobjlib = Library('lib/sndobj', sources, CCFLAGS=flags)
-  Depends(sndobjlib, hdrs)
+Depends(sndobjlib, hdrs)
 
 
 ######################################################################
@@ -221,9 +222,12 @@ else:
 # install
 
 if getPlatform() != 'win':
-  libdest = env['prefix']+'/lib'
-  print "installing dynamic SndObj module in %s" % libdest
-  env.Install(libdest, sndobjlib)
+  if getPlatform() != 'macosx':
+    libdest = env['prefix']+'/lib/libsndobj.so'
+    env.InstallAs(libdest, sndobjlib)
+    print "installing dynamic SndObj module in %s" % libdest
+  else:
+    print "installing SndObj dylib in %s" % env['install_name']  
   if not env['nostaticlib']:
 	print "installing static SndObj library in %s" % libdest
 	env.Install(libdest, sndobjliba)
