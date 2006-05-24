@@ -51,7 +51,7 @@ friend
 static
 #endif 
 void  
-#ifndef SWIGPYTHON
+#ifndef SWIGFIX
 CALLBACK
 #endif
 midiInputHandler(HMIDIIN, UINT wMsg, DWORD dwInstance,

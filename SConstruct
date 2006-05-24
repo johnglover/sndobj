@@ -8,7 +8,7 @@
 import sys
 import os
 
-env = Environment()
+env = Environment(ENV = {'PATH' : os.environ['PATH']})
 env.SConsignFile()
 env.CacheDir('./obj')
 
@@ -78,12 +78,16 @@ if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="WIN")
-        swigdef = ['-DWIN']
-        env.Append(CPPPATH='msvc6.0')
+        swigdef = ['-DWIN', ['-DSWIGFIX']]
+        msvcincludes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
+        msvclibs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
+        env.Append(CPPPATH=['msvc6.0', msvcincludes])
         env.Append(LIBS=['winmm', 'pthreadVC'])
-        env.Append(LIBPATH=['lib'])
+        env.Append(LIBPATH=['lib', msvclibs])
         rtio = True
         jackFound = False
+        msvcincludes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
+        msvclibs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
         if env['pythonpath'] == '':
           pythonpath = 'c:\\Python23'
 
@@ -254,7 +258,7 @@ if swigcheck and env['pythonmodule']:
   if getPlatform() == 'macosx':
     pysndobj.Prepend(CPPPATH=["%s/Headers" % pythonpath, 'src'])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
-    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.Program('python/_sndobj.so', pywrap)
     if env['install_name'] == 'lib/libsndobj.dylib':
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
@@ -268,8 +272,10 @@ if swigcheck and env['pythonmodule']:
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
     Depends(pymod,sndobjlib)
   if getPlatform() == 'win':
-    pysndobj.Prepend(CPPPATH=pythonpath)
-    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
+    pysndobj.Prepend(CPPPATH=[pythonpath+'\\include', 'src'])
+    pysndobj.Prepend(LIBPATH=[pythonpath+'\\libs'])
+    pysndobj.Prepend(LIBS=['lib/sndobj.lib'])
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
     Depends(pymod,sndobjlib)
 
