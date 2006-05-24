@@ -78,6 +78,7 @@ if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="WIN")
+        swigdef = ['-DWIN']
         env.Append(CPPPATH='msvc6.0')
         env.Append(LIBS=['winmm', 'pthreadVC'])
         env.Append(LIBPATH=['lib'])
@@ -126,7 +127,7 @@ if not env['PLATFORM'] == 'win32':
 else:
    flags = "-GX -GB -O2" + env['flags']
 
-env.Append(CPPPATH= Split('./include'))
+env.Prepend(CPPPATH= ['include'])
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
@@ -213,7 +214,7 @@ if getPlatform() != 'win':
     sndobjliba =  env.Library('lib/sndobj',sources, CCFLAGS=flags)
     Depends(sndobjliba, hdrs)
 else:
-  sndobjlib = Library('lib/sndobj', sources, CCFLAGS=flags)
+  sndobjlib = env.Library('lib/sndobj', sources, CCFLAGS=flags)
 Depends(sndobjlib, hdrs)
 
 
