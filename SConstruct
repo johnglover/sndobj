@@ -85,6 +85,7 @@ if getPlatform() == 'win':
           libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
         else: # mingw ? Set the mingwin paths here
           print 'not using MSVC (mingw?)...'
+          env.Append(CPPDEFINES=['CYGWIN'])
           includes = ''
           libs     = ''
         env.Append(CPPPATH=[includes])
