@@ -72,7 +72,7 @@ if getPlatform() == 'linux':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         if env['pythonpath'] == '':
-          pythonpath = '/usr/lib/python'
+          pythonpath = '/usr/include/python2.4'
 
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
@@ -262,7 +262,8 @@ if swigcheck and env['pythonmodule']:
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
     Depends(pymod, sndobjlib)
   if getPlatform() == 'linux':
-    pysndobj.Prepend(CPPPATH=pythonpath)
+    pysndobj.Prepend(CPPPATH=[pythonpath, 'src'])
+    pysndobj.Prepend(LIBS=['python2.4'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i')
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
     Depends(pymod,sndobjlib)
