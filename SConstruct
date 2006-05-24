@@ -16,6 +16,9 @@ env.CacheDir('./obj')
 #
 # general configuration
 
+def getVersion():
+    return sys.version[:3]    
+
 def getPlatform():
     if sys.platform[:5] == 'linux':
         return 'linux'
@@ -72,7 +75,7 @@ if getPlatform() == 'linux':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         if env['pythonpath'] == '':
-          pythonpath = '/usr/include/python2.4'
+          pythonpath = '/usr/include/python' + getVersion()
 
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
@@ -98,7 +101,7 @@ if getPlatform() == 'win':
         msvcincludes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
         msvclibs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
         if env['pythonpath'] == '':
-          pythonpath = 'c:\\Python23'
+          pythonpath = 'c:\\Python%c%c' % (getVersion()[0], getVersion()[2])
 
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
@@ -271,7 +274,7 @@ if swigcheck and env['pythonmodule']:
     Depends(pymod, sndobjlib)
   if getPlatform() == 'linux':
     pysndobj.Prepend(CPPPATH=[pythonpath, 'src'])
-    pysndobj.Prepend(LIBS=['python2.4'])
+    pysndobj.Prepend(LIBS=['python'+getVersion()])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i')
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
     Depends(pymod,sndobjlib)
