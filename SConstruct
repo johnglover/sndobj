@@ -134,7 +134,7 @@ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        rtio = False
 
-if not env['PLATFORM'] == 'win32':
+if not 'msvc' in env['TOOLS']:
    flags = "-O3 " + env['flags']
 else:
    flags = "-GX -GB -O2" + env['flags']
