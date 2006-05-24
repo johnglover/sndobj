@@ -79,11 +79,19 @@ if getPlatform() == 'win':
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="WIN")
         swigdef = ['-DWIN', ['-DSWIGFIX']]
-        msvcincludes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
-        msvclibs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
-        env.Append(CPPPATH=['msvc6.0', msvcincludes])
+        if 'msvc'in env['TOOLS']: # MSVC
+          print 'using MSVC...'
+          includes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
+          libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
+        else: # mingw ? Set the mingwin paths here
+          print 'not using MSVC (mingw?)...'
+          includes = ''
+          libs     = ''
+        env.Append(CPPPATH=[includes])
+ 	env.Append(LIBPATH=[libs])
+        env.Append(CPPPATH=['msvc6.0'])
+ 	env.Append(LIBPATH=['lib'])
         env.Append(LIBS=['winmm', 'pthreadVC'])
-        env.Append(LIBPATH=['lib', msvclibs])
         rtio = True
         jackFound = False
         msvcincludes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
@@ -230,14 +238,9 @@ if getPlatform() != 'win':
   if getPlatform() != 'macosx':
     libdest = env['prefix']+'/lib/libsndobj.so'
     env.InstallAs(libdest, sndobjlib)
-    print "installing dynamic SndObj module in %s" % libdest
-  else:
-    print "installing SndObj dylib in %s" % env['install_name']  
   if not env['nostaticlib']:
-	print "installing static SndObj library in %s" % libdest
 	env.Install(libdest, sndobjliba)
   incdest = env['prefix'] + '/include/SndObj/'
-  print "installing headers in %s " % incdest
   headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
   for header in headers:
     #	env.Execute(Chmod(header, 0555)
