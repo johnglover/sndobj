@@ -81,35 +81,36 @@ if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="WIN")
-        swigdef = ['-DWIN', ['-DSWIGFIX']]
+        swigdef = ['-DWIN', '-DSWIGFIX']
         if 'msvc'in env['TOOLS']: # MSVC
           print 'using MSVC...'
           includes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
           libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
-        else: # mingw ? Set the mingwin paths here
+          env.Append(CPPPATH=['msvc6.0'])
+        else: # mingw ? Set any outstanding mingwin paths here
           print 'not using MSVC (mingw?)...'
           env.Append(CPPDEFINES=['CYGWIN'])
           includes = ''
           libs     = ''
         env.Append(CPPPATH=[includes])
  	env.Append(LIBPATH=[libs])
-        env.Append(CPPPATH=['msvc6.0'])
  	env.Append(LIBPATH=['lib'])
         env.Append(LIBS=['winmm', 'pthreadVC'])
         rtio = True
         jackFound = False
-        msvcincludes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
-        msvclibs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
         if env['pythonpath'] == '':
           pythonpath = 'c:\\Python%c%c' % (getVersion()[0], getVersion()[2])
 
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
 	env.Append(CPPDEFINES=['WIN', 'CYGWIN'])
-        env.Append(LIBS=['winmm', 'pthreadVC'])
+        swigdef = ['-DWIN', '-DSWIGFIX']
+        env.Append(LIBS=['winmm', 'pthread'])
         env.Append(LIBPATH=['lib'])
         rtio = True
         jackFound = False
+        if env['pythonpath'] == '':
+          pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
 
 if getPlatform() == 'macosx':
         print "OS is MacOSX"
@@ -132,11 +133,19 @@ if getPlatform() == 'sgi':
         print "OS is SGI/Irix..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
         env.Append(CPPDEFINES="SGI")
+        swigdef = ['-DSGI']
+        env.Append(LIBS=['audio', 'midi', 'pthread'])
         rtio = True
+        jackFound = False
+        if env['pythonpath'] == '':
+          pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
 
 if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        rtio = False
+       jackFound = False
+       if env['pythonpath'] == '':
+          pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
 
 if not 'msvc' in env['TOOLS']:
    flags = "-O3 " + env['flags']
@@ -271,20 +280,18 @@ if swigcheck and env['pythonmodule']:
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
     else:
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
-    Depends(pymod, sndobjlib)
-  if getPlatform() == 'linux':
-    pysndobj.Prepend(CPPPATH=[pythonpath, 'src'])
-    pysndobj.Prepend(LIBS=['python'+getVersion()])
-    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
-    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
-    Depends(pymod,sndobjlib)
-  if getPlatform() == 'win':
+  elif getPlatform() == 'win':
     pysndobj.Prepend(CPPPATH=[pythonpath+'\\include', 'src'])
     pysndobj.Prepend(LIBPATH=[pythonpath+'\\libs'])
     pysndobj.Prepend(LIBS=['lib/sndobj.lib'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
-    Depends(pymod,sndobjlib)
+  else:
+    pysndobj.Prepend(CPPPATH=[pythonpath, 'src'])
+    pysndobj.Prepend(LIBS=['python'+getVersion()])
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
+    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
+  Depends(pymod,sndobjlib)
 
 ####################################################################
 #
