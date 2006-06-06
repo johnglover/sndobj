@@ -101,16 +101,18 @@ PVFilter::DoProcess(){
 
         amnt = amnt > 1 ? 1.f : (amnt ? amnt : 0.f);
 
-		if(m_dynamic)
+		if(m_dynamic){
 		fil = m_input2->Output(0);
+		}
 		else
 		fil = m_spectable->Lookup(0);
 
 		mag = m_input->Output(0);
     	m_output[m_vecpos] = mag*(1-amnt)+mag*fil*amnt;
 
-		if(m_dynamic)
+		if(m_dynamic){
 		fil = m_input2->Output(1);
+		}
 		else
 		fil = m_spectable->Lookup(1);
 
@@ -121,8 +123,9 @@ PVFilter::DoProcess(){
 			
 			mag = m_input->Output(m_vecpos);
 			freq = m_input->Output(m_vecpos+1);
-			if(m_dynamic) 
+			if(m_dynamic) {
 			 fil = m_input2->Output(m_vecpos);
+			}
 			else
 			 fil = m_spectable->Lookup(m_vecpos);
 

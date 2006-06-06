@@ -33,8 +33,9 @@ AddMsg("table", 22);
 
 if(spectab->GetLen() >= vecsize) {
 m_spectable = spectab;
-m_dynamic = false;
 }
+m_dynamic = false;
+
 
 }
 
@@ -69,17 +70,24 @@ SpecMult::DoProcess(){
 if(!m_error){
  if(m_input && (m_input2 || !m_dynamic)){
 	 float re1,re2,im1,im2;
+	  
 	 for(m_vecpos = 2; m_vecpos < m_vecsize; m_vecpos+=2) {
-
+     
 		// every complex pair except 0 and nyquist
 		 if(m_enable) {
         
           re1 = m_input->Output(m_vecpos);
-		  if(m_dynamic) re2 = m_input2->Output(m_vecpos); 
-		  else re2 = m_spectable->Lookup(m_vecpos); 
-          im1 = m_input->Output(m_vecpos+1);
-		  if(m_dynamic) im2 = m_input2->Output(m_vecpos+1);      
-		  else re2 = m_spectable->Lookup(m_vecpos+1); 
+		  if(m_dynamic){
+			  re2 = m_input2->Output(m_vecpos); 
+		  }
+		  else re2 = m_spectable->Lookup(m_vecpos);
+           
+		  im1 = m_input->Output(m_vecpos+1);
+		  if(m_dynamic) {
+			im2 = m_input2->Output(m_vecpos+1);
+		  }
+		  else 
+			  re2 = m_spectable->Lookup(m_vecpos+1); 
 		// complex multiplication (a+ib)*(c+id)
 		// (ac - bd) - i(ad + bc)  
 		  m_output[m_vecpos] = re1*re2 - im1*im2;
