@@ -267,7 +267,7 @@ env.Alias('install', env['prefix'])
 # Python module
 
 if swigcheck and env['pythonmodule']:
-  swigdef.append(['-c++', '-python','-Isrc', '-Iinclude', '-v'])
+  swigdef.append(['-lcpointer.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
   pysndobj.Append(SWIGFLAGS=swigdef)
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(LIBS= ['sndobj'])

@@ -159,7 +159,7 @@
 #include "ImpulseTable.h"    // linear FIR coeffs 
 
 %}
-
+%include cpointer.i
 %ignore SndObj::SndObj(SndObj &);
 %ignore SndObj::operator=(SndObj);
 %ignore Pitch::Pitch(float, SndObj*, int =0, int =DEF_VECSIZE, float =DEF_SR);
