@@ -37,7 +37,8 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /G6 /MT /W3 /GX /O2 /I "..\include" /I "." /D "_LIB" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR /YX /FD /c
+# ADD CPP /nologo /MT /w /W0 /O2 /I "..\include" /I "." /D "_LIB" /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "WIN" /D "WINPTHREAD" /FR /FD /c
+# SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
 # ADD RSC /l 0x409 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -71,6 +72,8 @@ SOURCE=..\src\rfftw\executor.c
 # Begin Source File
 
 SOURCE=..\src\rfftw\fcr_1.c
+# ADD CPP /W3
+# SUBTRACT CPP /O<none>
 # End Source File
 # Begin Source File
 
@@ -79,6 +82,7 @@ SOURCE=..\src\rfftw\fcr_10.c
 # Begin Source File
 
 SOURCE=..\src\rfftw\fcr_11.c
+# ADD CPP /O2
 # End Source File
 # Begin Source File
 

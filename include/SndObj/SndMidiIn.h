@@ -50,8 +50,12 @@ friend
 #ifdef VISUALC
 static
 #endif 
-void CALLBACK midiInputHandler(HMIDIIN, UINT wMsg, DWORD dwInstance,
-        DWORD dwParam1, DWORD dwParam2);
+void  
+#ifndef SWIGFIX
+CALLBACK
+#endif
+midiInputHandler(HMIDIIN, UINT wMsg, DWORD dwInstance,
+    DWORD dwParam1, DWORD dwParam2);
 
 #endif 
 

@@ -76,7 +76,7 @@ if(!m_error){
 		// every complex pair except 0 and nyquist
 		 if(m_enable) {
         
-          re1 = m_input->Output(m_vecpos);
+                  re1 = m_input->Output(m_vecpos);
 		  if(m_dynamic){
 			  re2 = m_input2->Output(m_vecpos); 
 		  }
@@ -87,7 +87,7 @@ if(!m_error){
 			im2 = m_input2->Output(m_vecpos+1);
 		  }
 		  else 
-			  re2 = m_spectable->Lookup(m_vecpos+1); 
+			  im2 = m_spectable->Lookup(m_vecpos+1); 
 		// complex multiplication (a+ib)*(c+id)
 		// (ac - bd) - i(ad + bc)  
 		  m_output[m_vecpos] = re1*re2 - im1*im2;
