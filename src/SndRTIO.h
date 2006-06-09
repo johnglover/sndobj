@@ -15,10 +15,10 @@
 #include "SndIO.h"
 
 #ifdef MACOSX    // Mac CoreAudio
-
 #include <CoreAudio.h>
-const int DEFAULT_DEV = 0xFFFFFFFF;
-
+const int DEF_DEV = 0xFFFFFFFF;
+const int DEF_BSIZE = 512;
+const int DEF_PERIOD = 4;
 #endif
 
 #ifdef OSS             // Open Sound System (Linux, etc...)
@@ -26,30 +26,40 @@ const int DEFAULT_DEV = 0xFFFFFFFF;
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
-
+typedef int AudioDeviceID;
+const char* DEF_DEV = "/dev/dsp";
+const int DEF_BSIZE = 512;
+const int DEF_PERIOD = 512;
 #endif
 
 #ifdef ALSA
-
 #include <alsa/asoundlib.h>
-
+typedef in AudioDeviceID;
+const char* DEF_DEV="plughw:0,0";
+const int DEF_BSIZE = 1024;
+const int DEF_PERIOD = 2;
 #endif
 
 
 #ifdef SGI           // SGI on Irix
 #include <audio.h>
-
 const int AL_DEFAULT = AL_DEFAULT_OUTPUT;
+typedef int AudioDeviceID;
+const int DEF_DEV = AL_DEFAULT; 
+const int DEF_BSIZE = 512;
+const int DEF_PERIOD = 512;
 #endif
 
 #ifdef WIN           // Windows MME
 #include <Windows.h>
 #include <Mmsystem.h>
-
-
+typedef int AudioDeviceID;
 void ListDevices();
 char* InputDeviceName(int dev, char* name);
 char* OutputDeviceName(int dev, char* name);
+const int DEF_DEV = WAVE_MAPPER;
+const int DEF_BSIZE = 256;
+const int DEF_PERIOD = 10;
 #endif
 
 class SndRTIO : public SndIO {
@@ -62,15 +72,10 @@ class SndRTIO : public SndIO {
   int m_buffsize; // buffer size
   int m_items;     // items
   int m_encoding;  // encoding
-      
-#if defined  (WIN) || defined (OSS) || defined (SGI)   
-  int m_dev;       // IO device ID
-#endif
+  AudioDeviceID m_dev;   // device ID
   int m_mode;
 
 #ifdef MACOSX
-
-  AudioDeviceID m_dev;
 
   float** m_inbuffs;
   float** m_outbuffs;
@@ -115,7 +120,6 @@ class SndRTIO : public SndIO {
   int m_status;
   bool m_firsttime; 
 
-
 #endif
 
 #ifdef SGI
@@ -150,59 +154,62 @@ class SndRTIO : public SndIO {
   void Reads();  // read functions
   void Readc();
 #endif
- public:
 
-#ifdef OSS
-  SndRTIO(short channels, int mode, int buffsize = 512, int DMAbuffsize = 512,
-	  int encoding = SHORTSAM_LE, SndObj** inputs = 0, int vecsize = DEF_VECSIZE, 
-	  float sr=DEF_SR, char* device = "/dev/dsp");
-
+  void SndRTIO_init(short, int, int=DEF_BSIZE, int=DEF_PERIOD,int=SHORTSAM, 
+		    SndObj** =0,int=DEF_VECSIZE, float=DEF_SR, 
+#if defined (OSS) || defined (ALSA)           
+		    char*=DEF_DEV);
+#else 
+  AudioDeviceID=DEF_DEV);
 #endif
 
-#ifdef SGI	  
-  SndRTIO(short channels, int mode, int buffsize = 512, int DACqueue = 512,
-	  int encoding = SHORTSAM, SndObj** inputs=0, int vecsize = DEF_VECSIZE, 
-	  float sr=DEF_SR, int dev=AL_DEFAULT);
+
+public: 
+
+SndRTIO(short ch, int mode, int bsize = DEF_BSIZE, 
+        int period = DEF_PERIOD, int encoding = SHORTSAM, 
+        SndObj** input=0, int vsize= DEF_VECSIZE, float sr=DEF_SR, 
+#if defined(OSS) || defined(ALSA)
+        char* dev = DEF_DEV)
+#else
+     int dev = DEF_DEV)
 #endif
-
-#ifdef WIN
-  SndRTIO(short channels, int mode, int buffsize = 256, int buffno = 10,
-	  int encoding = SHORTSAM, SndObj** inputs=0, int vecsize = DEF_VECSIZE, 
-	  float sr=DEF_SR, int dev = WAVE_MAPPER);
-  void ResetBuffers(){ for(int n=0; n < m_buffno; n++) 
-      memset(m_buffer[n], 0, m_pwhdr[n]->dwBufferLength); 
-    m_firsttime = 1; m_ndx  = 0; m_count =  m_buffsize*m_channels; }
+#ifndef MACOSX
+: SndIO(ch, encoding*8,input,vsize, sr)
+#else
+: SndIO((ch < 2 ?  2 : ch), 
+        (encoding > 0 ? encoding : sizeof(float)*8), 
+         input, vsize, sr) 
 #endif
+{
+SndRTIO_init(ch,mode,bsize,period,encoding,input,vsize,sr,dev);
+}
 
-#ifdef MACOSX
-  SndRTIO(short channels, int mode, int buffsize = 512, int buffno = 4,
-	  int encoding = SHORTSAM, SndObj** inputs=0, 
-	  int vecsize = DEF_VECSIZE, 
-	  float sr=DEF_SR, AudioDeviceID dev = DEFAULT_DEV);
-
-  OSStatus
-    ADIOProc(const AudioBufferList *input,
-	     AudioBufferList *output,
-	     SndRTIO* cdata);
-
+SndRTIO() 
+#ifndef MACOSX
+  : SndIO(1,16,0,DEF_VECSIZE,DEF_SR)
+#else
+  : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
 #endif
-
-#ifdef ALSA
-  SndRTIO(short channels, int mode, int buffsize = 1024, int buffno = 2,
-	  int encoding = SHORTSAM_LE, SndObj** inputs = 0, int vecsize = DEF_VECSIZE, 
-	  float sr=DEF_SR, char* device = "plughw:0,0");
-
-#endif
-
-#ifdef SWIGPYTHON
-  SndRTIO() { };
-#endif
-
+ { SndRTIO_init(1, SND_OUTPUT); }
+SndRTIO(short channels, SndObj** input=0)
+#ifndef MACOSX
+  : SndIO(1,16,input,DEF_VECSIZE,DEF_SR)
+#else
+  : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
+#endif 
+{
+      SndRTIO_init(channels,SND_OUTPUT,DEF_BSIZE,DEF_PERIOD,SHORTSAM,input);
+}
   ~SndRTIO();
   short Write();
   short Read();
   char* ErrorMessage();
-      
+
+#ifdef MACOSX
+OSStatus ADIOProc(const AudioBufferList *input, AudioBufferList *output,
+	     SndRTIO* cdata);
+#endif   
 
 };
 

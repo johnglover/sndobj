@@ -57,6 +57,7 @@ class SndThread {
   public:
   
   SndThread();
+  SndThread(int n, SndObj** objlist, SndIO *out, SndIO *in=0);
   ~SndThread();
  
   int AddObj(SndObj *obj); // add to lists

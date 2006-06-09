@@ -24,6 +24,20 @@ SndThread::SndThread(){
   pthread_attr_init(&attrib);
 }
 
+SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
+
+  SndObjNo = 0;
+  InputNo = 0;
+  OutputNo = 0;
+  last = 0;
+  input =  0;
+  output = 0;
+  for(int i=0; i < n; i++)AddObj(objs[i]);
+  if(in) AddObj(in, SNDIO_IN);
+  if(out) AddObj(out, SNDIO_OUT);
+  status = OFF;
+  pthread_attr_init(&attrib);
+}
 SndThread::~SndThread(){
 
   SndLink<SndObj>* temp;

@@ -12,8 +12,8 @@
 #if defined (SGI) || defined (OSS) || defined (WIN) || defined (ALSA)
 
 #include "SndRTIO.h"
-
-SndRTIO :: SndRTIO(short channels, int mode, int buffsize,
+void
+SndRTIO :: SndRTIO_init(short channels, int mode, int buffsize,
 #if defined (WIN) || defined (ALSA)
 int buffno,
 #endif
@@ -32,8 +32,6 @@ int vecsize, float sr,
 #if defined (OSS) || defined (ALSA)
                      char* device) 
 #endif
-            : SndIO(channels, encoding*8,inputs,vecsize, sr)
-
 {
 
 m_mode = mode;
@@ -1545,12 +1543,9 @@ return ((SndRTIO *)cdata)->ADIOProc(input,output,(SndRTIO *)cdata);
 
 }
 
-SndRTIO::SndRTIO(short channels, int mode, int buffsize, int buffno,
+SndRTIO::SndRTIO_init(short channels, int mode, int buffsize, int buffno,
 		  int encoding, SndObj** inputs, int vecsize, 
-		   float sr, AudioDeviceID dev):
-                  SndIO((channels < 2 ?  2 : channels), 
-                  (encoding > 0 ? encoding : sizeof(float)*8), 
-                  inputs, vecsize, sr) {
+		   float sr, AudioDeviceID dev){
                   
 UInt32 psize;
 int i;

@@ -169,18 +169,23 @@
 %include"SndThread.h" // needs pthread library
 #endif  
 
+%include"SndObj.h"
+%include"SndIO.h" 
+%include"Table.h"
+
 %include "carrays.i"
 %array_functions(int, intp);
 %array_functions(float, floatp);
 %array_functions(double, doublep);
 
+%inline %{
+typedef SndObj* sndobjp;
+%}
+
 %array_class(int, intArray);
 %array_class(float, floatArray);
 %array_class(double, doubleArray)
-
-%include"SndObj.h"
-%include"SndIO.h" 
-%include"Table.h"
+%array_class(sndobjp, sndobjArray);
 
 // SndObj-derived
 %include"Oscil.h"    // Oscillators
@@ -194,7 +199,7 @@
 %include"SndRead.h"  // audio file input
 
 #if defined(OSS) || defined(SGI) || defined(WIN)
-%include"MidiIn.h"   // Midi input
+%include"MidiIn.h"   // Midi input 
 %include "Bend.h"    // pitch bend
 %include"MidiMap.h" 
 #endif
