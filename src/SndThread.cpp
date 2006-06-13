@@ -1,4 +1,4 @@
-// Copyright (c)Victor Lazzarini, 1997-2004
+// Copyright (c)Victor Lazzarini and Rory Walsh, 1997-2004
 // See License.txt for a disclaimer of all warranties
 // and licensing information
 
@@ -21,7 +21,9 @@ SndThread::SndThread(){
   input =  0;
   output = 0;
   status = OFF;
+#ifndef USE_WIN32THREADS
   pthread_attr_init(&attrib);
+#endif
 }
 
 SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
@@ -36,8 +38,11 @@ SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
   if(in) AddObj(in, SNDIO_IN);
   if(out) AddObj(out, SNDIO_OUT);
   status = OFF;
+#ifndef USE_WIN32THREADS
   pthread_attr_init(&attrib);
+#endif
 }
+
 SndThread::~SndThread(){
 
   SndLink<SndObj>* temp;
@@ -212,11 +217,18 @@ SndThread::Insert(SndObj* obj, SndObj* prev){
 
 int
 SndThread::ProcOn(){
-  
   status = ON; 
+#ifndef USE_WIN32THREADS
   if(pthread_create(&thread, &attrib, 
      (void * (*)(void *)) SndProcessThread,
      (void *)this)) return 0; 
+#else 
+     DWORD threadID;
+     HANDLE hThread;
+     if(_beginthread(
+       (void(*)(void *))SndProcessThread, 4096, (void *)this)
+                    ) return 0;        
+#endif   
   return status;
 
 }
