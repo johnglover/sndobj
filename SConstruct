@@ -83,15 +83,20 @@ if getPlatform() == 'win':
 	env.Append(CPPDEFINES="WIN")
         swigdef = ['-DWIN', '-DSWIGFIX']
         if 'msvc'in env['TOOLS']: # MSVC
+          separateLibs = False
           print 'using MSVC...'
           includes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
           libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
           env.Append(CPPPATH=['msvc6.0'])
+          pythonlib=''
         else: # mingw ? Set any outstanding mingwin paths here
-          print 'not using MSVC (mingw?)...'
-          env.Append(CPPDEFINES=['CYGWIN'])
+          separateLibs = True
+          print 'using MINGW...'
+          env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
+          swigdef.append(['-DUSE_WIN32THREADS'])
           includes = ''
           libs     = ''
+          pythonlib = 'python%c%c'% (getVersion()[0], getVersion()[2])
         env.Append(CPPPATH=[includes])
  	env.Append(LIBPATH=[libs])
  	env.Append(LIBPATH=['lib'])
@@ -103,7 +108,7 @@ if getPlatform() == 'win':
 
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
-	env.Append(CPPDEFINES=['WIN', 'CYGWIN'])
+	env.Append(CPPDEFINES=['WIN', 'GCC'])
         swigdef = ['-DWIN', '-DSWIGFIX']
         env.Append(LIBS=['winmm', 'pthread'])
         env.Append(LIBPATH=['lib'])
@@ -220,9 +225,9 @@ fcr_7.c fhf_4.c fn_64.c fni_8.c frc_9.c  ftwi_6.c wisdomio.c
 fcr_8.c fhf_5.c fn_7.c fni_9.c ftw_10.c ftwi_64.c """)
 
 
-sources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
-			  + tablesources + sndthrsources) + \
-		  map(lambda x: './src/rfftw/' + x, fftwsources)
+sndsources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
+			  + tablesources + sndthrsources) 
+rfftsources = map(lambda x: './src/rfftw/' + x, fftwsources)
 
 
 ######################################################################
@@ -230,16 +235,28 @@ sources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
 # build
 
 if getPlatform() != 'win':
+  sources = sndsources + rfftsources
   if getPlatform() == 'macosx':
    env.Append(LINKFLAGS=['-install_name', env['install_name']])
    sndobjlib = env.SharedLibrary(env['install_name'], sources, CCFLAGS=flags)
   else:
    sndobjlib = env.SharedLibrary('lib/sndobj', sources, CCFLAGS=flags)
+  deplibs = [sndobjlib]
+  baselibs = ['sndobj']
   if not env['nostaticlib']:
     sndobjliba =  env.Library('lib/sndobj',sources, CCFLAGS=flags)
+    deplibs.append([sndobjliba])
     Depends(sndobjliba, hdrs)
 else:
-  sndobjlib = env.Library('lib/sndobj', sources, CCFLAGS=flags)
+  if separateLibs:
+   rfftwlib = env.Library('lib/rfftw', rfftsources, CCFLAGS=flags)
+   sndobjlib = env.Library('lib/sndobj', sndsources, CCFLAGS=flags)
+   deplibs = [sndobjlib, rfftwlib]
+   baselibs = ['sndobj', 'rfftw']
+  else:
+   sndobjlib = env.Library('lib/sndobj', sndsources+rfftsources, CCFLAGS=flags)
+   deplibs = [sndobjlib]
+   baselibs = ['sndobj']
 Depends(sndobjlib, hdrs)
 
 
@@ -270,7 +287,7 @@ if swigcheck and env['pythonmodule']:
   swigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
   pysndobj.Append(SWIGFLAGS=swigdef)
   pysndobj.Append(LIBPATH='./lib')
-  pysndobj.Append(LIBS= ['sndobj'])
+  pysndobj.Prepend(LIBS=baselibs)
   if getPlatform() == 'macosx':
     pysndobj.Prepend(CPPPATH=["%s/Headers" % pythonpath, 'src'])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
@@ -283,7 +300,7 @@ if swigcheck and env['pythonmodule']:
   elif getPlatform() == 'win':
     pysndobj.Prepend(CPPPATH=[pythonpath+'\\include', 'src'])
     pysndobj.Prepend(LIBPATH=[pythonpath+'\\libs'])
-    pysndobj.Prepend(LIBS=['lib/sndobj.lib'])
+    pysndobj.Append(LIBS=[pythonlib])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
   else:
@@ -299,12 +316,7 @@ if swigcheck and env['pythonmodule']:
 
 
 examples.Append(LIBPATH='./lib')
-examples.Append(LIBS= ['sndobj'])
-if getPlatform() == 'linux' and env['alsa']:
-	 examples.Append(LIBS= ['asound'])
-
-if getPlatform() == 'win':
-   examples.Append(LIBS=['winmm'])
+examples.Prepend(LIBS=baselibs)
 
 def BuildExample(prog, example, source):
     obj = examples.Object(example, source, CCFLAGS=flags)
@@ -316,36 +328,36 @@ def BuildExample(prog, example, source):
 if jackFound:
        examples.Append(LIBS= ['jack'])
        schroeder_jack = BuildExample('./bin/jack_schroeder','./obj/jack_schroeder.o', 'src/examples/jack_schroeder.cpp')
-       examples.Depends(schroeder_jack, sndobjlib)
+       examples.Depends(schroeder_jack, deplibs)
        streson_jack =   BuildExample('./bin/jack_streson', './obj/jack_streson.o', 'src/examples/jack_streson.cpp')
-       Depends(streson_jack, sndobjlib)
+       Depends(streson_jack, deplibs)
 # realtime IO examples
 if rtio:
 	rtschroeder = BuildExample('./bin/rtschroeder','./obj/rtschroeder.o', 'src/examples/rtschroeder.cpp')
-        Depends(rtschroeder, sndobjlib)
+        Depends(rtschroeder, deplibs)
 	streson = BuildExample('./bin/streson','./obj/streson.o', 'src/examples/streson.cpp')
-        Depends(streson, sndobjlib)       
+        Depends(streson, deplibs)       
 	blurring = BuildExample('./bin/blurring','./obj/blurring.o', 'src/examples/blurring.cpp')
-        Depends(blurring, sndobjlib)
+        Depends(blurring, deplibs)
 	harmonise = BuildExample('./bin/harmonise','./obj/harmonise.o', 'src/examples/harmonise.cpp')
-        Depends(harmonise, sndobjlib)
+        Depends(harmonise, deplibs)
 	transpose = BuildExample('./bin/transpose','./obj/transpose.o', 'src/examples/transpose.cpp')
-        Depends(transpose, sndobjlib)
+        Depends(transpose, deplibs)
 # schroeder
 schroeder = BuildExample('./bin/schroeder','./obj/schroeder.o', 'src/examples/schroeder.cpp')
-Depends(schroeder, sndobjlib)
+Depends(schroeder, deplibs)
 # cvoc
 cvoc = BuildExample('./bin/cvoc','./obj/cvoc.o', 'src/examples/cvoc.cpp')
-Depends(cvoc, sndobjlib)
+Depends(cvoc, deplibs)
 # denoiser
 denoiser = BuildExample('./bin/denoiser','./obj/denoiser.o', 'src/examples/denoiser.cpp')
-Depends(denoiser, sndobjlib)
+Depends(denoiser, deplibs)
 # FIR
 fir = BuildExample('./bin/fir','./obj/fir.o', 'src/examples/fir.cpp')
-Depends(fir, sndobjlib)
+Depends(fir, deplibs)
 # sinus
 sinus = BuildExample('./bin/sinus','./obj/sinus.o', 'src/examples/sinus.cpp')
-Depends(sinus, sndobjlib)
+Depends(sinus, deplibs)
 
 # morph PD class
 if configure.CheckHeader("m_pd.h", language="C"):
@@ -357,17 +369,17 @@ if configure.CheckHeader("m_pd.h", language="C"):
        morphex.Append(LINKFLAGS=['-bundle', '-flat_namespace', '-undefined', 'suppress'])
        morpho = morphex.Object('obj/morph_tilde.obj', 'src/examples/morph_tilde.cpp', CCFLAGS=flags)
        morph = morphex.Program('bin/morph~.pd_darwin', 'obj/morph_tilde.obj')
-       Depends(morpho, sndobjlib)
+       Depends(morpho, deplibs)
        Depends(morph,morpho)
     elif getPlatform() == 'win':
        pdbin = env['pddir'] + "//bin"
        examples.Append(LIBPATH=Split(pdbin))
        examples.Append(LIBS=Split("pd"))
        morph = examples.SharedLibrary('./bin/morph~', 'src/examples/morph_tilde.cpp', CCFLAGS=flags)       
-    Depends(morph, sndobjlib)
+    Depends(morph, deplibs)
 
 # LADSPA plugin example
 if configure.CheckHeader("ladspa.h", language="C") and getPlatform() == 'linux':
    ladspa_srcs = ['src/examples/Ladspaplug.cpp', 'src/examples/ladspa_example.cpp']
    ladspa = examples.SharedLibrary('bin/ladspaex', ladspa_srcs, CCFLAGS=flags)   
-   Depends(ladspa, sndobjlib)
+   Depends(ladspa, deplibs)

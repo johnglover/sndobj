@@ -79,14 +79,14 @@ class SndThread {
   int GetSndObjNo() { return SndObjNo; }
   int GetInputNo() { return InputNo; }
   int GetOutputNo() { return OutputNo; }
-
+#ifndef USE_WIN32THREADS
   pthread_attr_t GetAttrib() { return attrib; }
   void SetAttrib(pthread_attr_t att) { attrib = att; }
+#endif
 
-#ifndef USE_WIN32THREADS
   int ProcOn(); // start processing thread 
   int ProcOff(); // kill processing thread
-#endif    
+    
   // external thread function
   friend void SndProcessThread(SndThread* sndthread); 
      
