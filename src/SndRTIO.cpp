@@ -1542,7 +1542,7 @@ const AudioTimeStamp *inOT, void* cdata){
 return ((SndRTIO *)cdata)->ADIOProc(input,output,(SndRTIO *)cdata);
 
 }
-
+void
 SndRTIO::SndRTIO_init(short channels, int mode, int buffsize, int buffno,
 		  int encoding, SndObj** inputs, int vecsize, 
 		   float sr, AudioDeviceID dev){
@@ -1570,7 +1570,7 @@ break;
 }
 
 
-if(dev=DEFAULT_DEV){
+if(dev=DEF_DEV){
 psize = sizeof(AudioDeviceID);
 AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
                      &psize, &m_dev);
