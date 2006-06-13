@@ -1,4 +1,4 @@
-// Copyright (c)Victor Lazzarini, 1997-2004
+// Copyright (c)Victor Lazzarini and Rory Walsh, 1997-2006
 // See License.txt for a disclaimer of all warranties
 // and licensing information
 
@@ -8,7 +8,7 @@
 // Multithreading support for the SndObj Library
 //
 // Victor Lazzarini, 2001
-//
+// Win32 thread code by Rory Walsh, 2006
 
 #ifndef _SNDTHREAD_H
 #define _SNDTHREAD_H
@@ -17,18 +17,19 @@
 
 #ifdef WINPTHREAD
 #include <wpthread.h>
-#endif
-
-#ifndef WINPTHREAD
+#elif USE_WIN32THREADS
+#include <process.h>
+#include <windows.h>
+#else
 #include <pthread.h>
 #endif
+
 
 template<class s>  
 struct SndLink{      // SndObj / SndIO lists links       
   SndLink<s>* next;  // next link
   s*          obj;   // object pointed at by the link 
 };
-
 
 enum { SNDIO_IN, SNDIO_OUT }; // IO list names     
 enum { OFF=0, ON };           // processing status
@@ -51,8 +52,12 @@ class SndThread {
   int status;   // processing status ON, OFF
 
   // pthread-related  member variables
+#ifndef USE_WIN32THREADS
   pthread_attr_t  attrib;
   pthread_t       thread;
+#else
+  SECURITY_ATTRIBUTES sa;
+#endif
  
   public:
   
@@ -73,13 +78,14 @@ class SndThread {
   int GetSndObjNo() { return SndObjNo; }
   int GetInputNo() { return InputNo; }
   int GetOutputNo() { return OutputNo; }
-
+#ifndef USE_WIN32THREADS
   pthread_attr_t GetAttrib() { return attrib; }
   void SetAttrib(pthread_attr_t att) { attrib = att; }
+#endif
 
   int ProcOn(); // start processing thread 
   int ProcOff(); // kill processing thread
-     
+    
   // external thread function
   friend void SndProcessThread(SndThread* sndthread); 
      

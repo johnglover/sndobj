@@ -27,15 +27,15 @@ const int DEF_PERIOD = 4;
 #include <fcntl.h>
 #include <unistd.h>
 typedef int AudioDeviceID;
-const char* DEF_DEV = "/dev/dsp";
+#define DEF_DEV  "/dev/dsp"
 const int DEF_BSIZE = 512;
 const int DEF_PERIOD = 512;
 #endif
 
 #ifdef ALSA
 #include <alsa/asoundlib.h>
-typedef in AudioDeviceID;
-const char* DEF_DEV="plughw:0,0";
+typedef snd_pcm_t * AudioDeviceID;
+#define DEF_DEV "plughw:0,0"
 const int DEF_BSIZE = 1024;
 const int DEF_PERIOD = 2;
 #endif
@@ -138,7 +138,6 @@ class SndRTIO : public SndIO {
 
 #ifdef ALSA
      
-  snd_pcm_t  *m_dev;
   long* m_lp;
 
   void Writel();
@@ -158,7 +157,7 @@ class SndRTIO : public SndIO {
   void SndRTIO_init(short, int, int=DEF_BSIZE, int=DEF_PERIOD,int=SHORTSAM, 
 		    SndObj** =0,int=DEF_VECSIZE, float=DEF_SR, 
 #if defined (OSS) || defined (ALSA)           
-		    char*=DEF_DEV);
+		    char* =DEF_DEV);
 #else 
   AudioDeviceID=DEF_DEV);
 #endif

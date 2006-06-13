@@ -64,6 +64,7 @@ if getPlatform() == 'linux':
 	if alsaFound and env['alsa']:
 	  env.Append(CPPDEFINES="ALSA")
           swigdef = ['-DALSA']
+          env.Append(LIBS=['asound'])
           print "The library realtime IO (class SndRTIO) will be configured for ALSA"
 	  rtio = True 
 	elif ossFound and env['oss']:

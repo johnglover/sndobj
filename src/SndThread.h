@@ -31,7 +31,6 @@ struct SndLink{      // SndObj / SndIO lists links
   s*          obj;   // object pointed at by the link 
 };
 
-
 enum { SNDIO_IN, SNDIO_OUT }; // IO list names     
 enum { OFF=0, ON };           // processing status
 
