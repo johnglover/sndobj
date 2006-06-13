@@ -161,7 +161,7 @@ SndObj::Set(char* mess, float value){
 void
 SndObj::SetVectorSize(int vecsize){
 	if(m_output) delete[] m_output;
-	if(!(m_output = new float[m_vecsize])){
+	if(!(m_output = new float[vecsize])){
 		m_error = 1;
 		cout << ErrorMessage();
 		return;
