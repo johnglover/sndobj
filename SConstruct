@@ -73,6 +73,7 @@ if getPlatform() == 'linux':
           rtio = True  
 	if jackFound:
           env.Append(CPPDEFINES=Split('JACK'))
+          env.Append(LIBS=['jack'])
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         if env['pythonpath'] == '':
