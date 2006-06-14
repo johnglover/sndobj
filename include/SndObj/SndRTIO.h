@@ -191,15 +191,40 @@ SndRTIO()
   : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
 #endif
  { SndRTIO_init(1, SND_OUTPUT); }
+
 SndRTIO(short channels, SndObj** input=0)
 #ifndef MACOSX
-  : SndIO(1,16,input,DEF_VECSIZE,DEF_SR)
+  : SndIO(channels,16,input,DEF_VECSIZE,DEF_SR)
 #else
-  : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
+: SndIO((ch < 2 ?  2 : ch), 
+        (encoding > 0 ? encoding : sizeof(float)*8), 
+         input, vsize, sr) 
 #endif 
 {
       SndRTIO_init(channels,SND_OUTPUT,DEF_BSIZE,DEF_PERIOD,SHORTSAM,input);
 }
+
+SndRTIO(SndObj *p) 
+#ifndef MACOSX
+  : SndIO(1,16,0,DEF_VECSIZE,DEF_SR)
+#else
+  : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
+#endif
+ { SndRTIO_init(1, SND_OUTPUT);
+ SetOutput(1, p);
+#ifdef MACOSX
+    SetOutput(2, p); 
+#endif
+}
+
+SndRTIO(SndObj *pl, SndObj *pr) : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
+ { 
+   SndRTIO_init(2, SND_OUTPUT); 
+   SetOutput(1, pl); 
+   SetOutput(2, pr); 
+}
+
+
   ~SndRTIO();
   short Write();
   short Read();
