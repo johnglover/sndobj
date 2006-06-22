@@ -44,8 +44,10 @@ opt.AddOptions(
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
+        BoolOption('javamodule', 'build java module', False),
         ('install_name', 'on OSX, the dynamic library full install pathname', 'lib/libsndobj.dylib'),
-        ('pythonpath', 'python install path (defaults to usual places)', '')
+        ('pythonpath', 'python install path (defaults to usual places)', ''),
+        ('javapath', 'java headers path (defaults to usual places)', ''),
 	)
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -78,13 +80,19 @@ if getPlatform() == 'linux':
           print "The library will include support for Jack (Class SndJackIO)" 
         if env['pythonpath'] == '':
           pythonpath = '/usr/include/python' + getVersion()
+        else: 
+          pythonpath = env['pythonpath']
+        if env['javapath'] == '':
+          javapath = '/usr/java/include'
+        else: 
+          javapath = env['javapath']
 
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
-        hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="WIN")
         swigdef = ['-DWIN', '-DSWIGFIX']
         if 'msvc'in env['TOOLS']: # MSVC
+          hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy  src\\*.h include\\SndObj")
           separateLibs = False
           print 'using MSVC...'
           includes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
@@ -92,6 +100,7 @@ if getPlatform() == 'win':
           env.Append(CPPPATH=['msvc6.0'])
           pythonlib=''
         else: # mingw ? Set any outstanding mingwin paths here
+          hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy -f src/*.h include/SndObj")
           separateLibs = True
           print 'using MINGW...'
           env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
@@ -107,6 +116,12 @@ if getPlatform() == 'win':
         jackFound = False
         if env['pythonpath'] == '':
           pythonpath = 'c:\\Python%c%c' % (getVersion()[0], getVersion()[2])
+        else: 
+          pythonpath = env['pythonpath']
+        if env['javapath'] == '':
+          javapath = "C:\\Program Files\\Java\\jdk1.5.0_05"
+        else:
+          javapath = env['javapath']
 
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
@@ -118,6 +133,12 @@ if getPlatform() == 'cygwin':
         jackFound = False
         if env['pythonpath'] == '':
           pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
+        else: 
+          pythonpath = env['pythonpath']
+        if env['javapath'] == '':
+          javapath = '/usr/java/include'
+        else: 
+          javapath = env['javapath']
 
 if getPlatform() == 'macosx':
         print "OS is MacOSX"
@@ -135,6 +156,13 @@ if getPlatform() == 'macosx':
         rtio = True
         if env['pythonpath'] == '':
           pythonpath = '/System/Library/Frameworks/Python.framework'
+        else: 
+          pythonpath = env['pythonpath']
+        if env['javapath'] == '':
+          javapath = '/System/Library/Frameworks/JavaVM.framework'
+        else: 
+          javapath = env['javapath']  
+
 
 if getPlatform() == 'sgi':
         print "OS is SGI/Irix..."
@@ -146,6 +174,12 @@ if getPlatform() == 'sgi':
         jackFound = False
         if env['pythonpath'] == '':
           pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
+        else: 
+          pythonpath = env['pythonpath']
+        if env['javapath'] == '':
+          javapath = '/usr/java/include'
+        else: 
+          javapath = env['javapath']
 
 if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
@@ -153,6 +187,12 @@ if getPlatform() == 'unsupported':
        jackFound = False
        if env['pythonpath'] == '':
           pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
+       else: 
+          pythonpath = env['pythonpath']
+       if env['javapath'] == '':
+          javapath = '/usr/java/include'
+       else: 
+          javapath = env['javapath']
 
 if not 'msvc' in env['TOOLS']:
    flags = "-O3 " + env['flags']
@@ -163,6 +203,7 @@ env.Prepend(CPPPATH= ['include'])
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
+jsndobj = env.Copy()
 examples = env.Copy()
 
 ######################################################################
@@ -311,6 +352,36 @@ if swigcheck and env['pythonmodule']:
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
   Depends(pymod,sndobjlib)
+
+####################################################################
+# 
+# Java module
+
+if swigcheck and env['javamodule']:
+  swigdef.append(['-lcarrays.i', '-c++', '-java','-Isrc', '-Iinclude', '-v'])
+  jsndobj.Append(SWIGFLAGS=swigdef)
+  jsndobj.Append(LIBPATH='./lib')
+  jsndobj.Prepend(LIBS=baselibs)
+  if getPlatform() == 'macosx':
+    jsndobj.Prepend(CPPPATH=["%s/Headers" % javapath, 'src'])
+    jsndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'JavaVM'])
+    pywrap = jsndobj.SharedObject('java/AudioDefs.i', CCFLAGS=flags)
+    pymod = jsndobj.Program('java/lib_sndobj.jnilib', pywrap)
+    if env['install_name'] == 'lib/libsndobj.dylib':
+       jsndobj.Command('link', 'lib/libsndobj.dylib', 'cd java/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
+    else:
+       jsndobj.Command('link', 'lib/libsndobj.dylib', 'cd java/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
+  elif getPlatform() == 'win':
+    jsndobj.Prepend(CPPPATH=[javapath+'\\include', 'src',javapath+'\\include\win32'])
+    jsndobj.Prepend(LIBPATH=[javapath+'\\libs'])
+    jwrap = jsndobj.SharedObject('java/AudioDefs.i', CCFLAGS=flags)
+    jmod = jsndobj.SharedLibrary('java/sndobj', jwrap, SHLIBPREFIX='_')
+  else:
+    jsndobj.Prepend(CPPPATH=[javapath, 'src'])
+    jwrap = jsndobj.SharedObject('java/AudioDefs.i', CCFLAGS=flags)
+    jmod = jsndobj.SharedLibrary('java/sndobj', jwrap, SHLIBPREFIX='lib_')
+  Depends(jmod,sndobjlib)
+
 
 ####################################################################
 #

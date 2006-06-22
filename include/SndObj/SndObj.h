@@ -96,6 +96,7 @@ else return false;
 
 int GetError() { return m_error; }
 
+#ifndef SWIGJAVA
 SndObj operator=(SndObj obj){					   
     if(&obj == this) return *this;
 	for(int n = 0; n < m_vecsize; n++) m_output[n] = obj.Output(n);
@@ -180,6 +181,8 @@ SndObj operator=(SndObj obj){
 
  void operator>>(SndIO& out);
  void operator<<(SndIO& in);
+
+#endif 
 
  int PushIn(float *vector, int size){
 	 for(int i = 0; i<size; i++){
