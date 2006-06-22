@@ -48,7 +48,7 @@ class SndObj {
  inline int FindMsg(char* mess);
  void AddMsg(const char* mess, int ID);
 
-#if defined (WIN) && !defined(CYGWIN)
+#if defined (WIN) && !defined(GCC)
  int Ftoi(float x){
     union {
       float   f;

@@ -58,8 +58,8 @@ void ListDevices();
 char* InputDeviceName(int dev, char* name);
 char* OutputDeviceName(int dev, char* name);
 const int DEF_DEV = WAVE_MAPPER;
-const int DEF_BSIZE = 256;
-const int DEF_PERIOD = 10;
+const int DEF_BSIZE = 1024;
+const int DEF_PERIOD = 4;
 #endif
 
 class SndRTIO : public SndIO {
