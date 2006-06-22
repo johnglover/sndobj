@@ -83,7 +83,7 @@ if getPlatform() == 'linux':
         else: 
           pythonpath = env['pythonpath']
         if env['javapath'] == '':
-          javapath = '/usr/java/include'
+          javapath = '/usr/lib/java/jvm/include'
         else: 
           javapath = env['javapath']
 
