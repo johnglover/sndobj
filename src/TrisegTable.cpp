@@ -19,7 +19,7 @@ m_L = 512;
 m_initial = 0.f; 
 m_point1 = 1.f;
 m_point2 = 1.f;
-m_final  = 0.f;
+m_fin  = 0.f;
 
 m_seg1   = .25f;   
 m_seg2   = .5f;
@@ -44,7 +44,7 @@ m_typec = type;
 m_initial = init; 
 m_point1 = p1;
 m_point2 = p2;
-m_final  = fin;
+m_fin  = fin;
 
 m_seg1   = seg1;   
 m_seg2   = seg2;
@@ -66,7 +66,7 @@ m_typec = type;
 m_initial = TSPoints[0]; 
 m_point1 = TSPoints[2];
 m_point2 = TSPoints[4];
-m_final  = TSPoints[6];
+m_fin  = TSPoints[6];
 
 m_seg1   = TSPoints[1];   
 m_seg2   = TSPoints[3];
@@ -92,7 +92,7 @@ TrisegTable::SetCurve(float init, float seg1,
 m_initial = init; 
 m_point1 = p1;
 m_point2 = p2;
-m_final  = fin;
+m_fin  = fin;
 
 m_seg1   = seg1;   
 m_seg2   = seg2;
@@ -114,7 +114,7 @@ m_typec = type;
 m_initial = TSPoints[0]; 
 m_point1 = TSPoints[2];
 m_point2 = TSPoints[4];
-m_final  = TSPoints[6];
+m_fin  = TSPoints[6];
 
 m_seg1   = TSPoints[1];   
 m_seg2   = TSPoints[3];
@@ -148,7 +148,7 @@ TrisegTable :: MakeTable(){
       }
     for(i=seg1+seg2;i<m_L;i++)    // third segment
       {
-     m_table[i] = ((m_final - m_point2)/seg3)*(i - (seg1 + seg2)) + m_point2;
+     m_table[i] = ((m_fin - m_point2)/seg3)*(i - (seg1 + seg2)) + m_point2;
      max = (max < m_table[i])? m_table[i] : max;   
            }
   }
@@ -165,7 +165,7 @@ TrisegTable :: MakeTable(){
     max = (max < m_table[i])? m_table[i] : max;   
     }
     for(i=seg2+seg1;i<m_L;i++){    // third segment
-    m_table[i] = m_point2 + (m_final - m_point2)*(float)(
+    m_table[i] = m_point2 + (m_fin - m_point2)*(float)(
                 (1.f-exp(((double)(i-(seg1+seg2))/seg3)*m_typec))/
                      (1.f-exp((double)m_typec)));     
     max = (max < m_table[i])? m_table[i] : max;       

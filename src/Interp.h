@@ -17,7 +17,7 @@ class Interp : public SndObj {
      protected:
 
 float m_initial; // initial value 
-float m_final;  // final value
+float m_fin;  // final value
 float m_typec;  // type of curve  0 = LINEAR, EXP < 0 < INV EXP
 unsigned long m_dur;
 unsigned long m_count;
@@ -25,7 +25,7 @@ unsigned long m_count;
      public:
 
 Interp();
-Interp(float initial, float final,
+Interp(float initial, float fin,
         float dur, float type = 0.f, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
 ~Interp();
 
