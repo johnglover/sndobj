@@ -21,7 +21,7 @@ class TrisegTable : public Table {
       float m_initial; // points to be drawn
       float m_point1;
       float m_point2;
-      float m_final;
+      float m_fin;
 
       float m_seg1;   // segment durations 
       float m_seg2;

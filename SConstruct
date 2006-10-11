@@ -381,10 +381,13 @@ if swigcheck and env['javamodule']:
     jwrap = jsndobj.SharedObject('java/AudioDefs.i', CCFLAGS=flags)
     jmod = jsndobj.SharedLibrary('java/sndobj', jwrap, SHLIBPREFIX='lib_')
   Depends(jmod,sndobjlib)
-  jcode =  jsndobj.Java(target = './java', source = './java')
-  Depends(jcode, jmod)
-  sndobjar = jsndobj.Jar('sndobj.jar', ['./java/sndobj'], JARCHDIR = './java')
-  Depends(sndobjar, jcode)
+  try:
+     os.mkdir('java/JSndObj', 0755)
+  except:
+     pass
+  jcode =  jsndobj.Java(target = './java/JSndObj', source = './java')
+  #sndobjar = jsndobj.Jar('sndobj.jar', ['.'], JARCHDIR = './java/JSndObj')
+  #Depends(sndobjar, jcode)
 
 ####################################################################
 #

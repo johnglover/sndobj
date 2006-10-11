@@ -17,7 +17,7 @@ class Interp : public SndObj {
      protected:
 
 float m_initial; // initial value 
-float m_fin;  // final value
+float m_fin;  // fin value
 float m_typec;  // type of curve  0 = LINEAR, EXP < 0 < INV EXP
 unsigned long m_dur;
 unsigned long m_count;
@@ -32,7 +32,7 @@ Interp(float initial, float fin,
 int Set(char* mess, float value);
 void SetSr(float sr);
 void  Restart(){ m_count = 0; };
-void  SetCurve(float initial, float final, 
+void  SetCurve(float initial, float fin, 
                   float m_typec = 0.f);
 void  SetDur(float dur){
         m_dur = (unsigned long) (m_sr*dur);
