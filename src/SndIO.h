@@ -44,9 +44,15 @@ const int TWENTYFOUR_BE = 7;
 const int SHORTSAM = SHORTSAM_BE;
 #endif
 
-#ifdef MACOSX
+#if defined(MACOSX) && defined(WORDS_BIGENDIAN)
 const int SHORTSAM = SHORTSAM_BE;
 #endif
+
+#if defined(MACOSX) && !defined(WORDS_BIGENDIAN)
+const int SHORTSAM = SHORTSAM_LE;
+#endif
+
+
 
 struct _24Bit {
 	char s[3];
