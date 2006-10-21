@@ -198,6 +198,13 @@ if not 'msvc' in env['TOOLS']:
    flags = "-O3 " + env['flags']
 else:
    flags = "-GX -GB -O2" + env['flags']
+   
+#check endianness
+if sys.byteorder == "big":
+    print "Host is big endian"
+    env.Append(CPPFLAGS="-DWORDS_BIGENDIAN")
+else:
+    print "Host is little endian"
 
 env.Prepend(CPPPATH= ['include'])
 swigcheck = 'swig' in env['TOOLS']
