@@ -56,77 +56,77 @@ struct GUID
 #endif
 
 struct wav_ex {	
- short wValidBitsPerSample;
- int dwChannelMask;
- GUID SubFormat;
+	short wValidBitsPerSample;
+	int dwChannelMask;
+	GUID SubFormat;
 }; 
 
 struct WAVEFORMATEXTENSIBLE {
-
-wave_head waveformatex;
-wav_ex    waveformat_ext;
-
+	
+	wave_head waveformatex;
+	wav_ex    waveformat_ext;
+	
 };
 
 const int PCM = WAVE_FORMAT_PCM;
 const int IEEE_FLOAT = WAVE_FORMAT_IEEE_FLOAT;
 
 const GUID KSDATAFORMAT_SUBTYPE_PCM = {
-                       0x00000001,
-                       0x0000,
-					   0x0010,
-					   {0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
-					   };
+	0x00000001,
+	0x0000,
+	0x0010,
+	{0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
+};
 
 const GUID KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {
-                       0x00000003,
-                       0x0000,
-					   0x0010,
-					   {0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
-					   };
+	0x00000003,
+	0x0000,
+	0x0010,
+	{0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71}
+};
 
 
 class SndWaveX : public SndWave {
-
+	
 protected:
-
-inline bool GUIDcheck(GUID ID);
-int m_ChannelMask;
-GUID m_SubFormat;
-int  m_subformat;
-float*  m_fp;
-double* m_dp;
-bool m_iswavex;
-
+	
+	inline bool GUIDcheck(GUID ID);
+	int m_ChannelMask;
+	GUID m_SubFormat;
+	int  m_subformat;
+	float*  m_fp;
+	double* m_dp;
+	bool m_iswavex;
+	
 public:
-
-SndWaveX(char* name, short mode = OVERWRITE, 
-          short channels=1, int channelmask=0,  short bits=16, short format=PCM,
-             SndObj** inputlist=0, float spos= 0.f, 
-			 int vecsize = DEF_VECSIZE, float sr = DEF_SR); 
-~SndWaveX();
-
-void GetHeader(WAVEFORMATEXTENSIBLE* pheader);
-int GetChannelMask(){ return m_ChannelMask;}
-short Read();
-short Write();
-bool IsWaveExtensible(){ return m_iswavex; }
-
+		
+		SndWaveX(char* name, short mode = OVERWRITE, 
+				 short channels=1, int channelmask=0,  short bits=16, short format=PCM,
+				 SndObj** inputlist=0, float spos= 0.f, 
+				 int vecsize = DEF_VECSIZE, float sr = DEF_SR); 
+	~SndWaveX();
+	
+	void GetHeader(WAVEFORMATEXTENSIBLE* pheader);
+	int GetChannelMask(){ return m_ChannelMask;}
+	short Read();
+	short Write();
+	bool IsWaveExtensible(){ return m_iswavex; }
+	
 }; 
 
 bool
 SndWaveX::GUIDcheck(GUID ID){
-
-if(
-(m_SubFormat.Data1 == lenlong(ID.Data1)) &&
-(m_SubFormat.Data2 == lenshort(ID.Data2)) &&
-(m_SubFormat.Data3 == lenshort(ID.Data3))
-){
-for(int i=0; i < 8; i++) 
-if(m_SubFormat.Data4[i] != ID.Data4[i]) return false;
-return true;
-}
-else return false;
+	if(
+	   (m_SubFormat.Data1 == ID.Data1) &&
+		(m_SubFormat.Data2 == ID.Data2) &&
+		(m_SubFormat.Data3 == ID.Data3)
+		){ 
+		   for(int i=0; i < 8; i++) 
+			   if(m_SubFormat.Data4[i] != ID.Data4[i]) 
+				   return false;
+		   return true;
+	   }
+	   else return false;
 }
 
 #endif
