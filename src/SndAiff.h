@@ -22,7 +22,7 @@ const char     SSND_ID[4] = {'S','S','N','D'};
 const char     FORM_TYPE[4] = {'A','I','F','F'};
 
 
-typedef long ID;            // chunk ID
+typedef unsigned long ID;            // chunk ID
 typedef short MrkrID;       // Marker ID
 
 struct CkHdr{
