@@ -231,7 +231,7 @@ SndObj operator=(SndObj obj){
 
  SndObj(SndObj* input, int vecsize = DEF_VECSIZE, float sr = DEF_SR);
  SndObj();
-#ifndef SWIGPYTHON 
+#if !defined (SWIGPYTHON) && !defined(SWIGCFFI)
  SndObj(SndObj& obj);
 #endif
 
