@@ -80,5 +80,9 @@ else:
        sys.exit(0)
 
 sources = Split("""main.cpp Instrument.cpp""")
-env.Program('trane', sources)
+trane = env.Program('trane', sources)
+
+if getPlatform() == 'macosx':
+   env.Command(trane, 'trane.app/Contents/MacOS/trane', 'cp -f trane trane.app/Contents/MacOS/')
+
 
