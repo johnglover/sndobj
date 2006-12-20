@@ -99,8 +99,9 @@ if getPlatform() == 'win':
           libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
           env.Append(CPPPATH=['msvc6.0'])
           pythonlib=''
+          env.Append(LIBS=['pthreadVC'])
         else: # mingw ? Set any outstanding mingwin paths here
-          hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy -f src/*.h include/SndObj")
+          hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
           separateLibs = True
           print 'using MINGW...'
           env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
@@ -111,7 +112,7 @@ if getPlatform() == 'win':
         env.Append(CPPPATH=[includes])
  	env.Append(LIBPATH=[libs])
  	env.Append(LIBPATH=['lib'])
-        env.Append(LIBS=['winmm', 'pthreadVC'])
+        env.Append(LIBS=['winmm'])
         rtio = True
         jackFound = False
         if env['pythonpath'] == '':

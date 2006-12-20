@@ -1,0 +1,84 @@
+import sys
+import os
+
+env = Environment(ENV = {'PATH' : os.environ['PATH']})
+env.SConsignFile()
+
+def getVersion():
+    return sys.version[:3]    
+
+def getPlatform():
+    if sys.platform[:5] == 'linux':
+        return 'linux'
+    elif sys.platform[:3] == 'win':
+        if env['PLATFORM'] == 'win32':
+        	return 'win'
+	else:
+		return 'cygwin'
+    elif sys.platform[:6] == 'darwin':
+        return 'macosx'
+    else:
+        return 'unsupported'
+
+print "Building The Trane Thing instrument"
+configure = env.Configure()
+env.Append(LIBS=['sndobj'])
+ 
+if getPlatform() == 'linux':
+        print "OS is Linux..."
+	alsaFound = configure.CheckHeader("alsa/asoundlib.h", language = "C")
+	ossFound = configure.CheckHeader("soundcard.h", language="C")
+	if alsaFound and env['alsa']:
+	  env.Append(CPPDEFINES="ALSA")
+          env.Append(LIBS=['asound'])
+          print "using ALSA"
+	elif ossFound and env['oss']:
+	  env.Append(CPPDEFINES="OSS")
+          print "using OSS"
+        fltkFound = configure.CheckHeader("Fl/Fl.H", language = "C++")
+        if not fltkFound:
+            print "No FLTK... exiting"
+            sys.exit(0)
+
+elif getPlatform() == 'win':
+        print "OS is Windows, environment is win32..."
+	env.Append(CPPDEFINES="WIN")
+        if 'msvc'in env['TOOLS']: # MSVC
+          includes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
+          libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
+          env.Append(CPPPATH=['msvc6.0'])
+          env.Append(LIBS=['pthreadVC'])
+        else: # mingw
+          print 'using MINGW...'
+          env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
+          includes = 'c:/msys/1.0/local/include'
+          libs     = 'c:/msys/1.0/local/lib'
+	  env.Append(LINKFLAGS='-mwindows')
+        env.Append(CPPPATH=[includes, '../include'])
+ 	env.Append(LIBPATH=[libs])
+ 	env.Append(LIBPATH=['../lib'])
+        env.Append(LIBS=['winmm', 'fltk'])
+        fltkFound = configure.CheckHeader("FL/Fl.H", language = "C++")
+        if not fltkFound:
+            print "No FLTK... exiting"
+            sys.exit(0)
+
+elif getPlatform() == 'macosx':
+        print "OS is MacOSX"
+	env.Append(CPPDEFINES="MACOSX")
+        swigdef = ['-DMACOSX']
+        env.Append(CPPPATH=['/usr/local/include', '../include'])
+ 	env.Append(LIBPATH=['/usr/local/lib', '../lib'])
+	env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
+        env.Append(LINKFLAGS= ['-framework', 'coreaudio'])
+        fltkFound = configure.CheckHeader("Fl/Fl.H", language = "C++")
+        if not fltkFound:
+            print "No FLTK... exiting"
+            sys.exit(0)
+else:
+       print "Unsupported platform..."
+       sys.exit(0)
+
+sources = Split("""main.cpp Instrument.cpp""")
+env.Program('trane', sources)
+
