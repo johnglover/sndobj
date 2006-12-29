@@ -36,6 +36,7 @@ if getPlatform() == 'linux':
 	  env.Append(CPPDEFINES="OSS")
           print "using OSS"
         fltkFound = configure.CheckHeader("Fl/Fl.H", language = "C++")
+        sources = Split("""main.cpp Instrument.cpp""")
         if not fltkFound:
             print "No FLTK... exiting"
             sys.exit(0)
@@ -48,12 +49,15 @@ elif getPlatform() == 'win':
           libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
           env.Append(CPPPATH=['msvc6.0'])
           env.Append(LIBS=['pthreadVC'])
+          sources = Split("""main.cpp Instrument.cpp""")
         else: # mingw
           print 'using MINGW...'
           env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
           includes = 'c:/msys/1.0/local/include'
           libs     = 'c:/msys/1.0/local/lib'
 	  env.Append(LINKFLAGS='-mwindows')
+          res = env.Command("trane_res.o", "trane.rc", "windres -o trane_res.o trane.rc")
+          sources = Split("""main.cpp Instrument.cpp trane_res.o""")
         env.Append(CPPPATH=[includes, '../include'])
  	env.Append(LIBPATH=[libs])
  	env.Append(LIBPATH=['../lib'])
@@ -72,6 +76,7 @@ elif getPlatform() == 'macosx':
 	env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
         env.Append(LINKFLAGS= ['-framework', 'coreaudio'])
         fltkFound = configure.CheckHeader("Fl/Fl.H", language = "C++")
+        sources = Split("""main.cpp Instrument.cpp""")
         if not fltkFound:
             print "No FLTK... exiting"
             sys.exit(0)
@@ -79,9 +84,8 @@ else:
        print "Unsupported platform..."
        sys.exit(0)
 
-sources = Split("""main.cpp Instrument.cpp""")
-trane = env.Program('trane', sources)
 
+trane = env.Program('trane', sources)
 if getPlatform() == 'macosx':
    env.Command(trane, 'trane.app/Contents/MacOS/trane', 'cp -f trane trane.app/Contents/MacOS/')
 

@@ -102,6 +102,7 @@ int main(int argc, char **argv) {
     else
       inst.str_fr[i] = new Fl_Value_Slider(105, 20+i*60, 280, 40);
     inst.str_fr[i]->range(inst.trane.GetFreq(i),inst.trane.GetFreq(i)*4);
+    inst.str_fr[i]->value(inst.trane.GetFreq(i));
     inst.str_fr[i]->type(5);
     inst.str_fr[i]->callback((Fl_Callback*)fr_callback, (void *)&inst);
     inst.str_fr[i]->color(red);
@@ -113,6 +114,7 @@ int main(int argc, char **argv) {
       inst.str_gain[i] = new Fl_Dial(405, 20+i*60, 40, 40);
     inst.str_gain[i]->callback((Fl_Callback*)sgain_callback, (void *)&inst);
     inst.str_gain[i]->range(-60,0);
+    inst.str_gain[i]->value(inst.trane.GetStrGain(i));
     inst.str_gain[i]->box(FL_ROUND_UP_BOX);
     strings->add(inst.str_gain[i]);
     // loops

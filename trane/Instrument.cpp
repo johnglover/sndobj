@@ -6,7 +6,7 @@ Instrument::Instrument()
 
   /* input */
 #ifndef MACOSX
-  input = new SndRTIO(2, SND_INPUT, 1024);
+  input = new SndRTIO(2, SND_INPUT, 1024, 4);
 #else
   input = new SndCoreAudio(2);
 #endif
@@ -25,7 +25,7 @@ Instrument::Instrument()
   strmix = new Mixer;
   for (i = 0; i < 4; i++){
     string[i] = new StringFlt(fr[i], res[i], sound);
-    gstr[i] = 0.f;
+    gstr[i] = -12.f;
     strgain[i] = new Gain(gstr[i], string[i]);
     strmix->AddObj(strgain[i]);
     StringOff(i);
