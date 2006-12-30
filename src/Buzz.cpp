@@ -13,7 +13,9 @@ m_harm = 10;
 
 if(!(m_ptable = new HarmTable(2048, 1, SINE))){
 	m_error = 12;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 } 
 
@@ -24,7 +26,9 @@ if(!(oscil1 = new Oscili(m_ptable, m_fr*((2*m_harm+1)/2.f), 1.f, 0,0,1))){
 }
 if(!(oscil2 = new Oscili(m_ptable, m_fr/2.f, 1.f,0,0,1))){
 	m_error = 11;
-	cout  << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 	return;
 }
 m_inputamp = 0;
@@ -47,19 +51,25 @@ m_inputamp = inputamp;
 
 if(!(m_ptable = new HarmTable((long)m_sr/10, 1, SINE))){
 	m_error = 12;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 
 if(!(oscil1 = new Oscili(m_ptable, m_fr*((2*m_harm)+1)/2, 1.f, 0, 0,
                     1, m_sr))){
 	m_error = 11;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 if(!(oscil2 = new Oscili(m_ptable, m_fr/2, 1.f, 0, 0, 1, m_sr))){
 	m_error = 11;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 

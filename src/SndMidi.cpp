@@ -28,7 +28,9 @@ for(i = 0; i < 127; i++)
 #if defined(OSS) || defined(SGI)
 if(!(m_event = new MDevent[m_buffsize])){
 m_error =14;
-cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 return;
 }
 #endif
@@ -36,7 +38,9 @@ return;
 #ifdef WIN
 if(!(m_event = new MIDI_event[m_buffsize])){
 m_error =14;
-cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 return;
 }
 #endif
@@ -44,14 +48,18 @@ return;
 
 if(!(m_output = new float[m_channels])){
 m_error = 15;
-cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 return;
 }
 
 
 if(!(m_message = new short[m_channels])){
 m_error = 15;
-cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 return;
 }
 m_note = 0;
@@ -69,7 +77,7 @@ for(i = 0; i < m_channels; i++) {
 SndMidi::~SndMidi(){
 	delete[] m_message;
 	delete[] m_event;
-    delete[] m_vel;
+        delete[] m_vel;
 }
 
 short

@@ -34,7 +34,9 @@ m_delaytime = delaytime;
 m_size = (long)(delaytime*m_sr);
 if(!(m_delay = new float[m_size])){
      m_error = 13;
-	 cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
     return;
 }
 
@@ -84,7 +86,9 @@ if(m_delay) delete[] m_delay;
 m_size = (long)(m_delaytime*m_sr);
 if(!(m_delay = new float[m_size])){
      m_error = 13;
-	  cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
     return;
 }
 Reset();
@@ -105,7 +109,9 @@ m_size = (long)(delaytime*m_sr);
 if(m_delay) delete[] m_delay;
 if(!(m_delay = new float[m_size])){
      m_error = 13;
-	  cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
     return;
 }
 Reset();

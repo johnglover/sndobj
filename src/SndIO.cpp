@@ -26,7 +26,9 @@ m_sr = sr;
 if(m_channels){
 if(!(m_IOobjs = new SndObj*[m_channels])){
 	m_error = 2;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 
@@ -40,13 +42,15 @@ else for(n=0;n<m_channels;n++) m_IOobjs[n] = 0; // zero the pointers
 m_samples = m_vecsize*m_channels;
 if(!(m_output = new float[m_samples])){
 	m_error = 1;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
  }
 }
 else {
 	m_IOobjs = 0;
-    m_output = 0;
+        m_output = 0;
 	m_samples = 0;
 }
 m_error = 0;

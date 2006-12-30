@@ -17,7 +17,9 @@ SndObj::SndObj(){
 	m_vecpos = m_altvecpos = 0;
 	if(!(m_output = new float[m_vecsize])){
 		m_error = 1;
-		cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 		return;
 	}
 	m_input = 0;
@@ -41,7 +43,9 @@ SndObj::SndObj(SndObj* input, int vecsize, float sr){
     
 	if(!(m_output = new float[m_vecsize])){
 		m_error = 1;
-		cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 		return;
 	}
 	
@@ -66,7 +70,9 @@ SndObj::SndObj(SndObj& obj){
 	m_vecpos = m_altvecpos = 0;
 	if(!(m_output = new float[m_vecsize])){
 		m_error = 1;
-		cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 		return;
 	}
 	
@@ -163,7 +169,9 @@ SndObj::SetVectorSize(int vecsize){
 	if(m_output) delete[] m_output;
 	if(!(m_output = new float[vecsize])){
 		m_error = 1;
-		cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 		return;
 	}
     m_vecsize = vecsize;

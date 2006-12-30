@@ -1,4 +1,4 @@
- // Copyright (c)Victor Lazzarini, 1997-2004
+// Copyright (c)Victor Lazzarini, 1997-2004
 // See License.txt for a disclaimer of all warranties
 // and licensing information
 
@@ -212,7 +212,9 @@ SndASIO::SndASIO(int channels, int mode, char* driver, int numbuffs,
       return;
 
   }
-  // cout << m_bits;
+#ifdef DEBUG
+cout << m_bits;
+#endif
 }
 
 
@@ -490,10 +492,10 @@ void DriverList(){
     asioDrivers = new AsioDrivers;
 
     numdrivers =  
-		asioDrivers->getDriverNames(drivernames, 10); 
+	asioDrivers->getDriverNames(drivernames, 10); 
     
-	cout << "ASIO drivers in this system:\n";
-     for(i = 0; i < numdrivers; i++){  
+    cout << "ASIO drivers in this system:\n";
+    for(i = 0; i < numdrivers; i++){  
        cout << i << ":" << drivernames[i] << "\n"; 
 	}
      delete[] drivernames;

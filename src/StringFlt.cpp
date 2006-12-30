@@ -23,8 +23,10 @@ StringFlt::StringFlt(){
 	m_delaytime = .05f;
 	m_size = (long) 2205;
 	if(!(m_delay = new float[m_size])){
-		m_error = 13;
-		cout << ErrorMessage();
+	        m_error = 13;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 		return;
 	}
 	m_s = 0.5f;
@@ -181,7 +183,9 @@ StringFlt::SetSr(float sr){
 	if(m_delay)delete[] m_delay;
 	if(!(m_delay = new float[m_size])){
 		m_error = 13;
-		cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 	}
 	return;
 }

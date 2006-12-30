@@ -18,12 +18,16 @@ m_pow = m_pow1 = m_pow2 = 0.;
 
 if(!(m_delay = new double[4])){
 	m_error = 12;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 if(!(m_delay2 = new double[4])){
 	m_error = 12;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 m_delay[0] = m_delay[1]= m_delay[2] = m_delay [3] = 0.;
@@ -49,14 +53,19 @@ m_comp = input2;
 m_fr = fr;
 
 m_pow = m_pow1 = m_pow2 = 0.;
+
 if(!(m_delay = new double[4])){
 	m_error = 12;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 if(!(m_delay2 = new double[4])){
 	m_error = 12;
+#ifdef DEBUG
 	cout << ErrorMessage();
+#endif
 	return;
 }
 m_delay[0] = m_delay[1]= m_delay[2] = m_delay2[3] = 0.;

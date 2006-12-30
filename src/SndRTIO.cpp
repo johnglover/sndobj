@@ -108,32 +108,41 @@ m_cur = 0;
 
  case MMSYSERR_ALLOCATED:	//Specified resource is already allocated.
  m_error = 21;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case MMSYSERR_BADDEVICEID:	//Specified device identifier is out of range.
  m_error = 22;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
  
  case MMSYSERR_NODRIVER:	//No device driver is present.
  m_error = 23;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case MMSYSERR_NOMEM:	    //Unable to allocate or lock memory.
  m_error = 24;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case WAVERR_BADFORMAT:  	//Attempted to open with an unsupported waveform-audio format.
  m_error = 25;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  default:
  return;
-
                  }
  
  
@@ -146,12 +155,16 @@ m_cur = 0;
  
  case MMSYSERR_NODRIVER:	//No device driver is present.
  m_error = 23;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case MMSYSERR_NOMEM:	    //Unable to allocate or lock memory.
  m_error = 24;
- cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  default:
@@ -179,12 +192,18 @@ MMRESULT result;
 
  case MMSYSERR_ALLOCATED:	//Specified resource is already allocated.
 
- m_error = 21; cout << ErrorMessage();
+ m_error = 21; 
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case MMSYSERR_BADDEVICEID:	//Specified device identifier is out of range.
  
- m_error = 22; cout << ErrorMessage();
+ m_error = 22;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
  
  case MMSYSERR_NODRIVER:	//No device driver is present.
@@ -193,13 +212,18 @@ MMRESULT result;
  return ;
 
  case MMSYSERR_NOMEM:	    //Unable to allocate or lock memory.
- m_error = 24; cout << ErrorMessage();
-
+ m_error = 24;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case WAVERR_BADFORMAT:  	//Attempted to open with an unsupported waveform-audio format.
 
- m_error = 25; cout << ErrorMessage();
+ m_error = 25;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  default:
@@ -214,14 +238,19 @@ MMRESULT result;
                
 	          switch (result){
  
- case MMSYSERR_NODRIVER:	//No device driver is present.
- 
- m_error = 23;cout << ErrorMessage();
+ case MMSYSERR_NODRIVER:	//No device driver is present. 
+ m_error = 23;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  case MMSYSERR_NOMEM:	    //Unable to allocate or lock memory.
 
- m_error = 24; cout << ErrorMessage();
+ m_error = 24;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
  return ;
 
  default:

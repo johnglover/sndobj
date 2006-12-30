@@ -117,8 +117,10 @@ delete[] m_output;
 
 if(!(m_output = new float[m_vecsize])){
 		m_error = 1;
-		cout << ErrorMessage();
-		return;
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
+	return;
 	}
 
 

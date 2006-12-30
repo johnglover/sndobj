@@ -42,7 +42,9 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_channels = 0;
 			m_error = 21;
 			m_output =0;
-			cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 			return;
 			
 		}
@@ -58,7 +60,10 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_channels = 0;
 			m_output = 0;
 			m_iswave = false;
-			cout << ErrorMessage();
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
+		       
 			return;
 			
 		}
@@ -74,7 +79,10 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_channels = 0;
 			m_output = 0;
 			m_iswave = false;
-			cout << ErrorMessage();
+			
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 			return;
 		}
 		
@@ -85,7 +93,10 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_dataframes = 0;
 			m_output = 0;
 			m_iswave = false;
-			cout << ErrorMessage();
+			
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 			return;
 		}	 
 		
@@ -95,7 +106,10 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 		
 		if(!(m_IOobjs = new SndObj*[m_channels])){
 			m_error = 2;
-			cout << ErrorMessage();
+		        
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 			return;
 		}
 		
@@ -104,15 +118,19 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 		delete[] m_buffer;
 		
 		if(!(m_output = new float[m_samples])){
-			m_error = 1;
-			cout << ErrorMessage();
+			m_error = 1;		
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 			return;
 		}
 		
 		m_buffsize = (m_bits/8)*m_samples;
 		if(!(m_buffer = new char[m_buffsize])){
-			m_error = 11;
-			cout << ErrorMessage();
+			m_error = 11;	        
+#ifdef DEBUG
+	cout << ErrorMessage();
+#endif
 			return;
 		}
 		
