@@ -90,7 +90,7 @@ if getPlatform() == 'linux':
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
 	env.Append(CPPDEFINES="WIN")
-        swigdef = ['-DWIN', '-DSWIGFIX']
+        swigdef = ['-DWIN', '-DSWIGFIX', '-D_MSBC']
         if 'msvc'in env['TOOLS']: # MSVC
           hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy  src\\*.h include\\SndObj")
           separateLibs = False
@@ -127,7 +127,7 @@ if getPlatform() == 'win':
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
 	env.Append(CPPDEFINES=['WIN', 'GCC'])
-        swigdef = ['-DWIN', '-DSWIGFIX']
+        swigdef = ['-DWIN', '-DSWIGFIX', '-D_MBCS']
         env.Append(LIBS=['winmm', 'pthread'])
         env.Append(LIBPATH=['lib'])
         rtio = True
@@ -244,7 +244,7 @@ SpecVoc.cpp""")
 sndiosources = Split("""SndIO.cpp SndRTIO.cpp SndFIO.cpp 
 SndWave.cpp SndAiff.cpp SndBuffer.cpp 
 SndMidi.cpp SndMidiIn.cpp SndWaveX.cpp 
-SndPVOCEX.cpp SndSinIO.cpp  SndCoreAudio.cpp SndJackIO.cpp""")
+SndPVOCEX.cpp SndSinIO.cpp  SndCoreAudio.cpp SndJackIO.cpp SndAsio.cpp """)
 
 tablesources = Split("""HarmTable.cpp UsrHarmTable.cpp 
 TrisegTable.cpp SndTable.cpp PlnTable.cpp 
@@ -275,18 +275,21 @@ fcr_64.c  fhf_32.c fn_6.c fni_7.c frc_8.c  ftwi_5.c wisdom.c
 fcr_7.c fhf_4.c fn_64.c fni_8.c frc_9.c  ftwi_6.c wisdomio.c 
 fcr_8.c fhf_5.c fn_7.c fni_9.c ftw_10.c ftwi_64.c """)
 
+asios = Split("""iasiothiscallresolver.cpp asiodrivers.cpp asio.cpp asiolist.cpp""")
+
 
 sndsources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
 			  + tablesources + sndthrsources) 
 rfftsources = map(lambda x: './src/rfftw/' + x, fftwsources)
 
+asiosources = map(lambda x: './src/asio/' + x, asios)
 
 ######################################################################
 #
 # build
 
 if getPlatform() != 'win':
-  sources = sndsources + rfftsources
+  sources = sndsources + rfftsources 
   if getPlatform() == 'macosx':
    env.Append(LINKFLAGS=['-install_name', env['install_name']])
    sndobjlib = env.SharedLibrary(env['install_name'], sources, CCFLAGS=flags)
@@ -301,11 +304,11 @@ if getPlatform() != 'win':
 else:
   if separateLibs:
    rfftwlib = env.Library('lib/rfftw', rfftsources, CCFLAGS=flags)
-   sndobjlib = env.Library('lib/sndobj', sndsources, CCFLAGS=flags)
+   sndobjlib = env.Library('lib/sndobj', sndsources+asiosources, CCFLAGS=flags)
    deplibs = [sndobjlib, rfftwlib]
    baselibs = ['sndobj', 'rfftw']
   else:
-   sndobjlib = env.Library('lib/sndobj', sndsources+rfftsources, CCFLAGS=flags)
+   sndobjlib = env.Library('lib/sndobj', sndsources+rfftsources+asiosources, CCFLAGS=flags)
    deplibs = [sndobjlib]
    baselibs = ['sndobj']
 Depends(sndobjlib, hdrs)
@@ -351,7 +354,7 @@ if swigcheck and env['pythonmodule']:
   elif getPlatform() == 'win':
     pysndobj.Prepend(CPPPATH=[pythonpath+'\\include', 'src'])
     pysndobj.Prepend(LIBPATH=[pythonpath+'\\libs'])
-    pysndobj.Append(LIBS=[pythonlib])
+    pysndobj.Append(LIBS=[pythonlib, 'ole32'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
   else:

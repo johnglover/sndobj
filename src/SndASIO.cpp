@@ -188,7 +188,7 @@ SndASIO::SndASIO(int channels, int mode, char* driver, int numbuffs,
     
     if(ASIOOutputReady() == ASE_OK) optimise = true;
 				else optimise = false;
-    printf("channels: %d\n", m_channels);
+    // printf("channels: %d\n", m_channels);
 	m_outsndbuff = outsndbuff;
 	m_insndbuff = insndbuff;
 	m_encoding = encoding;
@@ -212,7 +212,7 @@ SndASIO::SndASIO(int channels, int mode, char* driver, int numbuffs,
       return;
 
   }
- cout << m_bits;
+  // cout << m_bits;
 }
 
 
@@ -430,7 +430,7 @@ long index, ASIOBool processNow){
 	}
  
  if(optimise)ASIOOutputReady();
-	
+ memset(outsndbuff[currentbuffer], 0, sizeof(float)*buffsize*ochannels);	
  currentbuffer= (currentbuffer+1)%buffs;
  return timeInfo;
 
@@ -483,8 +483,8 @@ void DriverList(){
     
 	// display driver names 
     char** drivernames = new char*[10];
-	int numdrivers;
-    for(int i = 0; i < 10; i++)
+	int numdrivers,i;
+    for(i = 0; i < 10; i++)
               drivernames[i] = new char[32];
     if(!asioDrivers)
     asioDrivers = new AsioDrivers;
@@ -504,13 +504,14 @@ void DriverList(){
 char* DriverName(int num, char* name){
 
     char** drivernames = new char*[10];
-    for(int i = 0; i < 10; i++)
+    int i;
+    for(i = 0; i < 10; i++)
               drivernames[i] = new char[32];
 
 	if(!asioDrivers)
     asioDrivers = new AsioDrivers;
     asioDrivers->getDriverNames(drivernames, 10); 
-    if(num && (num < 10)) 
+    if(num >= 0 && num < 10) 
 	strcpy(name, drivernames[num]);
     else
       name = NULL;
@@ -518,5 +519,6 @@ char* DriverName(int num, char* name){
     delete[] drivernames;
 	return name;
 }
+
 
 #endif

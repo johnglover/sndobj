@@ -83,7 +83,6 @@
 #include  "Randi.h"    // interpolated
 
 // Spectral stuff
-
 #include "FFT.h"        // windowed overlapping FFT
 #include "IFFT.h"       // overlap-add IFFT
 #include "PVA.h"        // pvoc analysis/synthesis
@@ -131,7 +130,7 @@
 #endif
 
 #include "SndRTIO.h" // WinMME/OSS/SGI RT IO
-#ifdef _MBCS
+#ifdef WIN 
 #include "SndAsio.h" // ASIO-driver IO
 #endif
 #ifdef JACK
@@ -301,7 +300,7 @@ typedef SndObj* sndobjp;
 #endif
 
 %include  "SndRTIO.h" // WinMME/OSS/SGI RT IO
-#ifdef _MBCS
+#ifdef WIN
 %include  "SndAsio.h" // ASIO-driver IO
 #endif
 #ifdef JACK
@@ -326,4 +325,5 @@ typedef SndObj* sndobjp;
 %include  "SpecEnvTable.h"    // spectral envelope
 %include  "PVTable.h"         // PV  frame
 %include  "ImpulseTable.h"    // linear FIR coeffs 
+
 
