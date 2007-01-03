@@ -14,7 +14,9 @@ class Instrument
 
   // SndObjs
   StringFlt *string[4];
-  Gain      *strgain[4];
+  Unit   *env[4];
+  LoPass  *lp[4];
+  Ring      *strgain[4];
   Gain    *loopgain[4];
   Mixer   *strmix;
   Mixer   *loopmix;
@@ -31,6 +33,7 @@ class Instrument
   void ReSample(int no){
     if(no >= 0 && no < 4) loop[no]->ReSample();
   }
+
   void LoopOff(int no){
     if(no >= 0 && no < 4){
       loopgain[no]->Disable();
@@ -45,12 +48,16 @@ class Instrument
   }
   void StringOff(int no){
     if(no >= 0 && no < 4){
+      env[no]->Disable();
+      lp[no]->Disable();
       strgain[no]->Disable();
       string[no]->Disable();
     }
   }
   void StringOn(int no){
     if(no >= 0 && no < 4){
+      env[no]->Enable();
+      lp[no]->Enable();
       strgain[no]->Enable();
       string[no]->Enable();
     }
@@ -59,16 +66,18 @@ class Instrument
     if(no >= 0 && no < 4) loop[no]->SetPitch(pitch);
   }
   void SetLoopGain(int no, float gain){
-    if(no >= 0 && no < 4) loopgain[no]->SetGain(gain);
+    if(no >= 0 && no < 4) loopgain[no]->SetGain(gloop[no] = gain);
   }
+
   void SetStrGain(int no, float gain){
-    if(no >= 0 && no < 4) strgain[no]->SetGain(gain);
+    if(no >= 0 && no < 4) env[no]->SetAmp(gstr[no] = gain);
   }
-  void SetRes(int no, float res){
-    if(no >= 0 && no < 4) string[no]->SetFdbgain(res);
+
+  void SetRes(int no, float re){
+    if(no >= 0 && no < 4) string[no]->SetFdbgain(res[no] = re);
   }
   void SetFreq(int no, float freq){
-    if(no >= 0 && no < 4) string[no]->SetFreq(freq);
+    if(no >= 0 && no < 4) string[no]->SetFreq(fr[no] = freq);
   }
   float GetFreq(int no){ 
     if(no<4 && no >= 0) return fr[no]; 
