@@ -87,11 +87,11 @@ SndWaveX::GetHeader(WAVEFORMATEXTENSIBLE* pheader){
 	pheader->waveformatex.nchns = m_header.nchns;
 	pheader->waveformatex.rate = m_header.rate; // sampling rate
 	pheader->waveformatex.aver = m_header.aver;// bytes per sec
-		pheader->waveformatex.nBlockAlign = m_header.nBlockAlign; // bytes per frame  
-		pheader->waveformatex.size = m_header.size;	// bits per sample 
-		pheader->waveformat_ext.wValidBitsPerSample = m_bits;
-		pheader->waveformat_ext.dwChannelMask = m_ChannelMask;
-		pheader->waveformat_ext.SubFormat =  m_SubFormat;
+	pheader->waveformatex.nBlockAlign = m_header.nBlockAlign; // bytes per frame  
+	pheader->waveformatex.size = m_header.size;	// bits per sample 
+	pheader->waveformat_ext.wValidBitsPerSample = m_bits;
+	pheader->waveformat_ext.dwChannelMask = m_ChannelMask;
+	pheader->waveformat_ext.SubFormat =  m_SubFormat;
 }
 
 

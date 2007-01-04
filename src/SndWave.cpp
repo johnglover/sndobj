@@ -43,7 +43,7 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_error = 21;
 			m_output =0;
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
 			return;
 			
@@ -61,9 +61,9 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_output = 0;
 			m_iswave = false;
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
-		       
+			
 			return;
 			
 		}
@@ -81,7 +81,7 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_iswave = false;
 			
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
 			return;
 		}
@@ -95,7 +95,7 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 			m_iswave = false;
 			
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
 			return;
 		}	 
@@ -106,9 +106,9 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 		
 		if(!(m_IOobjs = new SndObj*[m_channels])){
 			m_error = 2;
-		        
+			
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
 			return;
 		}
@@ -120,7 +120,7 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 		if(!(m_output = new float[m_samples])){
 			m_error = 1;		
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
 			return;
 		}
@@ -129,7 +129,7 @@ SndFIO(name, mode, channels, bits, inputlist, spos, vecsize, sr){
 		if(!(m_buffer = new char[m_buffsize])){
 			m_error = 11;	        
 #ifdef DEBUG
-	cout << ErrorMessage();
+			cout << ErrorMessage();
 #endif
 			return;
 		}
@@ -192,14 +192,13 @@ SndWave::~SndWave(){
 
 
 wave_head 
-SndWave::PutHeader(long databytes, int hdrsize, int len,
-				   int format)
+SndWave::PutHeader(long databytes, int hdrsize, int len, int format)
 {
 	wave_head form;
-	form.magic = LONG_LE(*((long *)RIFF_ID));
-	form.len0 = LONG_LE((long)(hdrsize + databytes)); 
-	form.magic1 = LONG_LE(*((long *)WAVE_ID));
-	form.magic2 = LONG_LE(*((long *)FMT_ID));
+	form.magic = *((long *)RIFF_ID);
+	form.len0 = LONG_LE(((long)(hdrsize + databytes))); 
+	form.magic1 = *((long *)WAVE_ID);
+	form.magic2 = *((long *)FMT_ID);
 	form.len = LONG_LE((long)len);  // length of format chunk 
 	form.format = SHORT_LE((short)format); // PCM == 1
 	form.nchns = SHORT_LE((short)m_channels);
@@ -224,26 +223,26 @@ SndWave::ReadHeader(){
 	m_header.nchns = SHORT_LE(m_header.nchns);
 	m_header.rate = LONG_LE(m_header.rate); // sampling rate
 	m_header.aver = LONG_LE(m_header.aver);// bytes per sec
-	m_header.nBlockAlign = SHORT_LE(m_header.nBlockAlign); // bytes per frame  
-	m_header.size = SHORT_LE(m_header.size);	// bits per sample 
+		m_header.nBlockAlign = SHORT_LE(m_header.nBlockAlign); // bytes per frame  
+		m_header.size = SHORT_LE(m_header.size);	// bits per sample 
 		
-	fseek(m_file,m_header.len+20,SEEK_SET);
-	char chunk_id[4]; 
-	long chunksize;
-	fread(&chunk_id,sizeof(char), 4, m_file);
-	fread(&chunksize,sizeof(long), 1, m_file);
-	chunksize = LONG_LE(chunksize);
-		
-	while (*(long*)chunk_id != *(long*)DATA_ID) {
-			
-		fseek(m_file,chunksize,SEEK_CUR);
+		fseek(m_file,m_header.len+20,SEEK_SET);
+		char chunk_id[4]; 
+		long chunksize;
 		fread(&chunk_id,sizeof(char), 4, m_file);
 		fread(&chunksize,sizeof(long), 1, m_file);
 		chunksize = LONG_LE(chunksize);
-	}
-	m_wdata.datasize = chunksize;          
 		
-	return 1;
+		while (*(long*)chunk_id != *(long*)DATA_ID) {
+			
+			fseek(m_file,chunksize,SEEK_CUR);
+			fread(&chunk_id,sizeof(char), 4, m_file);
+			fread(&chunksize,sizeof(long), 1, m_file);
+			chunksize = LONG_LE(chunksize);
+		}
+		m_wdata.datasize = chunksize;          
+		
+		return 1;
 }
 
 short 

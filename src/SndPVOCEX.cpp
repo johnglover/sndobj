@@ -1,4 +1,4 @@
-// Copyright (c)Victor Lazzarini, 1997-2004
+	// Copyright (c)Victor Lazzarini, 1997-2004
 // See License.txt for a disclaimer of all warranties
 // and licensing information
 
@@ -18,6 +18,8 @@ SndWaveX(name,mode,channels,channelmask, bits, format,
 	m_format = WAVE_FORMAT_EXTENSIBLE;
 	m_hdrsize = 100;
 	
+//	printf("bits %i mode %i fftsize %i\n", bits, mode, fftsize);
+	
 	if(mode != READ){ // if output
 		int mask;
 		short sbits;
@@ -26,8 +28,8 @@ SndWaveX(name,mode,channels,channelmask, bits, format,
 		GUID subfmt;
 		cbsize = SHORT_LE((short)62);
 		PutHeader(0,m_hdrsize,m_len, m_format);
-		sbits = SHORT_LE((short)m_bits);
-		m_bits = sbits; //
+		sbits = SHORT_LE((short)bits);
+		m_bits = bits; //
 		mask = LONG_LE((long) (m_ChannelMask = channelmask));
 		subfmt.Data1 = LONG_LE(0x8312B9C2);
 		subfmt.Data2 = SHORT_LE(0x2E6E);
@@ -141,7 +143,7 @@ short
 SndPVOCEX::Write(){
 	if(!m_error && (m_mode != READ)){
 		int i,n;
-		
+			
 		switch(m_bits){
 			
 			case 32: 
