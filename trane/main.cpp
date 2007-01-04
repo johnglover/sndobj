@@ -11,7 +11,7 @@
 struct InstData {
   Instrument trane;
   Fl_Value_Slider *str_fr[4], *loop_gain[4];
-  Fl_Dial *str_gain[4];
+  Fl_Dial *str_gain[4], *decay[4];
   Fl_Light_Button *str_bt[4], *loop_bt[4];
   Fl_Button *resamp_bt[4];
 };
@@ -64,6 +64,13 @@ static void sgain_callback(Fl_Widget* o, void *d) {
    
 }
 
+static void sdecay_callback(Fl_Widget* o, void *d) {
+  InstData *p = (InstData *) d;
+  for(int i=0; i < 4; i++)
+    if(o == p->decay[i])
+      p->trane.SetDec(i,-((Fl_Dial *)o)->value());
+   
+}
 static void lgain_callback(Fl_Widget* o, void *d) {
   InstData *p = (InstData *) d;
   for(int i=0; i < 4; i++)
@@ -97,9 +104,9 @@ int main(int argc, char **argv) {
     inst.str_bt[i]->callback((Fl_Callback*)str_callback, (void *) &inst);
     strings->add(inst.str_bt[i]);
     if(i==3)
-      inst.str_fr[i] = new Fl_Value_Slider(105, 20+i*60, 280, 40, "frequency");
+      inst.str_fr[i] = new Fl_Value_Slider(105, 20+i*60, 230, 40, "frequency");
     else
-      inst.str_fr[i] = new Fl_Value_Slider(105, 20+i*60, 280, 40);
+      inst.str_fr[i] = new Fl_Value_Slider(105, 20+i*60, 230, 40);
     inst.str_fr[i]->range(inst.trane.GetFreq(i),inst.trane.GetFreq(i)*4);
     inst.str_fr[i]->value(inst.trane.GetFreq(i));
     inst.str_fr[i]->type(5);
@@ -108,15 +115,25 @@ int main(int argc, char **argv) {
     inst.str_fr[i]->box(FL_FLAT_BOX);
     strings->add(inst.str_fr[i]);
     if(i==3)
-      inst.str_gain[i] = new Fl_Dial(405, 20+i*60, 40, 40, "Gain");
+      inst.str_gain[i] = new Fl_Dial(355, 20+i*60, 40, 40, "Gain");
     else
-      inst.str_gain[i] = new Fl_Dial(405, 20+i*60, 40, 40);
+      inst.str_gain[i] = new Fl_Dial(355, 20+i*60, 40, 40);
     inst.str_gain[i]->callback((Fl_Callback*)sgain_callback, (void *)&inst);
     inst.str_gain[i]->range(0,1.0);
     inst.str_gain[i]->value(inst.trane.GetStrGain(i));
     inst.str_gain[i]->box(FL_ROUND_UP_BOX);
     strings->add(inst.str_gain[i]);
-    // loops
+    if(i==3)
+      inst.decay[i] = new Fl_Dial(405, 20+i*60, 40, 40, "Decay");
+    else
+      inst.decay[i] = new Fl_Dial(405, 20+i*60, 40, 40);
+    inst.decay[i]->callback((Fl_Callback*)sdecay_callback, (void *)&inst);
+    inst.decay[i]->range(-48.0,-6.0);
+    inst.decay[i]->value(-inst.trane.GetDec(i));
+    inst.decay[i]->box(FL_ROUND_UP_BOX);
+    strings->add(inst.str_gain[i]);
+
+     // loops
     sprintf(mess2[i], "sample %d", i+1);
     inst.loop_bt[i] = new Fl_Light_Button(15+i*115,280, 80, 30, mess2[i]);
     inst.loop_bt[i]->type(FL_TOGGLE_BUTTON);

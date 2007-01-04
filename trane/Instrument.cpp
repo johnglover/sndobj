@@ -14,20 +14,20 @@ Instrument::Instrument()
 
   /* strings */
   fr[0] =  73.4f;
-  res[0] = .99f;
+  dec[0] = 12.f;
   fr[1] =  130.8f;
-  res[1] = .993f;
+  dec[1] = 12.f;
   fr[2] =  233.0f;
-  res[2] = .996f;
+  dec[2] = 12.f;
   fr[3] =  392.0f;
-  res[3] = .999f;
+  dec[3] = 12.f;
 	
   strmix = new Mixer;
   for (i = 0; i < 4; i++){
-    string[i] = new StringFlt(fr[i], res[i], sound);
+    string[i] = new StringFlt(fr[i], sound, dec[i]);
     gstr[i] = 0.5f;
-    env[i] = new  Unit(0.5f, UNIT_STEP);
-    lp[i] = new LoPass(10.f, env[i]);
+    value[i] = new  Unit(0.5f, UNIT_STEP);
+    lp[i] = new LoPass(10.f, value[i]);
     strgain[i] = new Ring(lp[i], string[i]);
     strmix->AddObj(strgain[i]);
     StringOff(i);
@@ -64,7 +64,7 @@ Instrument::Instrument()
   thread = new SndThread();
   thread->AddObj(sound);
   for(i=0; i<4; i++){
-    thread->AddObj(env[i]);
+    thread->AddObj(value[i]);
     thread->AddObj(lp[i]);
     thread->AddObj(string[i]);
     thread->AddObj(strgain[i]);
@@ -87,7 +87,7 @@ Instrument::~Instrument()
   delete input;
   for(int i=0;i <4; i++){
     delete string[i];
-    delete env[i];
+    delete value[i];
     delete lp[i];
     delete strgain[i];
     delete loop[i];

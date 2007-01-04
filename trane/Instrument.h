@@ -5,7 +5,7 @@
 
 class Instrument  
 {
-  float res[4];
+  float dec[4];
   float fr[4];
   float gloop[4];
   float gstr[4];
@@ -14,7 +14,7 @@ class Instrument
 
   // SndObjs
   StringFlt *string[4];
-  Unit   *env[4];
+  Unit   *value[4];
   LoPass  *lp[4];
   Ring      *strgain[4];
   Gain    *loopgain[4];
@@ -48,7 +48,7 @@ class Instrument
   }
   void StringOff(int no){
     if(no >= 0 && no < 4){
-      env[no]->Disable();
+      value[no]->Disable();
       lp[no]->Disable();
       strgain[no]->Disable();
       string[no]->Disable();
@@ -56,7 +56,7 @@ class Instrument
   }
   void StringOn(int no){
     if(no >= 0 && no < 4){
-      env[no]->Enable();
+      value[no]->Enable();
       lp[no]->Enable();
       strgain[no]->Enable();
       string[no]->Enable();
@@ -70,11 +70,13 @@ class Instrument
   }
 
   void SetStrGain(int no, float gain){
-    if(no >= 0 && no < 4) env[no]->SetAmp(gstr[no] = gain);
+    if(no >= 0 && no < 4) value[no]->SetAmp(gstr[no] = gain);
   }
 
-  void SetRes(int no, float re){
-    if(no >= 0 && no < 4) string[no]->SetFdbgain(res[no] = re);
+  void SetDec(int no, float re){
+    if(no >= 0 && no < 4) {
+   string[no]->SetDecay(dec[no] = re);
+    }
   }
   void SetFreq(int no, float freq){
     if(no >= 0 && no < 4) string[no]->SetFreq(fr[no] = freq);
@@ -82,8 +84,8 @@ class Instrument
   float GetFreq(int no){ 
     if(no<4 && no >= 0) return fr[no]; 
   }
-  float GetRes(int no){ 
-    if(no<4 && no >= 0) return res[no]; 
+  float GetDec(int no){ 
+    if(no<4 && no >= 0) return dec[no]; 
   }
   float GetLoopGain(int no){ 
     if(no<4 && no >= 0) return gloop[no]; 
