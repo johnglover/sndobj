@@ -6,7 +6,6 @@
 #include <FL/Fl_Dial.H>
 #include <FL/Fl_Group.H>
 #include <stdio.h>
-#include <time.h>
 #include "Instrument.h"
 
 struct InstData {
@@ -52,27 +51,24 @@ static void resample_callback(Fl_Widget* o, void *d) {
 
   InstData *p = (InstData *) d;
   for(int i=0; i < 4; i++)
-    if(o == p->resamp_bt[i]){
+    if(o == p->resamp_bt[i]) 
       p->trane.ReSample(i);
-    }
+    
 }
 
 static void sgain_callback(Fl_Widget* o, void *d) {
   InstData *p = (InstData *) d;
-  float f;
   for(int i=0; i < 4; i++)
-    if(o == p->str_gain[i]){
-      f =  ((Fl_Dial *)o)->value();
-      p->trane.SetStrGain(i,f);
-    }
+    if(o == p->str_gain[i])
+      p->trane.SetStrGain(i,((Fl_Dial *)o)->value());
+   
 }
 
 static void lgain_callback(Fl_Widget* o, void *d) {
   InstData *p = (InstData *) d;
   for(int i=0; i < 4; i++)
-    if(o == p->loop_gain[i]){
+    if(o == p->loop_gain[i])
       p->trane.SetLoopGain(i,((Fl_Value_Slider *)o)->value());
-    }
 }
 
 int main(int argc, char **argv) {
