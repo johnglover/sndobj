@@ -32,6 +32,7 @@ m_ffttmp = new float[m_fftsize];
 m_counter = new int[m_frames];
 m_halfsize = m_fftsize/2;
 m_fund = m_sr/m_fftsize;
+memset(m_ffttmp, 0, m_fftsize*sizeof(float));
 int i;
 for(i = 0; i < m_frames; i++){
 m_sigframe[i] = new float[m_fftsize];
@@ -66,6 +67,7 @@ m_ffttmp = new float[m_fftsize];
 m_counter = new int[m_frames];
 m_halfsize = m_fftsize/2;
 m_fund = m_sr/m_fftsize;
+memset(m_ffttmp, 0, m_fftsize*sizeof(float));
 int i;
 for(i = 0; i < m_frames; i++){
 m_sigframe[i] = new float[m_fftsize];
