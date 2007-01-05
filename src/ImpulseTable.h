@@ -16,26 +16,26 @@
 #include <rfftw.h>
 
 class ImpulseTable : public SpecEnvTable {
-protected:
+ protected:
   Table*  m_window;
   rfftw_plan m_plan; // FFTW initialisation
   float* m_ffttmp;
-      public:
+ public:
 		
   void SetWindow(Table* window){
-			  m_window = window->GetLen() == m_L ? window : 0;
-			  MakeTable();
-		  }
+    m_window = window->GetLen() == m_L ? window : 0;
+    MakeTable();
+  }
   short MakeTable();
   ImpulseTable();
   ImpulseTable(long L,
-	  int segments, float start, 
-	  float* points, float* lengths,float type = 0.f,
-	  Table* window=0,
-	  float nyquistamp=0.f);
+	       int segments, float start, 
+	       float* points, float* lengths,float type = 0.f,
+	       Table* window=0,
+	       float nyquistamp=0.f);
   
   ~ImpulseTable();
 
-        };
+};
 
 #endif

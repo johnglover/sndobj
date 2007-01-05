@@ -14,15 +14,15 @@
 /////////////// CONSTRUCTION / DESTRUCTION /////////////////////
 
 ButtBR::ButtBR(){ 
-m_type = 2;
-SetParam(m_fr, m_bw, m_type);
+  m_type = 2;
+  SetParam(m_fr, m_bw, m_type);
 }
 
 ButtBR::ButtBR(float fr, float bw, SndObj* inObj,  SndObj* inputfreq, 
-			   SndObj* inputbw, int vecsize, float sr) 
-			   : ButtBP (fr, bw, inObj, inputfreq, inputbw, vecsize, sr){
-m_type = 2;
-SetParam(m_fr, m_bw, m_type);
+	       SndObj* inputbw, int vecsize, float sr) 
+  : ButtBP (fr, bw, inObj, inputfreq, inputbw, vecsize, sr){
+  m_type = 2;
+  SetParam(m_fr, m_bw, m_type);
 }
 
 ButtBR::~ButtBR(){

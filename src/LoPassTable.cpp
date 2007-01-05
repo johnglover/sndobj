@@ -14,48 +14,48 @@
 
 LoPassTable::LoPassTable()
 {
-m_sr = 44100.f;
-m_fr = 1000.f;
-m_L = 11;
-m_table = new float[m_L];
-MakeTable();
+  m_sr = 44100.f;
+  m_fr = 1000.f;
+  m_L = 11;
+  m_table = new float[m_L];
+  MakeTable();
 }
 
 LoPassTable::~LoPassTable()
 {
-delete[] m_table;
+  delete[] m_table;
 
 }
 
 LoPassTable::LoPassTable(int impulsesize, float fr, float sr)
 {
-m_sr = sr;
-m_fr = fr;
+  m_sr = sr;
+  m_fr = fr;
 
-// make impulsesize odd
-impulsesize = ((impulsesize/2)*2)+1;
+  // make impulsesize odd
+  impulsesize = ((impulsesize/2)*2)+1;
 
-m_L = impulsesize;
-m_table = new float[m_L];
-MakeTable();
+  m_L = impulsesize;
+  m_table = new float[m_L];
+  MakeTable();
 }
 
 
 short LoPassTable::MakeTable()
 {
-double Pi = TWOPI/2.;
-ZeroTable();
-for(int i = 0; i < m_L; i++){
+  double Pi = TWOPI/2.;
+  ZeroTable();
+  for(int i = 0; i < m_L; i++){
 
-	m_table[i] = (float) ((sin(TWOPI*(i-m_L/2.)*(m_fr/m_sr))
-		                   / (Pi*(i-m_L/2.)))
-		        * (0.54+0.64*cos((Pi*(i-m_L/2.))/m_L)));
+    m_table[i] = (float) ((sin(TWOPI*(i-m_L/2.)*(m_fr/m_sr))
+			   / (Pi*(i-m_L/2.)))
+			  * (0.54+0.64*cos((Pi*(i-m_L/2.))/m_L)));
 
-}
-return 1;
+  }
+  return 1;
 }
 
 char* LoPassTable::ErrorMessage()
 {
- return "no error";
+  return "no error";
 }

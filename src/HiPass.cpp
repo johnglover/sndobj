@@ -13,17 +13,17 @@
 
 HiPass::HiPass()
 {
-double  C = 2 - cos(2*PI*m_fr/m_sr);	
-m_b1 = C - sqrt((C*C) - 1); 
-m_a = 1 - m_b1;
+  double  C = 2 - cos(2*PI*m_fr/m_sr);	
+  m_b1 = C - sqrt((C*C) - 1); 
+  m_a = 1 - m_b1;
 }
 
 HiPass::HiPass(float freq, SndObj* inObj, int vecsize, float sr):
   LoPass(freq, inObj,vecsize,sr)
 {
-double  C = 2 - cos(2*PI*m_fr/m_sr);	
-m_b1 = C - sqrt((C*C) - 1); 
-m_a = 1 - m_b1;
+  double  C = 2 - cos(2*PI*m_fr/m_sr);	
+  m_b1 = C - sqrt((C*C) - 1); 
+  m_a = 1 - m_b1;
 }
 
 HiPass::~HiPass(){
@@ -31,20 +31,20 @@ HiPass::~HiPass(){
 
 int HiPass::Set(char* mess, float value){
 
-	switch (FindMsg(mess)){
+  switch (FindMsg(mess)){
 
-	case 21:
+  case 21:
     SetFreq(value);
-	return 1;
+    return 1;
 
-    case 23:
-	SetSr(value);
-	return 1;
+  case 23:
+    SetSr(value);
+    return 1;
 
-	default:
+  default:
     return SndObj::Set(mess,value);
      
-	}
+  }
 
 
 }

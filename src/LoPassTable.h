@@ -16,20 +16,20 @@
 
 class LoPassTable : public Table  
 {	
-protected:
+ protected:
 
-	float m_fr;
-	float m_sr;
-public:
-	char* ErrorMessage();
-	short MakeTable();
+  float m_fr;
+  float m_sr;
+ public:
+  char* ErrorMessage();
+  short MakeTable();
         
-        void SetFreq(float fr) { m_fr=fr ; }
-        void SetSr(float sr) { m_sr =sr; }
+  void SetFreq(float fr) { m_fr=fr ; }
+  void SetSr(float sr) { m_sr =sr; }
         
-	LoPassTable(int impulsesize, float fr, float sr=44100);
-	LoPassTable();
-	virtual ~LoPassTable();
+  LoPassTable(int impulsesize, float fr, float sr=44100);
+  LoPassTable();
+  virtual ~LoPassTable();
 
 };
 

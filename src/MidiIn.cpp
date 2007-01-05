@@ -14,45 +14,45 @@
 MidiIn::MidiIn(){
 
 
-m_ioinput = 0;
-m_message = NOTE_MESSAGE;
-m_channel = 0;
-m_readvel = 0;
+  m_ioinput = 0;
+  m_message = NOTE_MESSAGE;
+  m_channel = 0;
+  m_readvel = 0;
 
-AddMsg("message type", 21);
-AddMsg("channel", 22);
-AddMsg("midi input", 23);
+  AddMsg("message type", 21);
+  AddMsg("channel", 22);
+  AddMsg("midi input", 23);
 
 }
 
 MidiIn::MidiIn(SndMidiIn* input, short message, short channel,
-			   int vecsize, float sr): SndObj (0, vecsize, sr){
+	       int vecsize, float sr): SndObj (0, vecsize, sr){
 
 
-m_ioinput = input;
-if((message != VELOCITY_MESSAGE)  &&  (message != POLYAFTOUCH_MESSAGE)){
-           m_readvel = m_readaft = 0;
-           m_message = message;
+  m_ioinput = input;
+  if((message != VELOCITY_MESSAGE)  &&  (message != POLYAFTOUCH_MESSAGE)){
+    m_readvel = m_readaft = 0;
+    m_message = message;
          
-	  }
-else{
-if(message == VELOCITY_MESSAGE){
-	          m_readaft = 0;
-			  m_readvel = 1;
-			  m_message = NOTE_MESSAGE;
-}
-if(message == POLYAFTOUCH_MESSAGE) { 
-	          m_readaft = 1;
-              m_readvel =  0;
-              m_message = NOTE_MESSAGE;
-}
-}
+  }
+  else{
+    if(message == VELOCITY_MESSAGE){
+      m_readaft = 0;
+      m_readvel = 1;
+      m_message = NOTE_MESSAGE;
+    }
+    if(message == POLYAFTOUCH_MESSAGE) { 
+      m_readaft = 1;
+      m_readvel =  0;
+      m_message = NOTE_MESSAGE;
+    }
+  }
 
-m_channel = channel-1;
+  m_channel = channel-1;
 
-AddMsg("message type", 21);
-AddMsg("channel", 22);
-AddMsg("midi input", 23);
+  AddMsg("message type", 21);
+  AddMsg("channel", 22);
+  AddMsg("midi input", 23);
 }
 
 
@@ -63,63 +63,63 @@ MidiIn::~MidiIn(){
 int
 MidiIn::Set(char* mess, float value){
 
-	switch(FindMsg(mess)){
+  switch(FindMsg(mess)){
 
-	case 21:
-	SetMessage((short) value);
-	return 1;
+  case 21:
+    SetMessage((short) value);
+    return 1;
 
-	case 22:
-	SetChannel((short) value);
-	return 1;
+  case 22:
+    SetChannel((short) value);
+    return 1;
 
-	default:
-	return SndObj::Set(mess, value);
+  default:
+    return SndObj::Set(mess, value);
 
-	}
+  }
 
 }
 
 int
 MidiIn::Connect(char* mess, void* input){
 
-	switch(FindMsg(mess)){
+  switch(FindMsg(mess)){
 
-	case 23:
-	m_ioinput = (SndMidiIn *) input;
-	return 1;
+  case 23:
+    m_ioinput = (SndMidiIn *) input;
+    return 1;
 
-	default:
-	return SndObj::Connect(mess, input);
+  default:
+    return SndObj::Connect(mess, input);
 
-	}
+  }
 
 }
 
 short
 MidiIn::DoProcess(){
-if(!m_error) { 
- if(m_ioinput){   
-  if(m_message == m_ioinput->GetMessage(m_channel+1)){
-   for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){   
-    if(m_enable){
-       if(!m_readvel  &&  !m_readaft)
-			 m_output[m_vecpos] = m_ioinput->Output(m_channel);		
-		 else {
-			  if(m_readvel)m_output[m_vecpos] = m_ioinput->LastNoteVelocity();
-			  if(m_readaft)m_output[m_vecpos] = m_ioinput->LastNoteAftertouch();
-		 }
-	} else m_output[m_vecpos] = 0.f;
-   }
-   return 1; 
-  } else return 1;
- }  
- else{
-   m_error = 11; 
-   return 0;
-   }
-}
- else return 0;
+  if(!m_error) { 
+    if(m_ioinput){   
+      if(m_message == m_ioinput->GetMessage(m_channel+1)){
+	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){   
+	  if(m_enable){
+	    if(!m_readvel  &&  !m_readaft)
+	      m_output[m_vecpos] = m_ioinput->Output(m_channel);		
+	    else {
+	      if(m_readvel)m_output[m_vecpos] = m_ioinput->LastNoteVelocity();
+	      if(m_readaft)m_output[m_vecpos] = m_ioinput->LastNoteAftertouch();
+	    }
+	  } else m_output[m_vecpos] = 0.f;
+	}
+	return 1; 
+      } else return 1;
+    }  
+    else{
+      m_error = 11; 
+      return 0;
+    }
+  }
+  else return 0;
 }
 
 char*
@@ -130,18 +130,18 @@ MidiIn::ErrorMessage(){
   switch(m_error){
 
   case 0:
-  message = "No error.";
-  break; 
+    message = "No error.";
+    break; 
 
   case 11:
-  message = "DoProcess() failed. No input object(s).";
-  break;
+    message = "DoProcess() failed. No input object(s).";
+    break;
 
   default:
-  message = "Undefined error";
-  break;
+    message = "Undefined error";
+    break;
   }
 
- return message;
+  return message;
 
 }

@@ -14,15 +14,15 @@
 /////////////// CONSTRUCTION / DESTRUCTION /////////////////////
 
 ButtLP::ButtLP(){
-m_type = 4;
-SetParam(m_fr, 0, m_type);
+  m_type = 4;
+  SetParam(m_fr, 0, m_type);
 
-                 }
+}
 
 ButtLP::ButtLP(float fr, SndObj* inObj,  SndObj* inputfreq, int vecsize, float sr) 
-: ButtBP (fr, 0.f, inObj, inputfreq, 0, vecsize, sr){
-m_type = 4;
-SetParam(m_fr, 0, m_type);
+  : ButtBP (fr, 0.f, inObj, inputfreq, 0, vecsize, sr){
+  m_type = 4;
+  SetParam(m_fr, 0, m_type);
 }
 
 ButtLP::~ButtLP(){

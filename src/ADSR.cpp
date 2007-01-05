@@ -14,158 +14,158 @@
 
 //////////////// CONSTRUCTION / DESTRUCTION ////////////////////
 
-   ADSR::ADSR(){
+ADSR::ADSR(){
    
-      Enable();
-      m_att = m_maxamp = m_dec = m_sus = m_rel = 0.f;
-      m_sustain = 0;
-      m_count = m_dur = 0;
-      AddMsg("attack", 21);
-      AddMsg("decay", 22);
-      AddMsg("sustain", 23);
-	  AddMsg("release", 24);
-      AddMsg("maxamp", 25);
-      AddMsg("duration", 26);
-	  AddMsg("go to release", 27);
-	  AddMsg("lock to sustain", 28);
-	  AddMsg("restart", 29);
+  Enable();
+  m_att = m_maxamp = m_dec = m_sus = m_rel = 0.f;
+  m_sustain = 0;
+  m_count = m_dur = 0;
+  AddMsg("attack", 21);
+  AddMsg("decay", 22);
+  AddMsg("sustain", 23);
+  AddMsg("release", 24);
+  AddMsg("maxamp", 25);
+  AddMsg("duration", 26);
+  AddMsg("go to release", 27);
+  AddMsg("lock to sustain", 28);
+  AddMsg("restart", 29);
 
-   }
+}
 
-   ADSR::ADSR(float att, float maxamp, float dec, float sus, float rel,
+ADSR::ADSR(float att, float maxamp, float dec, float sus, float rel,
 	   float dur, SndObj* InObj, int vecsize, float sr):
-		SndObj(InObj, vecsize, sr){
+  SndObj(InObj, vecsize, sr){
    
-      Enable();
-      m_maxamp = maxamp;
-      m_sus = sus;
-	  m_sustain = 0;
-      m_count = 0;
-      m_att = att*m_sr;
-      m_dec = dec*m_sr;
-      m_rel = rel*m_sr;
-      m_dur = (unsigned long) (dur*m_sr);
-      AddMsg("attack", 21);
-      AddMsg("decay", 22);
-      AddMsg("sustain", 23);
-	  AddMsg("release", 24);
-      AddMsg("maxamp", 25);
-      AddMsg("duration", 26);
-	  AddMsg("go to release", 27);
-	  AddMsg("lock to sustain", 28);
-	  AddMsg("restart", 29);
-   }
+  Enable();
+  m_maxamp = maxamp;
+  m_sus = sus;
+  m_sustain = 0;
+  m_count = 0;
+  m_att = att*m_sr;
+  m_dec = dec*m_sr;
+  m_rel = rel*m_sr;
+  m_dur = (unsigned long) (dur*m_sr);
+  AddMsg("attack", 21);
+  AddMsg("decay", 22);
+  AddMsg("sustain", 23);
+  AddMsg("release", 24);
+  AddMsg("maxamp", 25);
+  AddMsg("duration", 26);
+  AddMsg("go to release", 27);
+  AddMsg("lock to sustain", 28);
+  AddMsg("restart", 29);
+}
 
-   ADSR::~ADSR(){  
-   }
+ADSR::~ADSR(){  
+}
 
 ////////////////// OPERATIONS ///////////////////////////////
 
 
-   void
-   ADSR::SetADSR(float att, float dec, float sus, float rel)
-   {
-      m_att = m_sr*att;
-      m_dec = m_sr*dec;
-      m_sus = sus;
-      m_rel = m_sr*rel;            
-   }
+void
+ADSR::SetADSR(float att, float dec, float sus, float rel)
+{
+  m_att = m_sr*att;
+  m_dec = m_sr*dec;
+  m_sus = sus;
+  m_rel = m_sr*rel;            
+}
 
-   void
-   ADSR::SetSr(float sr){
-      m_att = (sr/m_sr)*m_att;
-      m_dec =  (sr/m_sr)*m_dec;
-      m_rel =  (sr/m_sr)*m_rel;
-      m_dur = (unsigned long) ( (sr/m_sr)*m_dur);
-      m_sr = sr;
-   }
+void
+ADSR::SetSr(float sr){
+  m_att = (sr/m_sr)*m_att;
+  m_dec =  (sr/m_sr)*m_dec;
+  m_rel =  (sr/m_sr)*m_rel;
+  m_dur = (unsigned long) ( (sr/m_sr)*m_dur);
+  m_sr = sr;
+}
 
-   int 
-   ADSR::Set(char* mess, float value){
+int 
+ADSR::Set(char* mess, float value){
 
-	switch (FindMsg(mess)){
+  switch (FindMsg(mess)){
 
-	case 21:
+  case 21:
     SetADSR(value,m_dec,m_sus,m_rel);
-	return 1;
-
-	case 22:
-	SetADSR(m_att,value,m_sus,m_rel);
     return 1;
 
-	case 23:
-	SetADSR(m_att,m_dec,value,m_rel);
-	return 1;
+  case 22:
+    SetADSR(m_att,value,m_sus,m_rel);
+    return 1;
 
-	case 24:
-	SetADSR(m_att,m_dec,m_sus,value);
-	return 1;
+  case 23:
+    SetADSR(m_att,m_dec,value,m_rel);
+    return 1;
 
-    case 25:
-	SetMaxAmp(value);
-	return 1;
+  case 24:
+    SetADSR(m_att,m_dec,m_sus,value);
+    return 1;
 
-	case 26:
-	SetDur(value);
-	return 1;
+  case 25:
+    SetMaxAmp(value);
+    return 1;
 
-	case 27:
-	Release();
-	return 1;
+  case 26:
+    SetDur(value);
+    return 1;
+
+  case 27:
+    Release();
+    return 1;
 	
-	case 28:
-	Sustain();
-	return 1;
+  case 28:
+    Sustain();
+    return 1;
 
-	case 29:
-	Restart();
-	return 1;
+  case 29:
+    Restart();
+    return 1;
 
-    case 1:
-	SetSr(value);
-	return 1;
+  case 1:
+    SetSr(value);
+    return 1;
 
-	default:
+  default:
     return SndObj::Set(mess,value);
      
-	}
+  }
 
 
- }
+}
 
 
-   short
-   ADSR::DoProcess()
-   {
+short
+ADSR::DoProcess()
+{
   if(!m_error){
-     float a;
-     for(m_vecpos=0; m_vecpos < m_vecsize; m_vecpos++){
-       if(m_enable){
-         if(m_count == m_dur) m_count=0;
+    float a;
+    for(m_vecpos=0; m_vecpos < m_vecsize; m_vecpos++){
+      if(m_enable){
+	if(m_count == m_dur) m_count=0;
 
-         if(m_count < m_att)
-            a = (m_maxamp/m_att)*m_count;	
-         if(m_count >= m_att && m_count < (m_att+m_dec)) 
-            a = ((m_sus - m_maxamp)/m_dec)*(m_count - m_att) + m_maxamp;
-         if(m_count >= (m_att+m_dec) && m_count <= (m_dur - m_rel))
-            a = m_sus;
-         if (m_count > (m_dur - m_rel)){ 
-			 if(!m_sustain){
-             a = ((0 - m_sus)/m_rel)*(m_count - (m_dur - m_rel)) + m_sus;
-		     m_count++;
-			 }
-			 else a = m_sus;
-		 }
-         else m_count++;
+	if(m_count < m_att)
+	  a = (m_maxamp/m_att)*m_count;	
+	if(m_count >= m_att && m_count < (m_att+m_dec)) 
+	  a = ((m_sus - m_maxamp)/m_dec)*(m_count - m_att) + m_maxamp;
+	if(m_count >= (m_att+m_dec) && m_count <= (m_dur - m_rel))
+	  a = m_sus;
+	if (m_count > (m_dur - m_rel)){ 
+	  if(!m_sustain){
+	    a = ((0 - m_sus)/m_rel)*(m_count - (m_dur - m_rel)) + m_sus;
+	    m_count++;
+	  }
+	  else a = m_sus;
+	}
+	else m_count++;
 		 
-		 if(m_input) 
-            m_output[m_vecpos] = m_input->Output(m_vecpos)*a;
-         else m_output[m_vecpos] = a;
+	if(m_input) 
+	  m_output[m_vecpos] = m_input->Output(m_vecpos)*a;
+	else m_output[m_vecpos] = a;
          
-	   } else m_output[m_vecpos] = 0.f ;
-	 }
-	  return 1;
+      } else m_output[m_vecpos] = 0.f ;
+    }
+    return 1;
   }
-	return 0;
-  }
+  return 0;
+}
 

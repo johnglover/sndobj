@@ -11,7 +11,7 @@
 
 class Buzz : public SndObj {
 
-                       protected:
+ protected:
 
   
   HarmTable* m_ptable;         // reference to a Table obj
@@ -25,15 +25,15 @@ class Buzz : public SndObj {
   
   SndObj* m_inputamp;  
 
-                         public:
+ public:
   Buzz();  
   Buzz(float fr, float amp, short harms, SndObj* InFrObj=0,
        SndObj* InAmpObj=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~Buzz();
   void SetFreq(float fr, SndObj* InFrObj=0);
   void SetAmp(float amp, SndObj* InAmpObj=0){
-	  m_amp = amp;
-	  m_inputamp = InAmpObj;
+    m_amp = amp;
+    m_inputamp = InAmpObj;
   }
   void SetSr(float sr);
   void SetHarm(int harm);
@@ -42,7 +42,7 @@ class Buzz : public SndObj {
   char* ErrorMessage();
   short DoProcess();
   
-                              };
+};
 
 #endif
 

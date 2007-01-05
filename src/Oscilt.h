@@ -17,19 +17,19 @@ class Oscilt : public Oscil
  
 {
 
-public:
+ public:
 
-Oscilt();
+  Oscilt();
 
-Oscilt(Table* table, float fr=440.f, 
-      float amp=1.f,  SndObj* inputfreq = 0, 
-      SndObj* inputamp = 0, int vecsize = DEF_VECSIZE,
-	  float sr=DEF_SR);
+  Oscilt(Table* table, float fr=440.f, 
+	 float amp=1.f,  SndObj* inputfreq = 0, 
+	 SndObj* inputamp = 0, int vecsize = DEF_VECSIZE,
+	 float sr=DEF_SR);
 
-~Oscilt();
+  ~Oscilt();
 
 
-short DoProcess();
+  short DoProcess();
 
 
 };

@@ -15,23 +15,23 @@
 
 class Bend : public MidiIn {
 
-protected:
+ protected:
 
-float m_bend;
-float m_range;
+  float m_bend;
+  float m_range;
 
-public:
+ public:
 
-Bend();
-Bend(SndObj* InObj, SndMidiIn* input, float range, short channel = 1, 
-	 int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-~Bend();
+  Bend();
+  Bend(SndObj* InObj, SndMidiIn* input, float range, short channel = 1, 
+       int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Bend();
 
-void SetRange(float range){ m_range = range;}
+  void SetRange(float range){ m_range = range;}
 
-int Set(char* mess, float value);
+  int Set(char* mess, float value);
 
-short DoProcess();
+  short DoProcess();
 
 };
 

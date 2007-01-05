@@ -13,35 +13,35 @@
 
 #include "SndObj.h"
 
-  struct SndObjList{
-                 SndObj* obj;
-                 SndObjList* next;
+struct SndObjList{
+  SndObj* obj;
+  SndObjList* next;
                  
-                 };
+};
  
 
- class Mixer : public SndObj{
+class Mixer : public SndObj{
 
-               protected:
+ protected:
 
-    SndObjList*  m_InObj;  // pointer to a linked list of SndObj
-    int          m_ObjNo;  // number of input objects
+  SndObjList*  m_InObj;  // pointer to a linked list of SndObj
+  int          m_ObjNo;  // number of input objects
 
     
 
-               public:
+ public:
 
-    Mixer();                            
-    Mixer(int ObjNo, SndObj** InObjs, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-    ~Mixer();
+  Mixer();                            
+  Mixer(int ObjNo, SndObj** InObjs, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Mixer();
   
-    int  GetObjNo() { return m_ObjNo; }  // return number of inputs
-    short AddObj(SndObj* InObj);         // add a SndObj to the input list
-	short DeleteObj(SndObj* InObj);      // delete a SndObj 
-    short DoProcess();         // MIX
-	int Connect(char* mess, void* input);
+  int  GetObjNo() { return m_ObjNo; }  // return number of inputs
+  short AddObj(SndObj* InObj);         // add a SndObj to the input list
+  short DeleteObj(SndObj* InObj);      // delete a SndObj 
+  short DoProcess();         // MIX
+  int Connect(char* mess, void* input);
 
-    char* ErrorMessage();
-                             };
+  char* ErrorMessage();
+};
 
 #endif

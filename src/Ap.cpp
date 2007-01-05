@@ -6,27 +6,27 @@
 
 Ap::Ap(){
 
-m_inputfr = 0;
-m_inputR = 0;    
-SetAPParams(m_fr, m_bw);
-AddMsg("pole frequency", 31);
-AddMsg("pole radius", 32);
+  m_inputfr = 0;
+  m_inputR = 0;    
+  SetAPParams(m_fr, m_bw);
+  AddMsg("pole frequency", 31);
+  AddMsg("pole radius", 32);
 
 
 }
 
 Ap::Ap(float fr, float R, SndObj* input,  
-		 SndObj* inputfreq, 
-         SndObj* inputR, int vecsize, float sr):
-TpTz(0.,0.,0., 0., 0., input, vecsize, sr){
-m_fr = fr;
-m_bw = R;
-m_inputfr = inputfreq;
-m_inputR = inputR;
-SetAPParams(fr, R);
+       SndObj* inputfreq, 
+       SndObj* inputR, int vecsize, float sr):
+  TpTz(0.,0.,0., 0., 0., input, vecsize, sr){
+  m_fr = fr;
+  m_bw = R;
+  m_inputfr = inputfreq;
+  m_inputR = inputR;
+  SetAPParams(fr, R);
 
-AddMsg("pole frequency", 31);
-AddMsg("pole radius", 32);
+  AddMsg("pole frequency", 31);
+  AddMsg("pole radius", 32);
 
 
 }
@@ -37,44 +37,44 @@ Ap::~Ap(){ }
 int
 Ap::Set(char* mess, float value){
 
-	switch (FindMsg(mess)){
+  switch (FindMsg(mess)){
 
-	case 31:
+  case 31:
     SetFreq(value,0);
-	return 1;
-
-	case 32:
-	SetR(value);
     return 1;
 
-    case 1:
-	SetSr(value);
-	return 1;
+  case 32:
+    SetR(value);
+    return 1;
 
-	default:
+  case 1:
+    SetSr(value);
+    return 1;
+
+  default:
     return SndObj::Set(mess,value);
      
-	}
+  }
 
 }
 
 int
 Ap::Connect(char* mess, void* input){
 
-	switch (FindMsg(mess)){
+  switch (FindMsg(mess)){
 
-	case 31:
+  case 31:
     m_inputfr = (SndObj *) input;
-	return 1;
+    return 1;
 
-	case 32:
+  case 32:
     m_inputR = (SndObj *) input;
     return 1;
 
-	default:
+  default:
     return SndObj::Connect(mess,input);
      
-	}
+  }
 
 }
 
@@ -82,65 +82,65 @@ Ap::Connect(char* mess, void* input){
 void 
 Ap::SetFreq(float fr, SndObj* inputfreq){
 
-if(!(m_inputfr = inputfreq))
-      SetAPParams(fr, m_bw);
-m_fr = fr;
+  if(!(m_inputfr = inputfreq))
+    SetAPParams(fr, m_bw);
+  m_fr = fr;
 
 }
 
 void 
 Ap::SetR(float r, SndObj* inputR){
 
-if(!(m_inputR = inputR))
-      SetAPParams(m_fr, r);
+  if(!(m_inputR = inputR))
+    SetAPParams(m_fr, r);
 
-m_bw = r;
+  m_bw = r;
 }
 
 
 short
 Ap::DoProcess(){
 
-if(!m_error){
- if(m_input){
+  if(!m_error){
+    if(m_input){
 	 
-   double out = 0., w = 0.;
-   float fr, R;
+      double out = 0., w = 0.;
+      float fr, R;
 
-   for(m_vecpos=0;m_vecpos < m_vecsize;m_vecpos++){  
+      for(m_vecpos=0;m_vecpos < m_vecsize;m_vecpos++){  
 
- if(m_enable){
+	if(m_enable){
    
-   if(m_inputfr || m_inputR){
-   fr = m_fr + (m_inputfr == 0 ? 0 : m_inputfr->Output(m_vecpos));
-   R = m_bw + (m_inputR== 0 ? 0 : m_inputR->Output(m_vecpos));
+	  if(m_inputfr || m_inputR){
+	    fr = m_fr + (m_inputfr == 0 ? 0 : m_inputfr->Output(m_vecpos));
+	    R = m_bw + (m_inputR== 0 ? 0 : m_inputR->Output(m_vecpos));
 
-      // set params              
-   SetAPParams(fr, R);
+	    // set params              
+	    SetAPParams(fr, R);
 
-	   }
+	  }
 
-    // filtering 
+	  // filtering 
     
-    w = m_a*(m_input->Output(m_vecpos)) - m_b1*m_delay[0] - m_b2*m_delay[1];
-    out = w + m_a1*m_delay[0] + m_a2*m_delay[1];
+	  w = m_a*(m_input->Output(m_vecpos)) - m_b1*m_delay[0] - m_b2*m_delay[1];
+	  out = w + m_a1*m_delay[0] + m_a2*m_delay[1];
 
-	m_delay[1] = m_delay [0];    
-    m_delay[0] = w;
+	  m_delay[1] = m_delay [0];    
+	  m_delay[0] = w;
   
-    m_output[m_vecpos] = out;
+	  m_output[m_vecpos] = out;
 
 	
+	}
+	else m_output[m_vecpos] = 0.f;
+      } 
+      return 1;
+    } else {
+      m_error = 3;
+      return 0;
+    }
   }
- else m_output[m_vecpos] = 0.f;
-	 } 
- return 1;
- } else {
-	m_error = 3;
-	return 0;
- }
-}
-else return 0;
+  else return 0;
 }
 
 char*
@@ -150,18 +150,18 @@ Ap::ErrorMessage(){
    
   switch(m_error){
 
-  // handle your error codes here
+    // handle your error codes here
   case 21:
-  message = "Memory allocation error\n";
-  break;
+    message = "Memory allocation error\n";
+    break;
 
   default:
-  message = Filter::ErrorMessage();
-  break;
+    message = Filter::ErrorMessage();
+    break;
   
   }
 
- return message;
+  return message;
 
 }
 

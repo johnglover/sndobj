@@ -16,13 +16,13 @@
 enum { SINE=1, SAW, SQUARE, BUZZ };
 
 class HarmTable : public Table {
-    protected :
+  protected :
 
-  int m_harm;
+    int m_harm;
   float m_phase;
   int m_typew;
          
-      public:
+ public:
  
   void SetHarm(int harm, int type);
 
@@ -32,7 +32,7 @@ class HarmTable : public Table {
   void SetPhase(float phase){ m_phase = (float)(phase*TWOPI); }
   HarmTable(long L, int harm, int type, float phase=0.f);
   ~HarmTable();
-                             };
+};
 
 
 #endif

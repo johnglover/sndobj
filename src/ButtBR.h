@@ -18,14 +18,14 @@ class ButtBR : public ButtBP
  
 {
 
-protected:
+ protected:
 
-public:
+ public:
 
-ButtBR();
-ButtBR(float fr, float bw, SndObj* inObj, SndObj* inputfreq = 0, 
-      SndObj* inputbw = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-~ButtBR();
+  ButtBR();
+  ButtBR(float fr, float bw, SndObj* inObj, SndObj* inputfreq = 0, 
+	 SndObj* inputbw = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~ButtBR();
 
 };
 

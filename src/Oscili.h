@@ -17,16 +17,16 @@ class Oscili : public Oscil
  
 {
 
-public:
+ public:
 
-Oscili();
+  Oscili();
 
-Oscili(Table* table, float fr=440.f, 
-      float amp=1.f,  SndObj* inputfreq = 0, 
-      SndObj* inputamp = 0, int vecsize= DEF_VECSIZE, float sr=DEF_SR);
+  Oscili(Table* table, float fr=440.f, 
+	 float amp=1.f,  SndObj* inputfreq = 0, 
+	 SndObj* inputamp = 0, int vecsize= DEF_VECSIZE, float sr=DEF_SR);
 
-~Oscili();
-short DoProcess();
+  ~Oscili();
+  short DoProcess();
 
 };
 

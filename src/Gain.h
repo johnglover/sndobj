@@ -15,26 +15,26 @@
 #include "SndObj.h"
 
 
- class Gain : public SndObj{
+class Gain : public SndObj{
 
-               protected:
+ protected:
 
-    float         m_gain;  // gain factor in dB
+  float         m_gain;  // gain factor in dB
        
-               public:
+ public:
 
-    Gain();                            
-    Gain(float gain, SndObj* InObj, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-    ~Gain();
+  Gain();                            
+  Gain(float gain, SndObj* InObj, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Gain();
 
-	int Set(char* mess, float value);
-      void  SetGain(float gain);
-	void  SetGainM(float gain_multiplier) { m_gain = gain_multiplier; }
+  int Set(char* mess, float value);
+  void  SetGain(float gain);
+  void  SetGainM(float gain_multiplier) { m_gain = gain_multiplier; }
     
-    float dBToAmp(float amp);      // changes amp in dB to amp multiplier
-    short DoProcess();           // change gain
+  float dBToAmp(float amp);      // changes amp in dB to amp multiplier
+  short DoProcess();           // change gain
 
-                             };
+};
 
 
 #endif

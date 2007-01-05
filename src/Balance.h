@@ -16,7 +16,7 @@
 
 class Balance : public SndObj {
 
-                       protected: 
+ protected: 
 
   float m_fr; 
   double m_pow;
@@ -28,16 +28,16 @@ class Balance : public SndObj {
   SndObj* m_comp;
 
   float rectify(float val){
-	return (val < 0 ? val*-1 : val); 
+    return (val < 0 ? val*-1 : val); 
   }
   double filter(double in, double* delay);
 
-			 public:
+ public:
   
   void SetInput(SndObj* input1, SndObj* input2){
-                m_comp = input2;
-                m_input = input1;
-               }
+    m_comp = input2;
+    m_input = input1;
+  }
   void  SetLPFreq(float fr);
   void SetSr(float sr);
   int Set(char* mess, float value);
@@ -50,23 +50,23 @@ class Balance : public SndObj {
   short DoProcess();
   int Connect(char* mess, void* input);
 
-                              };
+};
 
 double inline
 Balance::filter(double in, double* delay)
-                 { 
-    double out = 0.f;          // output
-    // filtering 
-    out = m_a0*in + m_a1*delay[2] + m_a0*delay[3] 
-           - m_b1*delay[0] - m_b2*delay[1];  
-    // recirculate the delay line
-    delay[3] = delay[2];       // past inputs
-    delay[2] = in;
-    delay[1] = delay[0];       // past outputs
-    delay[0] = out;    
-    return(out);               // output the float value
+{ 
+  double out = 0.f;          // output
+  // filtering 
+  out = m_a0*in + m_a1*delay[2] + m_a0*delay[3] 
+    - m_b1*delay[0] - m_b2*delay[1];  
+  // recirculate the delay line
+  delay[3] = delay[2];       // past inputs
+  delay[2] = in;
+  delay[1] = delay[0];       // past outputs
+  delay[0] = out;    
+  return(out);               // output the float value
 		  
-                 }  
+}  
 #endif
 
 
