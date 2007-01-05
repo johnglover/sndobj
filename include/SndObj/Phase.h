@@ -17,26 +17,26 @@
 
 class Phase : public SndObj {
 
-protected:
-     float m_freq;
-     float m_offset;
+ protected:
+  float m_freq;
+  float m_offset;
 
-public:
+ public:
    
-   Phase();
-   Phase(float freq, SndObj* FreqInput = 0 , float offset = 0.f,
-	     int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-   ~Phase();
+  Phase();
+  Phase(float freq, SndObj* FreqInput = 0 , float offset = 0.f,
+	int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Phase();
 
-   void SetFreq(float freq, SndObj* FreqInput = 0){
-       m_freq = freq;
-	   m_input = FreqInput;
-	   }
+  void SetFreq(float freq, SndObj* FreqInput = 0){
+    m_freq = freq;
+    m_input = FreqInput;
+  }
     
-   void SetPhase(float offset){ m_offset = offset; }
-   int Set(char* mess, float value);
-   int Connect(char* mess, void* input);
-   short DoProcess();
+  void SetPhase(float offset){ m_offset = offset; }
+  int Set(char* mess, float value);
+  int Connect(char* mess, void* input);
+  short DoProcess();
 
 };
 

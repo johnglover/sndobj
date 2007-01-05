@@ -9,32 +9,32 @@
 
 class PVFilter : public SpecInterp {
 	
-protected:
-float   m_amnt; 
+ protected:
+  float   m_amnt; 
 
-public:
+ public:
 
-PVFilter();
-PVFilter(SndObj* input, SndObj* filspec, float amnt=1.f,
-			   SndObj* amntobj=0, int vecsize=DEF_FFTSIZE,
-		   float sr=DEF_SR);
-PVFilter(Table* filtertable, SndObj* input, float amnt=1.f,
+  PVFilter();
+  PVFilter(SndObj* input, SndObj* filspec, float amnt=1.f,
 	   SndObj* amntobj=0, int vecsize=DEF_FFTSIZE,
-		   float sr=DEF_SR );
-~PVFilter();
+	   float sr=DEF_SR);
+  PVFilter(Table* filtertable, SndObj* input, float amnt=1.f,
+	   SndObj* amntobj=0, int vecsize=DEF_FFTSIZE,
+	   float sr=DEF_SR );
+  ~PVFilter();
 
-int Connect(char* mess, void* input);
-int Set(char* mess, float value);
+  int Connect(char* mess, void* input);
+  int Set(char* mess, float value);
 
-void SetFilterInput(SndObj* filobj){ SetInput2(filobj);}
-void SetFilterTable(Table* filtab) { SetTable(filtab);}
+  void SetFilterInput(SndObj* filobj){ SetInput2(filobj);}
+  void SetFilterTable(Table* filtab) { SetTable(filtab);}
 
-void SetAmount(float amnt, SndObj* amntobj=0){
-	    m_amnt = amnt;
-        m_interpobj = amntobj;
-}
+  void SetAmount(float amnt, SndObj* amntobj=0){
+    m_amnt = amnt;
+    m_interpobj = amntobj;
+  }
 
-short DoProcess();
+  short DoProcess();
 
 };
 

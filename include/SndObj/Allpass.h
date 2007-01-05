@@ -15,22 +15,22 @@
 #include "Comb.h"
 
 class Allpass : public Comb 
-              {
+{
 
-	      protected:
+ protected:
       
 
 
-               public:
-       Allpass();           
-       Allpass(float gain, float delaytime, SndObj* InObj, 
-		   int vecsize=DEF_VECSIZE, float sr=DEF_SR);           
-       ~Allpass();
+ public:
+  Allpass();           
+  Allpass(float gain, float delaytime, SndObj* InObj, 
+	  int vecsize=DEF_VECSIZE, float sr=DEF_SR);           
+  ~Allpass();
 
 
-       short DoProcess();       
+  short DoProcess();       
       
-	      };
+};
 
 #endif
 

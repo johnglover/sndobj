@@ -10,35 +10,35 @@
 
 const double  squrt2o2 = sqrt(2.) / 2.; 
 
- class Pan : public SndObj{
+class Pan : public SndObj{
 
-               protected:
+ protected:
 
-    SndObj*       m_channel;
-	float         m_pan;
-	int           m_res;
-	float*        m_panpos;
-     SndObj*        m_inputpan;
-    inline float Panning(float pan, int chan);
+  SndObj*       m_channel;
+  float         m_pan;
+  int           m_res;
+  float*        m_panpos;
+  SndObj*        m_inputpan;
+  inline float Panning(float pan, int chan);
    
-               public:
+ public:
    
-	SndObj*  left;
-	SndObj*  right;
-    Pan();                            
-    Pan(float pan, SndObj* InObj, SndObj* InPan = 0, int res=1024, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-    ~Pan();
+  SndObj*  left;
+  SndObj*  right;
+  Pan();                            
+  Pan(float pan, SndObj* InObj, SndObj* InPan = 0, int res=1024, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Pan();
   
-    void  SetPan(float pan, SndObj* InPan = 0){
-		 m_pan = pan;
-		 m_inputpan = InPan;
-	}
-    int Set(char* mess, float value);
-    int Connect(char* mess, void* input);
+  void  SetPan(float pan, SndObj* InPan = 0){
+    m_pan = pan;
+    m_inputpan = InPan;
+  }
+  int Set(char* mess, float value);
+  int Connect(char* mess, void* input);
 	
-      short DoProcess();          
-      char* ErrorMessage();
-                             };
+  short DoProcess();          
+  char* ErrorMessage();
+};
 
 
 #endif

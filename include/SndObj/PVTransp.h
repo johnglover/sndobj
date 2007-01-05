@@ -14,22 +14,22 @@ enum { NORMAL_TRANSP=0, KEEP_FORMANT};
 
 class PVTransp : public SpecMult  
 {
-protected:
-float m_base;
-float m_pitch;
-float m_keepform;
+ protected:
+  float m_base;
+  float m_pitch;
+  float m_keepform;
 
-public:
-	int Set(char* mess, float value);
-	int Connect(char* mess, void* input);
-	void SetPitch(float pitch, SndObj* inpitch=0);
-	void SetMode(int mode){ m_keepform= mode ? true : false;}
-	PVTransp();
-	PVTransp(SndObj* input, float pitch, int mode=NORMAL_TRANSP,
-		  SndObj* inpitch=0, 
-		 int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
-	~PVTransp();
-	short DoProcess();
+ public:
+  int Set(char* mess, float value);
+  int Connect(char* mess, void* input);
+  void SetPitch(float pitch, SndObj* inpitch=0);
+  void SetMode(int mode){ m_keepform= mode ? true : false;}
+  PVTransp();
+  PVTransp(SndObj* input, float pitch, int mode=NORMAL_TRANSP,
+	   SndObj* inpitch=0, 
+	   int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
+  ~PVTransp();
+  short DoProcess();
 
 
 };

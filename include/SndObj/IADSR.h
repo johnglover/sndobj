@@ -16,27 +16,27 @@
 
 class IADSR : public ADSR{
 
-            protected:
+ protected:
 
-   float m_init;
-   float m_end;
+  float m_init;
+  float m_end;
 
-            public:
+ public:
 
-    IADSR();                            
-    IADSR(float init, float att, float maxamp, float dec, float sus, 
-         float rel, float end, float dur, SndObj* InObj = 0, int vecsize=DEF_VECSIZE,
-		 float sr=DEF_SR);
-    ~IADSR();
+  IADSR();                            
+  IADSR(float init, float att, float maxamp, float dec, float sus, 
+	float rel, float end, float dur, SndObj* InObj = 0, int vecsize=DEF_VECSIZE,
+	float sr=DEF_SR);
+  ~IADSR();
   
-    void SetInit(float init){ m_init = init;}
-    void SetEnd(float end){ m_end = end; }
+  void SetInit(float init){ m_init = init;}
+  void SetEnd(float end){ m_end = end; }
     
-	int Set(char* mess, float value);
+  int Set(char* mess, float value);
 
-    short DoProcess();           // change gain
+  short DoProcess();           // change gain
 
-                             };
+};
 
 
 #endif

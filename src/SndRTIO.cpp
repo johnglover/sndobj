@@ -15,22 +15,22 @@
 void
 SndRTIO :: SndRTIO_init(short channels, int mode, int buffsize,
 #if defined (WIN) || defined (ALSA)
-int buffno,
+			int buffno,
 #endif
 #ifdef SGI
-		   int DACQueue,
+			int DACQueue,
 #endif
 #ifdef OSS
-		   int DMAbuffsize,
+			int DMAbuffsize,
 #endif
-int encoding, 
-SndObj** inputs, 
-int vecsize, float sr,
+			int encoding, 
+			SndObj** inputs, 
+			int vecsize, float sr,
 #if defined (WIN) || defined (SGI)
-		   int dev)
+			int dev)
 #endif
 #if defined (OSS) || defined (ALSA)
-                     char* device) 
+  char* device) 
 #endif
 {
 

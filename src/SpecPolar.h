@@ -10,29 +10,29 @@
 
 class SpecPolar : public SpecMult {
 	
-protected:
+ protected:
 
-void inline convert(float* a, float* b);
+  void inline convert(float* a, float* b);
 
-public:
+ public:
 
-SpecPolar();
-SpecPolar(SndObj* input,int vecsize=DEF_FFTSIZE,
-		   float sr=DEF_SR);
-~SpecPolar();
+  SpecPolar();
+  SpecPolar(SndObj* input,int vecsize=DEF_FFTSIZE,
+	    float sr=DEF_SR);
+  ~SpecPolar();
 
-short DoProcess();
+  short DoProcess();
 
 };
 
 void
 SpecPolar::convert(float* a, float* b){
 
-float mag, pha;
-mag = sqrt((*a)*(*a) + (*b)*(*b));
-pha = atan((*b)/(*a));
-*a=mag;
-*b=pha;
+  float mag, pha;
+  mag = sqrt((*a)*(*a) + (*b)*(*b));
+  pha = atan((*b)/(*a));
+  *a=mag;
+  *b=pha;
 
 }
 

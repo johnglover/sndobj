@@ -59,7 +59,7 @@ class SndThread {
   SECURITY_ATTRIBUTES sa;
 #endif
  
-  public:
+ public:
   
   SndThread();
   SndThread(int n, SndObj** objlist, SndIO *out, SndIO *in=0);

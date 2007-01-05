@@ -10,23 +10,23 @@
 
 class SpecCombine : public SpecCart {
 	
-protected:
+ protected:
 
-int m_halfsize;
+  int m_halfsize;
 
-public:
+ public:
 
-SpecCombine();
-SpecCombine(SndObj* magin, SndObj* phasin, 
-			int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
-~SpecCombine();
+  SpecCombine();
+  SpecCombine(SndObj* magin, SndObj* phasin, 
+	      int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
+  ~SpecCombine();
 
-void SetPhaseInput(SndObj* phasin){ m_input2 = phasin; }
-void SetMagInput(SndObj* magin) { m_input = magin; }
+  void SetPhaseInput(SndObj* phasin){ m_input2 = phasin; }
+  void SetMagInput(SndObj* magin) { m_input = magin; }
 
-int Connect(char* mess, void* input);
+  int Connect(char* mess, void* input);
 
-short DoProcess();
+  short DoProcess();
 
 };
 

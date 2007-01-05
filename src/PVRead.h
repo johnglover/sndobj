@@ -13,37 +13,37 @@
 
 class PVRead : public PVS {
 
-protected:
+ protected:
 
-SndPVOCEX* m_ioinput;
-int* m_last;
-int* m_first;
-int m_count;
-int m_channels;
-int m_winsize;
-int m_maxbuffs;
+  SndPVOCEX* m_ioinput;
+  int* m_last;
+  int* m_first;
+  int m_count;
+  int m_channels;
+  int m_winsize;
+  int m_maxbuffs;
 
-float* m_win;
+  float* m_win;
 
-SndObj** m_outobj;
+  SndObj** m_outobj;
 
-private:
-void inline synthesis(float* signal);
+ private:
+  void inline synthesis(float* signal);
 
-public:
+ public:
 
-SndObj* Outchannel(int channel){ return m_outobj[channel%m_channels];}
+  SndObj* Outchannel(int channel){ return m_outobj[channel%m_channels];}
 
-int Set(char* mess, float value);
-void SetInput(char* name);
-void SetTimescale(float timescale);
+  int Set(char* mess, float value);
+  void SetInput(char* name);
+  void SetTimescale(float timescale);
 
-PVRead();
-PVRead(char* name, float timescale=1.0,int vecsize=DEF_VECSIZE,
-        float sr=DEF_SR);
-~PVRead();
+  PVRead();
+  PVRead(char* name, float timescale=1.0,int vecsize=DEF_VECSIZE,
+	 float sr=DEF_SR);
+  ~PVRead();
 
-short DoProcess();
+  short DoProcess();
 
 };
 

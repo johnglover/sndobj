@@ -14,31 +14,31 @@
 
 class Interp : public SndObj {
 
-     protected:
+ protected:
 
-float m_initial; // initial value 
-float m_fin;  // fin value
-float m_typec;  // type of curve  0 = LINEAR, EXP < 0 < INV EXP
-unsigned long m_dur;
-unsigned long m_count;
+  float m_initial; // initial value 
+  float m_fin;  // fin value
+  float m_typec;  // type of curve  0 = LINEAR, EXP < 0 < INV EXP
+  unsigned long m_dur;
+  unsigned long m_count;
 
-     public:
+ public:
 
-Interp();
-Interp(float initial, float fin,
-        float dur, float type = 0.f, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-~Interp();
+  Interp();
+  Interp(float initial, float fin,
+	 float dur, float type = 0.f, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Interp();
 
-int Set(char* mess, float value);
-void SetSr(float sr);
-void  Restart(){ m_count = 0; };
-void  SetCurve(float initial, float fin, 
-                  float m_typec = 0.f);
-void  SetDur(float dur){
-        m_dur = (unsigned long) (m_sr*dur);
-		m_count = 0;
-}
-short DoProcess();
+  int Set(char* mess, float value);
+  void SetSr(float sr);
+  void  Restart(){ m_count = 0; };
+  void  SetCurve(float initial, float fin, 
+		 float m_typec = 0.f);
+  void  SetDur(float dur){
+    m_dur = (unsigned long) (m_sr*dur);
+    m_count = 0;
+  }
+  short DoProcess();
 
 };
 

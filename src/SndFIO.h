@@ -23,148 +23,148 @@ enum {WAITOPEN=10,SFOPEN,SFERROR};
 
 class SndFIO : public SndIO{
 	
-protected:
+ protected:
 	
-	char* m_name;
-	FILE* m_file; 
-	FILE* m_safe;
-	short m_filestat;
-	short m_mode;
-	float m_spos;
-	long  m_datapos;
-	long  m_buffsize;  // size of buffer in bytes 
-	char* m_buffer;
-	char* m_cp;
-	short* m_sp;
-	long* m_lp;
-	_24Bit* m_s24p;
-	short m_selfdesc; // self-describing header present
-	long m_dataframes;
-	int  m_eof; // end of file indicator
+  char* m_name;
+  FILE* m_file; 
+  FILE* m_safe;
+  short m_filestat;
+  short m_mode;
+  float m_spos;
+  long  m_datapos;
+  long  m_buffsize;  // size of buffer in bytes 
+  char* m_buffer;
+  char* m_cp;
+  short* m_sp;
+  long* m_lp;
+  _24Bit* m_s24p;
+  short m_selfdesc; // self-describing header present
+  long m_dataframes;
+  int  m_eof; // end of file indicator
 	
-	short m_itemsleft;
+  short m_itemsleft;
 	
-	/* Byte Swapping Functions */
+  /* Byte Swapping Functions */
 	
-	short SwapShort(short inv);
-	long SwapLong(long inv);
-	float SwapFloat32( float inv );
-	double SwapDouble( double inv );
+  short SwapShort(short inv);
+  long SwapLong(long inv);
+  float SwapFloat32( float inv );
+  double SwapDouble( double inv );
 	
-public:
+ public:
 		
-		FILE *GetFile(){return m_safe; }
-	short GetMode(){ return m_mode; }
-	void SetPos(float pos){ 
-		m_spos = pos;
-		if(!fseek(m_safe,(long)(m_spos*m_sr*m_channels*(m_bits/8))+
-				  m_datapos,
-				  SEEK_SET)) m_eof=0; 
-	}
-	void SetPos(long pos){
-       	if(!fseek(m_safe, pos  +
-				  m_datapos, SEEK_SET)){
-			if(m_sr && m_channels && m_bits)
-				m_spos = pos/(m_sr*m_channels*(m_bits/8));
-			m_eof=0; 
-		}
-	}
+  FILE *GetFile(){return m_safe; }
+  short GetMode(){ return m_mode; }
+  void SetPos(float pos){ 
+    m_spos = pos;
+    if(!fseek(m_safe,(long)(m_spos*m_sr*m_channels*(m_bits/8))+
+	      m_datapos,
+	      SEEK_SET)) m_eof=0; 
+  }
+  void SetPos(long pos){
+    if(!fseek(m_safe, pos  +
+	      m_datapos, SEEK_SET)){
+      if(m_sr && m_channels && m_bits)
+	m_spos = pos/(m_sr*m_channels*(m_bits/8));
+      m_eof=0; 
+    }
+  }
 	
-	int  Eof() { return (m_eof = feof(m_file));}
-	long  GetDataFrames(){ return m_dataframes;} 
-	float GetPos(){ return m_spos; }
-	short GetStatus(){ return m_filestat; }
+  int  Eof() { return (m_eof = feof(m_file));}
+  long  GetDataFrames(){ return m_dataframes;} 
+  float GetPos(){ return m_spos; }
+  short GetStatus(){ return m_filestat; }
 	
-	SndFIO(char* name, short mode, short channels=1, short bits=16,
-		   SndObj** inputlist=0, float spos= 0.f,
-		   int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-	~SndFIO();
-	short Read();
-	short Write();
-	char* ErrorMessage();
+  SndFIO(char* name, short mode, short channels=1, short bits=16,
+	 SndObj** inputlist=0, float spos= 0.f,
+	 int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~SndFIO();
+  short Read();
+  short Write();
+  char* ErrorMessage();
 	
 };
 
 
 inline short SndFIO::SwapShort (short inv)
 {
-	union shortconv {
-		short	us;
-		unsigned char uc[2];
-	} *inp, outv;
+  union shortconv {
+    short	us;
+    unsigned char uc[2];
+  } *inp, outv;
 	
-	inp = (union shortconv *)&inv;
+  inp = (union shortconv *)&inv;
 	
-	outv.uc[0] = inp->uc[1];
-	outv.uc[1] = inp->uc[0];
+  outv.uc[0] = inp->uc[1];
+  outv.uc[1] = inp->uc[0];
 	
-	return( outv.us);
+  return( outv.us);
 }
 
 inline long SndFIO::SwapLong (long inv)
 {
-	union longconv {
-		long	ul;
-		unsigned char uc[4];
-	} *inp, outv;
+  union longconv {
+    long	ul;
+    unsigned char uc[4];
+  } *inp, outv;
 	
-	inp = (union longconv *)&inv;
+  inp = (union longconv *)&inv;
 	
-	outv.uc[0] = inp->uc[3];
-	outv.uc[1] = inp->uc[2];
-	outv.uc[2] = inp->uc[1];
-	outv.uc[3] = inp->uc[0];
+  outv.uc[0] = inp->uc[3];
+  outv.uc[1] = inp->uc[2];
+  outv.uc[2] = inp->uc[1];
+  outv.uc[3] = inp->uc[0];
 	
-	return( outv.ul);
+  return( outv.ul);
 	
 }
 
 inline float SndFIO::SwapFloat32( float inv )
 {
-    union floatconv {
-		float				uf;
-		unsigned char		uc[4];
-    } *inp, outv;
+  union floatconv {
+    float				uf;
+    unsigned char		uc[4];
+  } *inp, outv;
     
-    inp = (union floatconv *)&inv;
+  inp = (union floatconv *)&inv;
     
-    outv.uc[0] = inp->uc[3];
-    outv.uc[1] = inp->uc[2];
-    outv.uc[2] = inp->uc[1];
-    outv.uc[3] = inp->uc[0];
+  outv.uc[0] = inp->uc[3];
+  outv.uc[1] = inp->uc[2];
+  outv.uc[2] = inp->uc[1];
+  outv.uc[3] = inp->uc[0];
     
-    return( outv.uf );
+  return( outv.uf );
 }
 
 inline double SndFIO::SwapDouble( double inv )
 {
-    union doubleconv {
-		double				ud;
-		unsigned char		uc[8];
-    } *inp, outv;
+  union doubleconv {
+    double				ud;
+    unsigned char		uc[8];
+  } *inp, outv;
     
-    inp = (union doubleconv *)&inv;
+  inp = (union doubleconv *)&inv;
     
-    outv.uc[0] = inp->uc[7];
-    outv.uc[1] = inp->uc[6];
-    outv.uc[2] = inp->uc[5];
-    outv.uc[3] = inp->uc[4];
-    outv.uc[4] = inp->uc[3];
-    outv.uc[5] = inp->uc[2];
-    outv.uc[6] = inp->uc[1];
-    outv.uc[7] = inp->uc[0];
+  outv.uc[0] = inp->uc[7];
+  outv.uc[1] = inp->uc[6];
+  outv.uc[2] = inp->uc[5];
+  outv.uc[3] = inp->uc[4];
+  outv.uc[4] = inp->uc[3];
+  outv.uc[5] = inp->uc[2];
+  outv.uc[6] = inp->uc[1];
+  outv.uc[7] = inp->uc[0];
     
-    return( outv.ud );
+  return( outv.ud );
 }
 
 /* Maybe not the best way, but these deal with endian issues
-for any type of io use the macro around what type is expected
-to be written or read. if this is already the processors native form 
-it will do nothing, if not it will swap bytes.
+   for any type of io use the macro around what type is expected
+   to be written or read. if this is already the processors native form 
+   it will do nothing, if not it will swap bytes.
 
-so, when reading or writing a LE type on a BE machine, SHORT_LE( n ) 
-will swap bytes for reading and writing. when reading or writing a LE
-type on a LE machine, it does nothing
+   so, when reading or writing a LE type on a BE machine, SHORT_LE( n ) 
+   will swap bytes for reading and writing. when reading or writing a LE
+   type on a LE machine, it does nothing
 */
 
 #ifdef WORDS_BIGENDIAN

@@ -18,7 +18,7 @@ jprocess_callback(jack_nframes_t n_frames, void *arg){
 
 void
 jshutdown_callback(void *arg){
- ((SndJackIO *)arg)->JShutdown();
+  ((SndJackIO *)arg)->JShutdown();
 }
 
 int
@@ -27,7 +27,7 @@ jbuffersize_callback(jack_nframes_t n_frames, void *arg){
 }
 
 SndJackIO::SndJackIO(char* name, int channels, int mode, int buffno,
-          SndObj** inObjs, int vecsize,
+		     SndObj** inObjs, int vecsize,
 		     float sr) : SndIO(channels,16,inObjs,vecsize, sr)
 {
   int i, portno, portmax;
@@ -67,31 +67,31 @@ SndJackIO::SndJackIO(char* name, int channels, int mode, int buffno,
       }
       m_inused[i] = true;
     } 
-     if((iports = jack_get_ports(m_client,0,0,
-			       JackPortIsPhysical | JackPortIsOutput))==0){
+    if((iports = jack_get_ports(m_client,0,0,
+				JackPortIsPhysical | JackPortIsOutput))==0){
       m_error = 13;
-      } 
+    } 
       
-     portmax = 24;
+    portmax = 24;
 
     m_inport = new jack_port_t*[m_channels];
     for(i=0; i < m_channels; i++){
       sprintf(port_name, "in%d", i+1);    
-            m_inport[i] = 
+      m_inport[i] = 
 	jack_port_register (m_client,port_name,JACK_DEFAULT_AUDIO_TYPE,
 			    JackPortIsInput,0);
-        if(i<=portmax) portno = i;
-	      else portno = portmax;
+      if(i<=portmax) portno = i;
+      else portno = portmax;
 	
       if(jack_connect(m_client,iports[portno],
-             jack_port_name(m_inport[i]))){
-               m_error = 14;
-	       }
+		      jack_port_name(m_inport[i]))){
+	m_error = 14;
       }
+    }
     free(iports);              
   }
 
-if(m_mode == SND_IO || m_mode == SND_OUTPUT){
+  if(m_mode == SND_IO || m_mode == SND_OUTPUT){
     // register & connect outputs
     m_outbuff = new float*[m_buffno];
     for(i=0; i < m_buffno; i++){
@@ -101,56 +101,56 @@ if(m_mode == SND_IO || m_mode == SND_OUTPUT){
       }
       m_outused[i] = true;
     } 
-     if((oports = jack_get_ports(m_client,0,0,
-			       JackPortIsPhysical | JackPortIsInput))==0){
+    if((oports = jack_get_ports(m_client,0,0,
+				JackPortIsPhysical | JackPortIsInput))==0){
       m_error = 15;
     } 
     
      
-     portmax = 24;
+    portmax = 24;
 
     m_outport = new jack_port_t*[m_channels];
     for(i=0; i < m_channels; i++){
       sprintf(port_name, "out%d", i+1);    
-          m_outport[i] = 
+      m_outport[i] = 
 	jack_port_register (m_client,port_name,JACK_DEFAULT_AUDIO_TYPE,
 			    JackPortIsOutput,0);
       if(i<=portmax) portno = i;
-	      else portno = portmax;
+      else portno = portmax;
       
-       if(jack_connect(m_client,
-             jack_port_name(m_outport[i]), oports[portno])){
-               m_error = 16;
-	       }
+      if(jack_connect(m_client,
+		      jack_port_name(m_outport[i]), oports[portno])){
+	m_error = 16;
       }
+    }
     free(oports);
   }
 
-    m_outcount = m_incount = 0;
-    m_outcurbuff = m_incurbuff = m_curbuff = 0;
+  m_outcount = m_incount = 0;
+  m_outcurbuff = m_incurbuff = m_curbuff = 0;
     
 }
 
- SndJackIO::~SndJackIO(){
-   jack_client_close(m_client);
-   if(m_outbuff) delete[] m_outbuff;
-   if(m_inbuff)  delete[] m_inbuff;
-   delete[] m_outused;
-   delete[] m_inused;
- }
+SndJackIO::~SndJackIO(){
+  jack_client_close(m_client);
+  if(m_outbuff) delete[] m_outbuff;
+  if(m_inbuff)  delete[] m_inbuff;
+  delete[] m_outused;
+  delete[] m_inused;
+}
 
- void
-   SndJackIO::JShutdown(){
-   m_error = 18;
- }
+void
+SndJackIO::JShutdown(){
+  m_error = 18;
+}
 
- int
- SndJackIO::BufferResize(jack_nframes_t nframes){
+int
+SndJackIO::BufferResize(jack_nframes_t nframes){
    
-   m_bufframes = nframes;
-   m_items = m_bufframes*m_channels;
+  m_bufframes = nframes;
+  m_items = m_bufframes*m_channels;
 
- if(m_mode == SND_IO || m_mode == SND_INPUT){
+  if(m_mode == SND_IO || m_mode == SND_INPUT){
      
     delete[] m_inbuff;
     m_inbuff = new float*[m_buffno];
@@ -162,9 +162,9 @@ if(m_mode == SND_IO || m_mode == SND_OUTPUT){
       m_inused[i] = true;
     }   
                
- }
+  }
 
-if(m_mode == SND_IO || m_mode == SND_OUTPUT){
+  if(m_mode == SND_IO || m_mode == SND_OUTPUT){
    
     delete[] m_outbuff;
     m_outbuff = new float*[m_buffno];
@@ -177,106 +177,106 @@ if(m_mode == SND_IO || m_mode == SND_OUTPUT){
       m_outused[i] = true;
     } 
     
-}
-    m_outcount = m_incount = 0;
-    m_outcurbuff = m_incurbuff = m_curbuff = 0;
+  }
+  m_outcount = m_incount = 0;
+  m_outcurbuff = m_incurbuff = m_curbuff = 0;
    
-    return 1;
- }
+  return 1;
+}
 
- int
-   SndJackIO::ConnectIn(int channel, char* port){
+int
+SndJackIO::ConnectIn(int channel, char* port){
       
   if( (m_mode != SND_OUTPUT) && (channel < 1) && (channel <= m_channels) &&
-(jack_connect(m_client,port,
-	      jack_port_name(m_inport[channel-1])) != 0 ))
-     return 0;
-   else return 1;
+      (jack_connect(m_client,port,
+		    jack_port_name(m_inport[channel-1])) != 0 ))
+    return 0;
+  else return 1;
 
- }
+}
  
 int
-   SndJackIO::DisconnectIn(int channel, char* port){
+SndJackIO::DisconnectIn(int channel, char* port){
       
   if((m_mode != SND_OUTPUT) && (channel < 1) && (channel <= m_channels) &&
-(jack_disconnect(m_client,port,
-		 jack_port_name(m_inport[channel-1])) != 0))
-     return 0;
-   else return 1;
+     (jack_disconnect(m_client,port,
+		      jack_port_name(m_inport[channel-1])) != 0))
+    return 0;
+  else return 1;
 
- }
-
-int
-   SndJackIO::ConnectOut(int channel, char* port){
-      
-   if((m_mode != SND_INPUT) && (channel < 1) && (channel <= m_channels) &&
-(jack_connect(m_client,jack_port_name(m_outport[channel-1]),
-     port) != 0))
-     return 0;
-   else return 1;
-
- }
+}
 
 int
-   SndJackIO::DisconnectOut(int channel, char* port){
+SndJackIO::ConnectOut(int channel, char* port){
       
- if((m_mode != SND_INPUT) && (channel < 1) && (channel <= m_channels) &&    
-(jack_disconnect(m_client,jack_port_name(m_outport[channel-1]),
-		 port) != 0))
-     return 0;
-   else return 1;
+  if((m_mode != SND_INPUT) && (channel < 1) && (channel <= m_channels) &&
+     (jack_connect(m_client,jack_port_name(m_outport[channel-1]),
+		   port) != 0))
+    return 0;
+  else return 1;
 
- }
+}
+
+int
+SndJackIO::DisconnectOut(int channel, char* port){
+      
+  if((m_mode != SND_INPUT) && (channel < 1) && (channel <= m_channels) &&    
+     (jack_disconnect(m_client,jack_port_name(m_outport[channel-1]),
+		      port) != 0))
+    return 0;
+  else return 1;
+
+}
  
 
- int
- SndJackIO::JProcess(jack_nframes_t nframes){
+int
+SndJackIO::JProcess(jack_nframes_t nframes){
 
-   int i,j,k;
-   jack_default_audio_sample_t *sigin;
-   jack_default_audio_sample_t *sigout;
-   for(i=0; i < m_channels; i++){
-     if(m_mode != SND_OUTPUT)
-     sigin = (jack_default_audio_sample_t *)
-       jack_port_get_buffer(m_inport[i], nframes);
-     if(m_mode != SND_INPUT)
-     sigout = (jack_default_audio_sample_t *)
-       jack_port_get_buffer(m_outport[i], nframes);      
+  int i,j,k;
+  jack_default_audio_sample_t *sigin;
+  jack_default_audio_sample_t *sigout;
+  for(i=0; i < m_channels; i++){
+    if(m_mode != SND_OUTPUT)
+      sigin = (jack_default_audio_sample_t *)
+	jack_port_get_buffer(m_inport[i], nframes);
+    if(m_mode != SND_INPUT)
+      sigout = (jack_default_audio_sample_t *)
+	jack_port_get_buffer(m_outport[i], nframes);      
 
-     for(j=i, k=0; j < m_items; j+=m_channels, k++){
-       if(m_mode != SND_OUTPUT)
-       m_inbuff[m_curbuff][j] = sigin[k];
-       if(m_mode != SND_INPUT){
-       sigout[k] = m_outbuff[m_curbuff][j];
-       m_outbuff[m_curbuff][j] = 0.f;
-       }
-     }
-   }
-   m_outused[m_curbuff] =  m_inused[m_curbuff] = true;
-   m_curbuff++;
-   m_curbuff %= m_buffno;
+    for(j=i, k=0; j < m_items; j+=m_channels, k++){
+      if(m_mode != SND_OUTPUT)
+	m_inbuff[m_curbuff][j] = sigin[k];
+      if(m_mode != SND_INPUT){
+	sigout[k] = m_outbuff[m_curbuff][j];
+	m_outbuff[m_curbuff][j] = 0.f;
+      }
+    }
+  }
+  m_outused[m_curbuff] =  m_inused[m_curbuff] = true;
+  m_curbuff++;
+  m_curbuff %= m_buffno;
 
   return 0;
- }
+}
 
 short
- SndJackIO::Write(){
+SndJackIO::Write(){
   if(!m_error){
     int i;
     for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
 
       for(i=0; i < m_channels; i++)
-     m_outbuff[m_outcurbuff][m_outcount+i]
-       = (m_IOobjs[i] ? m_IOobjs[i]->Output(m_vecpos) : 0.f);
-     m_outcount+=m_channels;
+	m_outbuff[m_outcurbuff][m_outcount+i]
+	  = (m_IOobjs[i] ? m_IOobjs[i]->Output(m_vecpos) : 0.f);
+      m_outcount+=m_channels;
     
-     if(m_outcount == m_items){
-       m_outused[m_outcurbuff] = false;
-       m_outcurbuff++;
-       m_outcurbuff %= m_buffno;
-       m_outcount = 0;
-       while(!m_outused[m_outcurbuff]) usleep(100);
-     }
+      if(m_outcount == m_items){
+	m_outused[m_outcurbuff] = false;
+	m_outcurbuff++;
+	m_outcurbuff %= m_buffno;
+	m_outcount = 0;
+	while(!m_outused[m_outcurbuff]) usleep(100);
+      }
      
     }
     return 1;
@@ -286,66 +286,66 @@ short
 
 short 
 SndJackIO::Read(){
-   if(!m_error){    
-     for(m_vecpos=0; m_vecpos  < m_vecsize*m_channels;m_vecpos++){
-       m_output[m_vecpos] = m_inbuff[m_incurbuff][m_incount];
-       m_inbuff[m_incurbuff][m_incount] = 0.f;
-       m_incount++;
-       if(m_incount == m_items){
-	 m_inused[m_incurbuff] = false;
-         m_incurbuff++;
-	 m_incurbuff %= m_buffno;
-	 m_incount = 0;
-         while(!m_inused[m_incurbuff]) usleep(100);
-       }
-     }
-     return 1;
-   }
-   return 0;
+  if(!m_error){    
+    for(m_vecpos=0; m_vecpos  < m_vecsize*m_channels;m_vecpos++){
+      m_output[m_vecpos] = m_inbuff[m_incurbuff][m_incount];
+      m_inbuff[m_incurbuff][m_incount] = 0.f;
+      m_incount++;
+      if(m_incount == m_items){
+	m_inused[m_incurbuff] = false;
+	m_incurbuff++;
+	m_incurbuff %= m_buffno;
+	m_incount = 0;
+	while(!m_inused[m_incurbuff]) usleep(100);
+      }
+    }
+    return 1;
+  }
+  return 0;
 
- }
+}
 char*
-  SndJackIO::ErrorMessage(){
+SndJackIO::ErrorMessage(){
 
- char* message;
+  char* message;
    
   switch(m_error){
 
   case 11:
-  message = "Error initialising the Jack Client\n";
-  break; 
+    message = "Error initialising the Jack Client\n";
+    break; 
 
   case 12:
-  message = "Failed to allocate buffer memory\n";
-  break;
+    message = "Failed to allocate buffer memory\n";
+    break;
 
   case 13:
-  message = "Failed to find any physical input ports\n";
-  break;
+    message = "Failed to find any physical input ports\n";
+    break;
 
   case 14:
-  message = "Failed to connect to physical input port\n";
-  break;
+    message = "Failed to connect to physical input port\n";
+    break;
 
   case 15:
-  message = "Failed to find any physical output ports\n";
-  break;
+    message = "Failed to find any physical output ports\n";
+    break;
 
   case 16:
-  message = "Failed to connect to physical output port\n";
-  break;
+    message = "Failed to connect to physical output port\n";
+    break;
 
   case 17:
-  message = "Failed to activate Jack client\n";
-  break;
+    message = "Failed to activate Jack client\n";
+    break;
 
   case 18:
-  message = "Jack server has shut down\n";
-  break;
+    message = "Jack server has shut down\n";
+    break;
 
   default:
     return SndIO::ErrorMessage();
-  break;
+    break;
   
   }
   return message;

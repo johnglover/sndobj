@@ -14,10 +14,10 @@
 #include "Table.h"
 
 class UsrDefTable : public Table {
-    protected :
-  float* m_pvalues;     
+  protected :
+    float* m_pvalues;     
     
-    public:
+ public:
  
   void SetTable(long L, float* values);
   char* ErrorMessage();
@@ -25,6 +25,6 @@ class UsrDefTable : public Table {
   UsrDefTable();
   UsrDefTable(long L, float* values);
   ~UsrDefTable();
-                             };
+};
 
 #endif

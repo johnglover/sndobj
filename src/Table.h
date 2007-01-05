@@ -14,31 +14,31 @@
 const double TWOPI = 8.*atan(1.);
 class Table {
   
-            protected:
+ protected:
 
- long  m_L;         // size;
- float* m_table;    // table
- int   m_error;     // error code
- void ZeroTable () 
-        {
-         int i;
-         for(i=0;i<m_L;i++) m_table[i]=0.f;
-        }
+  long  m_L;         // size;
+  float* m_table;    // table
+  int   m_error;     // error code
+  void ZeroTable () 
+    {
+      int i;
+      for(i=0;i<m_L;i++) m_table[i]=0.f;
+    }
 
  
-            public:
+ public:
 
- long GetLen() { return m_L; }
- float* GetTable(){ return m_table; }
- float Lookup(int pos){
-	 return m_table[pos%m_L];
- }
+  long GetLen() { return m_L; }
+  float* GetTable(){ return m_table; }
+  float Lookup(int pos){
+    return m_table[pos%m_L];
+  }
 
- virtual ~Table(){};
- virtual char* ErrorMessage() = 0;
- virtual short MakeTable() = 0; 
+  virtual ~Table(){};
+  virtual char* ErrorMessage() = 0;
+  virtual short MakeTable() = 0; 
  
          
-             };
+};
  
 #endif

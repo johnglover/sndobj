@@ -14,23 +14,23 @@
  
 #include "SndObj.h"
 
- class Ring : public SndObj{
+class Ring : public SndObj{
 
-               protected:
-    SndObj* m_input2;
+ protected:
+  SndObj* m_input2;
           
-               public:
+ public:
 
-    Ring();                            
-    Ring(SndObj* InObj1, SndObj* InObj2, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-    ~Ring();
+  Ring();                            
+  Ring(SndObj* InObj1, SndObj* InObj2, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Ring();
   
-    void  SetInput1(SndObj* InObj){m_input=InObj; }
-    void  SetInput2(SndObj* InObj){m_input2=InObj;}
+  void  SetInput1(SndObj* InObj){m_input=InObj; }
+  void  SetInput2(SndObj* InObj){m_input2=InObj;}
   
-    short DoProcess();           // ring modulator
-    int Connect(char* mess, void* input);
+  short DoProcess();           // ring modulator
+  int Connect(char* mess, void* input);
 
-                             };
+};
 
 #endif

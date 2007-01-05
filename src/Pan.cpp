@@ -21,21 +21,21 @@ Pan::Pan(){
   for(int i = 0; i < m_res*2; i++){
     pan = ((float)i/m_res) - 1; 
     m_panpos[i] = (float)(squrt2o2*(1-pan)/sqrt(1+(pan*pan)));
-           }
+  }
   AddMsg("pan position", 21);
 }
 
 Pan::Pan(float pan, SndObj* InObj, SndObj* InPan, int res, int vecsize, float sr):
-		   SndObj(InObj, vecsize, sr){
+  SndObj(InObj, vecsize, sr){
   
-   m_pan = pan;
-   m_inputpan = InPan;
+  m_pan = pan;
+  m_inputpan = InPan;
   m_channel = new SndObj[2];
 
   if(vecsize != DEF_VECSIZE){
-	m_channel[0].SetVectorSize(vecsize);
+    m_channel[0].SetVectorSize(vecsize);
     m_channel[1].SetVectorSize(vecsize);
-	}
+  }
 
 
   m_channel[0].SetInput(this);
@@ -48,31 +48,31 @@ Pan::Pan(float pan, SndObj* InObj, SndObj* InPan, int res, int vecsize, float sr
   for(int i = 0; i < res; i++){
     panval = ((float)i/m_res) - 1; 
     m_panpos[i] = (float)(squrt2o2*(1-panval)/sqrt(1+(panval*panval)));
-           }
-    AddMsg("pan position", 21);
-                           }
+  }
+  AddMsg("pan position", 21);
+}
 
 Pan::~Pan(){
-   delete[] m_channel;
+  delete[] m_channel;
 }
 
 ////////////////// OPERATIONS ///////////////////////////////
 float  Pan::Panning(float pan, int chan){
 
- if(pan >= -1 && pan <= 1){
-  if(!chan) return m_panpos[Ftoi(m_res*(1+pan))];
-  else return m_panpos[Ftoi(m_res*(1-pan))];
+  if(pan >= -1 && pan <= 1){
+    if(!chan) return m_panpos[Ftoi(m_res*(1+pan))];
+    else return m_panpos[Ftoi(m_res*(1-pan))];
   }
   else {
-	  if (pan < -1) { 
-		  if(!chan) return m_panpos[0]; 
-          else  return 0.f;
-	  }
-	  else {
-		  if(!chan) return 0.f;
-          else return m_panpos[0];
+    if (pan < -1) { 
+      if(!chan) return m_panpos[0]; 
+      else  return 0.f;
+    }
+    else {
+      if(!chan) return 0.f;
+      else return m_panpos[0];
 
-	  } 
+    } 
   }
 
 }
@@ -80,80 +80,80 @@ float  Pan::Panning(float pan, int chan){
 int
 Pan::Set(char* mess, float value){
 
-	switch(FindMsg(mess)){
+  switch(FindMsg(mess)){
 
-	case 21:
-	SetPan(value);
-	return 1;
+  case 21:
+    SetPan(value);
+    return 1;
 
-	default:
-	return SndObj::Set(mess, value);
+  default:
+    return SndObj::Set(mess, value);
 
-	}
+  }
 
 }
 
 int
 Pan::Connect(char* mess, void* input){
 
-	switch(FindMsg(mess)){
+  switch(FindMsg(mess)){
 
-	case 21:
-	m_inputpan = (SndObj *) input;
-	return 1;
+  case 21:
+    m_inputpan = (SndObj *) input;
+    return 1;
 
-	default:
-	return SndObj::Connect(mess, input);
+  default:
+    return SndObj::Connect(mess, input);
 
-	}
+  }
 
 }
 
 short
 Pan::DoProcess()
-             {
+{
 
-	if(!m_error){
-if(m_input){
- float pan;
- for(int i=0; i < 2; i++){
-  for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
-	 if(m_enable) {
-      pan = m_pan + (m_inputpan ==  0 ? 0 : m_inputpan->Output(m_vecpos));
-      m_output[m_vecpos] = m_input->Output(m_vecpos)*Panning(pan,i);
-	 }
+  if(!m_error){
+    if(m_input){
+      float pan;
+      for(int i=0; i < 2; i++){
+	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
+	  if(m_enable) {
+	    pan = m_pan + (m_inputpan ==  0 ? 0 : m_inputpan->Output(m_vecpos));
+	    m_output[m_vecpos] = m_input->Output(m_vecpos)*Panning(pan,i);
+	  }
 	  else m_output[m_vecpos] = 0.f;
+	}
+	m_channel[i].DoProcess();
+      }
+      return 1;
+    }
+    else {
+      m_error=11;
+      return 0;
+    }
   }
-     m_channel[i].DoProcess();
- }
- return 1;
-}
-	else {
-		m_error=11;
-		return 0;
-	}
-	}
-	else return 0;
+  else return 0;
 }
 	     
    
 char*
 Pan::ErrorMessage(){
 
-	char *message;
+  char *message;
 	
-	switch(m_error){
+  switch(m_error){
 
-	case 11:
+  case 11:
     message = "DoProcess() failed, no input object\n";	
     break;
 
-	default :
-		message =  SndObj::ErrorMessage();
-  break;
+  default :
+    message =  SndObj::ErrorMessage();
+    break;
   }
 
- return message;
+  return message;
 
 }
 

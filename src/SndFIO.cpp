@@ -62,7 +62,7 @@ SndFIO::SndFIO(char* name, short mode, short channels, short bits,
     m_filestat=SFERROR;
     m_error=12;
 #ifdef DEBUG
-	cout << ErrorMessage();
+    cout << ErrorMessage();
 #endif
     return;
   } 
@@ -74,7 +74,7 @@ SndFIO::SndFIO(char* name, short mode, short channels, short bits,
     if(!(m_buffer = new char[m_buffsize])){
       m_error = 11;
 #ifdef DEBUG
-	cout << ErrorMessage();
+      cout << ErrorMessage();
 #endif
       return;
     }
@@ -96,7 +96,7 @@ SndFIO::SndFIO(char* name, short mode, short channels, short bits,
      && m_bits != 24){
     m_error = 13;
 #ifdef DEBUG
-	cout << ErrorMessage();
+    cout << ErrorMessage();
 #endif
   }
   if(spos > 0) SetPos(spos);

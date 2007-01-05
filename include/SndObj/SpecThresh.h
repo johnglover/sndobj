@@ -10,22 +10,22 @@
 
 class SpecThresh : public SpecPolar {
 	
-protected:
+ protected:
 
-float m_thresh;
+  float m_thresh;
 
-public:
+ public:
 
-void SetThreshold(float thresh){ m_thresh = thresh; }
+  void SetThreshold(float thresh){ m_thresh = thresh; }
 
-int Set(char* mess, float value);
+  int Set(char* mess, float value);
 
-SpecThresh();
-SpecThresh(float threshold, SndObj* input, int vecsize=DEF_FFTSIZE,
-		   float sr=DEF_SR);
-~SpecThresh();
+  SpecThresh();
+  SpecThresh(float threshold, SndObj* input, int vecsize=DEF_FFTSIZE,
+	     float sr=DEF_SR);
+  ~SpecThresh();
 
-short DoProcess();
+  short DoProcess();
 
 };
 

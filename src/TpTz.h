@@ -15,35 +15,35 @@
 
 class TpTz: public Filter {
 
-protected:
+ protected:
 
 
-double m_a1;
-double m_a2;
+  double m_a1;
+  double m_a2;
 
 
-public:
+ public:
 
-TpTz();
-TpTz(double a, double a1, double a2,
-     double b1, double b2, SndObj* input,
-	 int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  TpTz();
+  TpTz(double a, double a1, double a2,
+       double b1, double b2, SndObj* input,
+       int vecsize=DEF_VECSIZE, float sr=DEF_SR);
 
-~TpTz();
+  ~TpTz();
 
-void
-SetParam(double a, double a1, double a2,
-		 double b1, double b2){
-m_a = a;
-m_a1 = a1;
-m_a2 = a2;
-m_b2 = b2;
-m_b1 = b1;
-}
+  void
+    SetParam(double a, double a1, double a2,
+	     double b1, double b2){
+    m_a = a;
+    m_a1 = a1;
+    m_a2 = a2;
+    m_b2 = b2;
+    m_b1 = b1;
+  }
 
-int Set(char* mess, float value);
+  int Set(char* mess, float value);
 
-short DoProcess();
+  short DoProcess();
 
 };
 

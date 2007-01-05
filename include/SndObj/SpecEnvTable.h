@@ -15,18 +15,18 @@
 #include "PVEnvTable.h"
 
 class SpecEnvTable : public PVEnvTable {
-protected:
-      const double m_pi;
-      public:
+ protected:
+  const double m_pi;
+ public:
 		  
   short MakeTable();
   SpecEnvTable();
   SpecEnvTable(long L,  int segments, float start, 
-	  float* points, float* lengths,float type = 0.f, 
-	  float nyquistamp=0.f);
+	       float* points, float* lengths,float type = 0.f, 
+	       float nyquistamp=0.f);
 
   ~SpecEnvTable();
 
-        };
+};
 
 #endif

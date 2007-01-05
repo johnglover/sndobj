@@ -17,26 +17,26 @@
 
 class SndIn : public SndObj {
 
-protected:
+ protected:
 
-   SndIO* m_ioinput;
-   short  m_channel;
+  SndIO* m_ioinput;
+  short  m_channel;
 
-public:
+ public:
    
-   SndIn();
-   SndIn(SndIO *input, short channel=1, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-   ~SndIn();
+  SndIn();
+  SndIn(SndIO *input, short channel=1, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~SndIn();
 
-   void SetInput(SndIO *input, short channel=1){
-              m_ioinput = input;
-              m_channel = channel;
-   }
+  void SetInput(SndIO *input, short channel=1){
+    m_ioinput = input;
+    m_channel = channel;
+  }
 
-   int Connect(char* mess, void* input);
-   int Set(char* mess, float value);
-   short DoProcess();
-   char* ErrorMessage();
+  int Connect(char* mess, void* input);
+  int Set(char* mess, float value);
+  short DoProcess();
+  char* ErrorMessage();
 
 };
 

@@ -13,11 +13,11 @@
 #include "Table.h"
 
 class HammingTable : public Table {
-    protected :
+  protected :
  
-   float  m_alpha;
+    float  m_alpha;
 
-      public:
+ public:
   
   void SetParam(long L, float alpha=.54);
   char* ErrorMessage();
@@ -25,7 +25,7 @@ class HammingTable : public Table {
   HammingTable();
   HammingTable(long L, float alpha);
   ~HammingTable();
-                             };
+};
 
 
 #endif

@@ -9,27 +9,27 @@
 
 class NoteTable : public Table {
 
-protected:
+ protected:
 
-short m_lowernote;
-short m_uppernote;
-float m_lowerfreq;
-float m_upperfreq;
+  short m_lowernote;
+  short m_uppernote;
+  float m_lowerfreq;
+  float m_upperfreq;
 
-public:
+ public:
 
-void
-SetFreqInterval(float lowerfreq, float upperfreq);
-void
-SetNoteInterval(short lowernote, short uppernote);
+  void
+    SetFreqInterval(float lowerfreq, float upperfreq);
+  void
+    SetNoteInterval(short lowernote, short uppernote);
 
-NoteTable();
-NoteTable(short lowernote, short uppernote, 
-float lowerfreq, float upperfreq);
-~NoteTable();
+  NoteTable();
+  NoteTable(short lowernote, short uppernote, 
+	    float lowerfreq, float upperfreq);
+  ~NoteTable();
 
-short MakeTable();
-char* ErrorMessage();
+  short MakeTable();
+  char* ErrorMessage();
 
 };
 

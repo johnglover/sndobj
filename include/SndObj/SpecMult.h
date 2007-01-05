@@ -10,31 +10,31 @@
 
 class SpecMult : public SndObj{
 
-protected:
+ protected:
 
-SndObj* m_input2;
-Table*  m_spectable;
-bool m_dynamic;
+  SndObj* m_input2;
+  Table*  m_spectable;
+  bool m_dynamic;
 
-public:
+ public:
 
-SpecMult();
-SpecMult(SndObj* input1, SndObj* input2, int vecsize=DEF_FFTSIZE,
-		 float sr=DEF_SR);
-SpecMult(Table* spectab, SndObj* input1, int vecsize=DEF_FFTSIZE,
-		 float sr=DEF_SR);
-~SpecMult();
+  SpecMult();
+  SpecMult(SndObj* input1, SndObj* input2, int vecsize=DEF_FFTSIZE,
+	   float sr=DEF_SR);
+  SpecMult(Table* spectab, SndObj* input1, int vecsize=DEF_FFTSIZE,
+	   float sr=DEF_SR);
+  ~SpecMult();
 
-int Connect(char* mess, void* input);
-void SetInput2(SndObj* input2){ m_input2 = input2; m_dynamic = true; }
-void SetTable(Table *spectab) { 
-	if(spectab->GetLen() >= m_vecsize){
-		m_spectable = spectab;
-		m_dynamic = false;
-	}
-}
+  int Connect(char* mess, void* input);
+  void SetInput2(SndObj* input2){ m_input2 = input2; m_dynamic = true; }
+  void SetTable(Table *spectab) { 
+    if(spectab->GetLen() >= m_vecsize){
+      m_spectable = spectab;
+      m_dynamic = false;
+    }
+  }
 
-short DoProcess();
+  short DoProcess();
 
 
 

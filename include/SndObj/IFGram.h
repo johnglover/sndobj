@@ -15,30 +15,30 @@
 
 class IFGram : public PVA {
 
-protected:
+ protected:
 
 
-float* m_diffwin; // difference window
-float* m_fftdiff; // holds fft of diff window
-float* m_diffsig;
-float* m_pdiff;
+  float* m_diffwin; // difference window
+  float* m_fftdiff; // holds fft of diff window
+  float* m_diffsig;
+  float* m_pdiff;
 
-private:
+ private:
 
-void inline IFAnalysis(float* signal); 
+  void inline IFAnalysis(float* signal); 
 
-public:
+ public:
 
-	IFGram();
-	IFGram(Table* window, SndObj* input, float scale=1.f,
-		 int fftsize=DEF_FFTSIZE, int hopsize=DEF_VECSIZE, float sr=DEF_SR);
+  IFGram();
+  IFGram(Table* window, SndObj* input, float scale=1.f,
+	 int fftsize=DEF_FFTSIZE, int hopsize=DEF_VECSIZE, float sr=DEF_SR);
 
-	~IFGram();
+  ~IFGram();
  
-	int Set(char* mess, float value);
-	int Connect(char* mess, void* input);
-    void SetFFTSize(int fftsize);
-	short DoProcess();
+  int Set(char* mess, float value);
+  int Connect(char* mess, void* input);
+  void SetFFTSize(int fftsize);
+  short DoProcess();
   
 };
 

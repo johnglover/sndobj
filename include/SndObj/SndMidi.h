@@ -68,79 +68,79 @@ typedef struct {
 } MIDI_event;
 
 typedef union {
-      MIDI_event event;
-      DWORD  dword;
+  MIDI_event event;
+  DWORD  dword;
 } midi_msg;
 
 #endif
 
 class SndMidi : public SndIO {
 
-protected:
+ protected:
 
-short m_noteon;
-short m_noteoff;
-unsigned char *m_vel;
-unsigned char  *m_aft;
-short* m_message;
-unsigned char m_status;
-unsigned char m_type;
-unsigned char m_note;
-int m_read;
-int m_count;
-int m_buffsize;
-short m_chans; // channels in the range of 0-15
-short m_msgflag; // flag to check for new messages
+  short m_noteon;
+  short m_noteoff;
+  unsigned char *m_vel;
+  unsigned char  *m_aft;
+  short* m_message;
+  unsigned char m_status;
+  unsigned char m_type;
+  unsigned char m_note;
+  int m_read;
+  int m_count;
+  int m_buffsize;
+  short m_chans; // channels in the range of 0-15
+  short m_msgflag; // flag to check for new messages
 
 #if defined(OSS) || defined(SGI) // OSS& SGI  MIDI 
 
-int    m_fd;
+  int    m_fd;
 #ifndef SGI
-char*  m_port;  // midi device
+  char*  m_port;  // midi device
 #endif
 #ifndef OSS
-MDport m_port;
+  MDport m_port;
 #endif
-MDevent* m_event; 
-pollfd m_midifd;
+  MDevent* m_event; 
+  pollfd m_midifd;
 
 #endif    // OSS & SGI MIDI
 
 #ifdef WIN   // Windows MME MIDI
 
-MIDI_event*  m_event;
+  MIDI_event*  m_event;
  
 #endif // Windows MME MIDI
 
-public:
+ public:
 	
-short NoteOn();
-short NoteOff();
-char LastNote() { return m_note; }
-char  Velocity(char note){ 
-	return m_vel[note];}
-char  LastNoteVelocity(){ return m_vel[m_note];}
-char  Aftertouch(char note) {  
-	return m_aft[note];
-}
-char  LastNoteAftertouch(){ return m_aft[m_note];}
-short GetMessage(short channel) { if(channel > 0 && channel <= 16)
-	return m_message[channel-1];
-    else return OUTOFRANGE;}
+  short NoteOn();
+  short NoteOff();
+  char LastNote() { return m_note; }
+  char  Velocity(char note){ 
+    return m_vel[note];}
+  char  LastNoteVelocity(){ return m_vel[m_note];}
+  char  Aftertouch(char note) {  
+    return m_aft[note];
+  }
+  char  LastNoteAftertouch(){ return m_aft[m_note];}
+  short GetMessage(short channel) { if(channel > 0 && channel <= 16)
+    return m_message[channel-1];
+  else return OUTOFRANGE;}
 
-bool NewMessage(short channel){
-	channel--;
-	if((1<<channel) & m_msgflag){
-		m_msgflag = m_msgflag ^ (1<<channel);
-        return true;
-	}
-	else return false;
-}
+  bool NewMessage(short channel){
+    channel--;
+    if((1<<channel) & m_msgflag){
+      m_msgflag = m_msgflag ^ (1<<channel);
+      return true;
+    }
+    else return false;
+  }
 
 
-	SndMidi(int buffsize, float sr=DEF_SR);
-	~SndMidi();
-	char* ErrorMessage();
+  SndMidi(int buffsize, float sr=DEF_SR);
+  ~SndMidi();
+  char* ErrorMessage();
 
 };
 

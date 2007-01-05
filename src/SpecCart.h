@@ -10,29 +10,29 @@
 
 class SpecCart : public SpecMult {
 	
-protected:
+ protected:
 
-void inline convert(float* a, float* b);
+  void inline convert(float* a, float* b);
 
-public:
+ public:
 
-SpecCart();
-SpecCart(SndObj* input,int vecsize=DEF_FFTSIZE,
-		   float sr=DEF_SR);
-~SpecCart();
+  SpecCart();
+  SpecCart(SndObj* input,int vecsize=DEF_FFTSIZE,
+	   float sr=DEF_SR);
+  ~SpecCart();
 
-short DoProcess();
+  short DoProcess();
 
 };
 
 void
 SpecCart::convert(float* a, float* b){
 
-float re, im;
-re = (*a)*cos(*b);
-im = (*a)*sin(*b);
-*a=re;
-*b=im;
+  float re, im;
+  re = (*a)*cos(*b);
+  im = (*a)*sin(*b);
+  *a=re;
+  *b=im;
 
 }
 

@@ -16,11 +16,11 @@ class IFAdd : public ReSyn {
 
  public:
 
- IFAdd();
- IFAdd(IFGram* input, int bins, Table* table, float pitch=1.f, float scale=1.f,
+  IFAdd();
+  IFAdd(IFGram* input, int bins, Table* table, float pitch=1.f, float scale=1.f,
         float tscal=1.f, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
- ~IFAdd();
- short DoProcess();
+  ~IFAdd();
+  short DoProcess();
 
 
 };

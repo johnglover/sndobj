@@ -19,41 +19,41 @@
 class Convol: public SndObj {
 
 
-   protected:
+ protected:
 
-   Table* m_table;
-   float* m_impulse;
-   float* m_sigframe;
-   float* m_outframe;
-   float* m_overlap;
+  Table* m_table;
+  float* m_impulse;
+  float* m_sigframe;
+  float* m_outframe;
+  float* m_overlap;
 
-   int m_L;
-   int m_count;
-   int m_fftsize;
-   float m_scale;
+  int m_L;
+  int m_count;
+  int m_fftsize;
+  float m_scale;
 
-   rfftw_plan m_fwd;
-   rfftw_plan m_inv;
+  rfftw_plan m_fwd;
+  rfftw_plan m_inv;
 
-   void inline mult(float* a, float* b, float* res);
-   void inline fft(float* in, float* out);
-   void inline ifft(float* in, float* out);
+  void inline mult(float* a, float* b, float* res);
+  void inline fft(float* in, float* out);
+  void inline ifft(float* in, float* out);
 
-   public:
+ public:
 
-   // constructors / destructor
-   Convol();
-   Convol(Table* impulse, SndObj* input, float scale=1.f,
-		    int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  // constructors / destructor
+  Convol();
+  Convol(Table* impulse, SndObj* input, float scale=1.f,
+	 int vecsize=DEF_VECSIZE, float sr=DEF_SR);
 
-   ~Convol();
+  ~Convol();
    
-   int Connect(char* mess, void* input);
-   int Set(char* mess, float value);
-   void SetImpulse(Table* impulse, float scale);
+  int Connect(char* mess, void* input);
+  int Set(char* mess, float value);
+  void SetImpulse(Table* impulse, float scale);
 
 
-   short DoProcess();
+  short DoProcess();
 
 };
 	

@@ -13,24 +13,24 @@
 
 class PVBlur : public SpecMult  
 {
-protected:
-float **m_frame;
-float m_time;
-int m_framenos;
-int m_hopsize;
-int m_cur;
+ protected:
+  float **m_frame;
+  float m_time;
+  int m_framenos;
+  int m_hopsize;
+  int m_cur;
 
-public:
-	int Set(char* mess, float value);
-	void SetBlurTime(float time);
-	void SetHopsize(int hopsize){ m_hopsize = hopsize;
-	SetBlurTime(m_time);
-	}
-	PVBlur();
-	PVBlur(SndObj* input, float blurtime, int hopsize=DEF_VECSIZE, 
-		int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
-	~PVBlur();
-	short DoProcess();
+ public:
+  int Set(char* mess, float value);
+  void SetBlurTime(float time);
+  void SetHopsize(int hopsize){ m_hopsize = hopsize;
+  SetBlurTime(m_time);
+  }
+  PVBlur();
+  PVBlur(SndObj* input, float blurtime, int hopsize=DEF_VECSIZE, 
+	 int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
+  ~PVBlur();
+  short DoProcess();
 
 
 };

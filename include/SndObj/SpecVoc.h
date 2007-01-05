@@ -10,16 +10,16 @@
 
 class SpecVoc : public SpecPolar {
 	
-protected:
+ protected:
 
-public:
+ public:
 
-SpecVoc();
-SpecVoc(SndObj* input, SndObj* input2, int vecsize=DEF_FFTSIZE,
-		   float sr=DEF_SR);
-~SpecVoc();
+  SpecVoc();
+  SpecVoc(SndObj* input, SndObj* input2, int vecsize=DEF_FFTSIZE,
+	  float sr=DEF_SR);
+  ~SpecVoc();
 
-short DoProcess();
+  short DoProcess();
 
 };
 

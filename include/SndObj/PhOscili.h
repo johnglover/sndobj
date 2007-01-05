@@ -17,28 +17,28 @@
 class PhOscili : public Oscil
  
 {
-protected:
+ protected:
   SndObj* m_inputphase;
 	
-public:
+ public:
 
-PhOscili();
+  PhOscili();
 
-PhOscili(
-		Table* table, 
-		float fr, 
-		float amp,  
-		SndObj* inputfreq = 0, 
-		SndObj* inputamp = 0, 
-		SndObj* inputphase = 0, 
-		int vecsize= DEF_VECSIZE,
-		float sr=DEF_SR
-	);
+  PhOscili(
+	   Table* table, 
+	   float fr, 
+	   float amp,  
+	   SndObj* inputfreq = 0, 
+	   SndObj* inputamp = 0, 
+	   SndObj* inputphase = 0, 
+	   int vecsize= DEF_VECSIZE,
+	   float sr=DEF_SR
+	   );
 
-~PhOscili();
+  ~PhOscili();
 
-int Connect(char* mess, void* input);
-short DoProcess();
+  int Connect(char* mess, void* input);
+  short DoProcess();
 
 };
 #endif

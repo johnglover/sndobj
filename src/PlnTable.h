@@ -14,12 +14,12 @@
 #include "Table.h"
 
 class PlnTable : public Table {
-    protected :
+  protected :
 
   int m_order;
   double* m_coefs;
   float m_range;       
-      public:
+ public:
  
   void SetPln(int order, double* coefs, float range=1.f);
   char* ErrorMessage();
@@ -27,6 +27,6 @@ class PlnTable : public Table {
   PlnTable();
   PlnTable(long L, int order, double* coefs, float range=1.f);
   ~PlnTable();
-                             };
+};
 
 #endif

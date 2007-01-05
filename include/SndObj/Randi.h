@@ -16,7 +16,7 @@
 
 class Randi : public Randh {
 
-                       protected:
+ protected:
  
   //float m_fr; 
   //long m_period;
@@ -25,16 +25,16 @@ class Randi : public Randh {
   float m_target;
   float m_start;
 
-			 public:
+ public:
    
   Randi();
   Randi(float fr,float amp,SndObj* InFrObj=0,
-	  SndObj* InAmpObj=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+	SndObj* InAmpObj=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~Randi();
  
   short DoProcess();
   
-                              };
+};
 #endif 
 
 

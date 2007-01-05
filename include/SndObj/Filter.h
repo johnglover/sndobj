@@ -15,7 +15,7 @@
 
 class Filter : public SndObj {
 
-                       protected:
+ protected:
   
   float m_fr; 
   float m_bw;
@@ -25,12 +25,12 @@ class Filter : public SndObj {
   double* m_delay;        // filter delay
   void inline SetParam(float fr, float bw);
 
-   double m_a;
-   double m_b1;
-   double m_b2;
+  double m_a;
+  double m_b1;
+  double m_b2;
 
 
-			 public:
+ public:
   Filter();
   Filter(float fr, float bw, SndObj* inObj, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~Filter();
@@ -41,28 +41,28 @@ class Filter : public SndObj {
   int Set(char* mess, float value);
 
   void SetSr(float sr){
-	  m_sr = sr;
-	  SetParam(m_fr, m_bw);
+    m_sr = sr;
+    SetParam(m_fr, m_bw);
   }
- char* ErrorMessage();
- short DoProcess();
+  char* ErrorMessage();
+  short DoProcess();
 
  
 
   
-                              };
+};
 
 void 
 Filter::SetParam(float fr, float bw){
 
-	double R, thecos, rsq, rr; // coefficient vars      
+  double R, thecos, rsq, rr; // coefficient vars      
     
-    rr = 2*(R = (1 - PI*(bw/m_sr)));
-	rsq = R*R;
-    thecos = (rr/(1+(rsq)))*cos(PI*(fr/(m_sr/2))); 
-    m_a = (1 - (rsq))*sin(acos(thecos));
-    m_b1 = rr*thecos;
-    m_b2 = rsq;
+  rr = 2*(R = (1 - PI*(bw/m_sr)));
+  rsq = R*R;
+  thecos = (rr/(1+(rsq)))*cos(PI*(fr/(m_sr/2))); 
+  m_a = (1 - (rsq))*sin(acos(thecos));
+  m_b1 = rr*thecos;
+  m_b2 = rsq;
 
 }
 

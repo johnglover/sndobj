@@ -16,34 +16,34 @@
 
 class Randh : public Rand {
 
-                       protected:
+ protected:
  
   float m_fr; 
   long m_period;
   long m_count;
   SndObj* m_inputfr;
   
-			 public:
+ public:
    
   Randh();
   Randh(float fr,float amp,SndObj* InFrObj=0,
-	  SndObj* InAmpObj=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+	SndObj* InAmpObj=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~Randh();
 
   int Connect(char* mess, void* input);
   void SetSr(float sr);
   void SetFreq(float fr, SndObj* InFrObj = 0){
   
-	  m_fr = fr;
-	  m_period = (long) (m_fr > .1 ? m_sr/m_fr : m_sr/.1); 
-      m_count = m_period;
-      m_inputfr = InFrObj;
+    m_fr = fr;
+    m_period = (long) (m_fr > .1 ? m_sr/m_fr : m_sr/.1); 
+    m_count = m_period;
+    m_inputfr = InFrObj;
          
-}
+  }
   int Set(char* mess, float value);
   short DoProcess();
   
-                              };
+};
 #endif 
 
 

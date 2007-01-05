@@ -10,22 +10,22 @@
 
 class SpecSplit : public SpecPolar {
 	
-protected:
+ protected:
 
-SndObj* m_channel;
-int m_halfsize;
+  SndObj* m_channel;
+  int m_halfsize;
 
-public:
+ public:
 
-SndObj* magnitude;
-SndObj* phase;
+  SndObj* magnitude;
+  SndObj* phase;
 
-SpecSplit();
-SpecSplit(SndObj* input,int vecsize=DEF_FFTSIZE+2,
-		   float sr=DEF_SR);
-~SpecSplit();
+  SpecSplit();
+  SpecSplit(SndObj* input,int vecsize=DEF_FFTSIZE+2,
+	    float sr=DEF_SR);
+  ~SpecSplit();
 
-short DoProcess();
+  short DoProcess();
 
 };
 

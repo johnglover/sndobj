@@ -14,22 +14,22 @@
 
 
 Randh::Randh(){
-      m_inputfr = 0;
-      m_period = 1;
-      m_count = 1;
-	  AddMsg("frequency", 31);
+  m_inputfr = 0;
+  m_period = 1;
+  m_count = 1;
+  AddMsg("frequency", 31);
 
 }
 
 Randh::Randh(float fr,float amp, SndObj* InFrObj, 
-			 SndObj* InAmpObj, int vecsize, float sr)
-			 : Rand(amp, InAmpObj, vecsize, sr)
+	     SndObj* InAmpObj, int vecsize, float sr)
+  : Rand(amp, InAmpObj, vecsize, sr)
 {
-	 m_fr = fr;              
-     m_period = (long) (m_fr > 0.1 ? m_sr/m_fr : m_sr/.1);
-     m_count = m_period;
-     m_inputfr = InFrObj;
-     AddMsg("frequency", 31);
+  m_fr = fr;              
+  m_period = (long) (m_fr > 0.1 ? m_sr/m_fr : m_sr/.1);
+  m_count = m_period;
+  m_inputfr = InFrObj;
+  AddMsg("frequency", 31);
 
      
 }
@@ -42,29 +42,29 @@ Randh ::~Randh(){
 /////////////// OPERATIONS //////////////////////////////////////
 void
 Randh::SetSr(float sr){
-	m_sr = sr;
-	m_period = (long) (m_fr > 0.1 ? m_sr/m_fr : sr/.1); 
-    m_count = m_period;
+  m_sr = sr;
+  m_period = (long) (m_fr > 0.1 ? m_sr/m_fr : sr/.1); 
+  m_count = m_period;
 }
 
 
 int 
 Randh::Set(char* mess, float value){
 
-	switch (FindMsg(mess)){
+  switch (FindMsg(mess)){
 
-	case 31:
+  case 31:
     SetFreq(value);
-	return 1;
-
-	case 1:
-	SetSr(value);
     return 1;
 
-	default:
+  case 1:
+    SetSr(value);
+    return 1;
+
+  default:
     return Rand::Set(mess,value);
      
-	}
+  }
 
 
 }
@@ -73,16 +73,16 @@ Randh::Set(char* mess, float value){
 int 
 Randh::Connect(char* mess, void* input){
 
-	switch (FindMsg(mess)){
+  switch (FindMsg(mess)){
 
-	case 31:
+  case 31:
     m_inputfr = (SndObj *) input;
-	return 1;
+    return 1;
 
-	default:
+  default:
     return Rand::Connect(mess,input);
      
-	}
+  }
 
 
 }
@@ -90,31 +90,31 @@ Randh::Connect(char* mess, void* input){
 short
 Randh::DoProcess(){  
  
-	if(!m_error){
-long oldper; 
-float freq, amp;  
-for(m_vecpos=0; m_vecpos<m_vecsize;m_vecpos++){	     
-  if(m_enable){
-	  oldper = m_period;
-      freq = m_fr + (m_inputfr == 0 ? 0 : m_inputfr->Output(m_vecpos));
-      amp = m_amp + (m_input== 0 ? 0 : m_input->Output(m_vecpos));
-	  m_period = (long) ( freq > .1 ? m_sr/freq : m_sr/.1 );   
-	  if((m_count-1) > 0 ) {
-		  m_count = (m_count--)+(m_period - oldper);
-		  m_output[m_vecpos] = Output(m_vecpos-1); 
-	  }
-	  else{
-		  m_output[m_vecpos] = amp*((rand()-MAXR)/MAXR);
-          m_count = m_period;
-		  }
-  }
-  else m_output[m_vecsize] = 0.f ;
-}
-
-return 1;
+  if(!m_error){
+    long oldper; 
+    float freq, amp;  
+    for(m_vecpos=0; m_vecpos<m_vecsize;m_vecpos++){	     
+      if(m_enable){
+	oldper = m_period;
+	freq = m_fr + (m_inputfr == 0 ? 0 : m_inputfr->Output(m_vecpos));
+	amp = m_amp + (m_input== 0 ? 0 : m_input->Output(m_vecpos));
+	m_period = (long) ( freq > .1 ? m_sr/freq : m_sr/.1 );   
+	if((m_count-1) > 0 ) {
+	  m_count = (m_count--)+(m_period - oldper);
+	  m_output[m_vecpos] = Output(m_vecpos-1); 
 	}
+	else{
+	  m_output[m_vecpos] = amp*((rand()-MAXR)/MAXR);
+          m_count = m_period;
+	}
+      }
+      else m_output[m_vecsize] = 0.f ;
+    }
 
-else return 0;
+    return 1;
+  }
+
+  else return 0;
 
 }
 

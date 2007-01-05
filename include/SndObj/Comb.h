@@ -15,23 +15,23 @@
 #include "DelayLine.h"
 
 class Comb : public DelayLine 
-              {
+{
 
-	      protected:
+ protected:
       
-       float m_gain; // comb gain
+  float m_gain; // comb gain
 
-               public:
-       Comb();           
-       Comb(float gain, float delaytime, SndObj* InObj, 
-		   int vecsize=DEF_VECSIZE, float sr=DEF_SR);         
-       ~Comb();
+ public:
+  Comb();           
+  Comb(float gain, float delaytime, SndObj* InObj, 
+       int vecsize=DEF_VECSIZE, float sr=DEF_SR);         
+  ~Comb();
 
-       void SetGain(float gain);
-       int Set(char* mess, float value);
-       short DoProcess();       
+  void SetGain(float gain);
+  int Set(char* mess, float value);
+  short DoProcess();       
       
-	      };
+};
 
 #endif
 

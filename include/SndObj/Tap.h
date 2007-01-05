@@ -17,25 +17,25 @@
 
 
 class Tap : public DelayLine
-              {
+{
 
-	         protected:
-       DelayLine* m_DLine;
-       long     m_delaysamples;
+ protected:
+  DelayLine* m_DLine;
+  long     m_delaysamples;
 
-               public:
-       Tap();           
-       Tap(float delaytime, DelayLine* DLine, int vecsize=DEF_VECSIZE, 
-		    float sr=DEF_SR);         
-       ~Tap();
-       void SetDelayTime(float delaytime);
-       void SetDelayTap(DelayLine* DLine);
-       int Set(char* mess, float value);
-       int Connect(char* mess, void *input);
+ public:
+  Tap();           
+  Tap(float delaytime, DelayLine* DLine, int vecsize=DEF_VECSIZE, 
+      float sr=DEF_SR);         
+  ~Tap();
+  void SetDelayTime(float delaytime);
+  void SetDelayTap(DelayLine* DLine);
+  int Set(char* mess, float value);
+  int Connect(char* mess, void *input);
 
-       short DoProcess();       
-       char* ErrorMessage();
+  short DoProcess();       
+  char* ErrorMessage();
 
-	      };
+};
 
 #endif

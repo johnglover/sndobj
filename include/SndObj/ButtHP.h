@@ -17,16 +17,16 @@
 class ButtHP: public ButtBP
  
 {
-protected:
+ protected:
 
-public:
+ public:
 
-ButtHP();
+  ButtHP();
 
-ButtHP(float fr, SndObj* inObj, SndObj* inputfreq = 0,
-	   int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ButtHP(float fr, SndObj* inObj, SndObj* inputfreq = 0,
+	 int vecsize=DEF_VECSIZE, float sr=DEF_SR);
 
- ~ButtHP();
+  ~ButtHP();
 
 };
 

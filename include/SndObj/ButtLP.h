@@ -17,14 +17,14 @@
 class ButtLP: public ButtBP
  
 {
-protected:
+ protected:
 
-public:
+ public:
 
-ButtLP();
-ButtLP(float fr, SndObj* inObj, SndObj* inputfreq = 0,
-	   int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-~ButtLP();
+  ButtLP();
+  ButtLP(float fr, SndObj* inObj, SndObj* inputfreq = 0,
+	 int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~ButtLP();
 
 };
 

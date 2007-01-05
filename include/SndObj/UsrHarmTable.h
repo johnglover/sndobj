@@ -14,12 +14,12 @@
 #include "Table.h"
 
 class UsrHarmTable : public Table {
-    protected :
+  protected :
 
-  int m_harm;
+    int m_harm;
   float* m_amp;
          
-      public:
+ public:
  
   void SetHarm(int harm, float* amps);
 
@@ -28,6 +28,6 @@ class UsrHarmTable : public Table {
   UsrHarmTable();
   UsrHarmTable(long L, int harm, float* amps);
   ~UsrHarmTable();
-                             };
+};
 
 #endif

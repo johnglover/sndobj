@@ -11,19 +11,19 @@ class ReSyn : public SinSyn {
 
  protected:
 
- float m_pitch;
- float m_tscal;
+  float m_pitch;
+  float m_tscal;
 
  public:
 
- ReSyn();
- ReSyn(SinAnal* input, int maxtracks, Table* table, float pitch=1.f, 
-	    float scale=1.f, float tscal=1.f, int vecsize=DEF_VECSIZE, 
-		float sr=DEF_SR);
+  ReSyn();
+  ReSyn(SinAnal* input, int maxtracks, Table* table, float pitch=1.f, 
+	float scale=1.f, float tscal=1.f, int vecsize=DEF_VECSIZE, 
+	float sr=DEF_SR);
   void SetPitch(float pitch){ m_pitch = pitch; }
   void SetTimeScale(float scale) { m_tscal = scale; }
   int Set(char* mess, float value);
- ~ReSyn();
+  ~ReSyn();
   short DoProcess();
 
 

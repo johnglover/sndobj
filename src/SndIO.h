@@ -55,56 +55,56 @@ const int SHORTSAM = SHORTSAM_LE;
 
 
 struct _24Bit {
-	char s[3];
+  char s[3];
 };
 
 
- class SndIO {
+class SndIO {
 
-      protected:
+ protected:
  
-      SndObj**  m_IOobjs; 
-      float* m_output;
-      float m_sr;
-      short m_channels;
-      short m_bits;
-	  int m_vecsize;
-	  int m_vecpos;
-      int m_error;
-	  int m_samples;
+  SndObj**  m_IOobjs; 
+  float* m_output;
+  float m_sr;
+  short m_channels;
+  short m_bits;
+  int m_vecsize;
+  int m_vecpos;
+  int m_error;
+  int m_samples;
 
-	  short VerifySR(SndObj *InObj){      
-       if(InObj->GetSr() != m_sr) return 0;
-       else return 1;                           
-                            }
+  short VerifySR(SndObj *InObj){      
+    if(InObj->GetSr() != m_sr) return 0;
+    else return 1;                           
+  }
 
-      public:
-	      short m_sampsize;
+ public:
+  short m_sampsize;
          
-        float GetSr(){ return m_sr; }
-		int   GetVectorSize() { return m_vecsize; }
-        short GetChannels() { return m_channels; }
-        short GetSize() { return m_bits; }
-		float Output(int pos){ return m_output[pos]; }
-        float Output(int pos, int channel){
-            return m_output[(pos*m_channels)+(channel-1)];
-                                }
-        short SetOutput(short channel, SndObj* input){
-		   if(channel <= m_channels){                     
-					   m_IOobjs[channel-1] = input;
-					   return 1;
-				} else return 0;
-                                }
+  float GetSr(){ return m_sr; }
+  int   GetVectorSize() { return m_vecsize; }
+  short GetChannels() { return m_channels; }
+  short GetSize() { return m_bits; }
+  float Output(int pos){ return m_output[pos]; }
+  float Output(int pos, int channel){
+    return m_output[(pos*m_channels)+(channel-1)];
+  }
+  short SetOutput(short channel, SndObj* input){
+    if(channel <= m_channels){                     
+      m_IOobjs[channel-1] = input;
+      return 1;
+    } else return 0;
+  }
          
-		SndIO(short channels=1, short bits=16,SndObj** inputlist=0, 
-              int vecsize = DEF_VECSIZE, float sr = DEF_SR);
-		virtual ~SndIO();
-		virtual short Read();
-		virtual short Write();
-        virtual char* ErrorMessage();
-		int Error() { return m_error; }
+  SndIO(short channels=1, short bits=16,SndObj** inputlist=0, 
+	int vecsize = DEF_VECSIZE, float sr = DEF_SR);
+  virtual ~SndIO();
+  virtual short Read();
+  virtual short Write();
+  virtual char* ErrorMessage();
+  int Error() { return m_error; }
 
-                          };
+};
 
 
 

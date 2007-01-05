@@ -16,16 +16,16 @@
 
 class SndBuffer : public SndIO {
 
- int  m_buffsize;
- int  m_wpointer;
- int  m_rpointer;
- int  m_elements;
- float* m_buff;
+  int  m_buffsize;
+  int  m_wpointer;
+  int  m_rpointer;
+  int  m_elements;
+  float* m_buff;
 
  public:
 
   SndBuffer(short channels, int buffsize=DEF_VECSIZE, 
-	  SndObj** inputlist=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+	    SndObj** inputlist=0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~SndBuffer();
 
   short Write();

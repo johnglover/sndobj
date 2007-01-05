@@ -16,7 +16,7 @@
 
 class Lookupi : public Lookup {
 
-		       public:
+ public:
   Lookupi();
   Lookupi(Table* table, long offset, SndObj* InObj, 
 	  int mode = WRAP_AROUND,
@@ -24,6 +24,6 @@ class Lookupi : public Lookup {
   ~Lookupi();
   short DoProcess();
   
-                              };
+};
 
 #endif

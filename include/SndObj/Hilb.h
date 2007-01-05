@@ -16,43 +16,43 @@ const float c2 = -0.860735f;
 const float c3 = -0.5531f; 
 
 const double poles[12] = {.3609, 2.7412, 11.1573, 44.7581, 179.6242, 798.4578, 
-                        1.2524, 5.5671, 22.3423, 89.6271, 364.7914, 2770.1114};
+			  1.2524, 5.5671, 22.3423, 89.6271, 364.7914, 2770.1114};
 
 
 class Hilb : public SndObj 
 {
-   protected:
-   SndObj*       m_channel;
+ protected:
+  SndObj*       m_channel;
 
-   // pointers to the memory locations
-   double*        m_delay1;
-   double*        m_delay2;
-   double*        m_delay3;
-   double*        m_delay4;
+  // pointers to the memory locations
+  double*        m_delay1;
+  double*        m_delay2;
+  double*        m_delay3;
+  double*        m_delay4;
 
 
-   // memory
-   double*        m_delay;
+  // memory
+  double*        m_delay;
 
-   double*        m_coef;
+  double*        m_coef;
 
-   inline double  allpass(double in, double* delay, double coef);
+  inline double  allpass(double in, double* delay, double coef);
 
-   public:
+ public:
 
-   SndObj*       real;
-   SndObj*       imag;
+  SndObj*       real;
+  SndObj*       imag;
 
-   // constructors / destructor
-   Hilb();
-   Hilb(SndObj* input,
-	   int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  // constructors / destructor
+  Hilb();
+  Hilb(SndObj* input,
+       int vecsize=DEF_VECSIZE, float sr=DEF_SR);
 
-   ~Hilb();
+  ~Hilb();
    
 
-   short DoProcess();
-   char* ErrorMessage();
+  short DoProcess();
+  char* ErrorMessage();
 
 };
 
@@ -60,10 +60,10 @@ class Hilb : public SndObj
 double	
 Hilb::allpass(double in, double* delay, double coef1){
 
-    double out = coef1*(in - delay[1]) + delay[0];
-        // recirculate the delay line
-    delay[0] = in;
-    return (delay[1] = out);
+  double out = coef1*(in - delay[1]) + delay[0];
+  // recirculate the delay line
+  delay[0] = in;
+  return (delay[1] = out);
 }
 
 

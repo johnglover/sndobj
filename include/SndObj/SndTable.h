@@ -16,12 +16,12 @@
 #include "SndFIO.h"
 
 class SndTable : public Table {
-    protected :
+  protected :
 
-   SndFIO* m_input;
-   short  m_channel;
+    SndFIO* m_input;
+  short  m_channel;
 
-      public:
+ public:
   
   void SetInput(long L, SndFIO* input, short channel=1);
   char* ErrorMessage();
@@ -29,7 +29,7 @@ class SndTable : public Table {
   SndTable();
   SndTable(long L, SndFIO* input, short channel=1);
   ~SndTable();
-                             };
+};
 
 
 #endif

@@ -16,29 +16,28 @@
 
 class EnvTable : public Table {
 
-      protected:
-      int* m_seglen;
-      float* m_segp;
-	  int m_segments;
+ protected:
+  int* m_seglen;
+  float* m_segp;
+  int m_segments;
 
-      float m_typec;       // type of curve (LOG OR LINEAR)
+  float m_typec;       // type of curve (LOG OR LINEAR)
 
-      public:
+ public:
   
-void
-SetEnvelope(int segments, float start, 
-					 float* points, float* lengths, 
-					 float type);
+  void SetEnvelope(int segments, float start, 
+		   float* points, float* lengths, 
+		   float type);
 		  
 
   char* ErrorMessage();
   short MakeTable();
   EnvTable();
   EnvTable(long L,  int segments, float start, 
-	  float* points, float* lengths,float type = 0.f);
+	   float* points, float* lengths,float type = 0.f);
 
   ~EnvTable();
 
-        };
+};
 
 #endif

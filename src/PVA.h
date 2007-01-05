@@ -15,28 +15,28 @@
 
 class PVA : public FFT {
 
-protected:
+ protected:
 
-int  m_rotcount; // rotation counter 
-float m_factor;  // conversion factor
-float* m_phases;
+  int  m_rotcount; // rotation counter 
+  float m_factor;  // conversion factor
+  float* m_phases;
 
-private:
+ private:
 
-void inline pvanalysis(float* signal); 
+  void inline pvanalysis(float* signal); 
 
-public:
+ public:
 
-	PVA();
-	PVA(Table* window, SndObj* input, float scale=1.f,
-		 int fftsize=DEF_FFTSIZE, int hopsize=DEF_VECSIZE, float sr=DEF_SR);
+  PVA();
+  PVA(Table* window, SndObj* input, float scale=1.f,
+      int fftsize=DEF_FFTSIZE, int hopsize=DEF_VECSIZE, float sr=DEF_SR);
 
-	~PVA();
-    	float Outphases(int pos){ return m_phases[pos]; } // reads phase output.
-	int Set(char* mess, float value);
-    void SetFFTSize(int fftsize);
-	void SetHopSize(int hopsize);
-	short DoProcess();
+  ~PVA();
+  float Outphases(int pos){ return m_phases[pos]; } // reads phase output.
+  int Set(char* mess, float value);
+  void SetFFTSize(int fftsize);
+  void SetHopSize(int hopsize);
+  short DoProcess();
   
 };
 

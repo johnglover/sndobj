@@ -13,20 +13,20 @@ class Osci : public Osc {
 
  protected:
  
- long m_lomask;
- float m_lodiv;
+  long m_lomask;
+  float m_lodiv;
 
  public:
 
- Osci();
- Osci(Table* table, float fr, float amp, SndObj* inputfr,
-      SndObj* inputamp = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  Osci();
+  Osci(Table* table, float fr, float amp, SndObj* inputfr,
+       SndObj* inputamp = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
 
- ~Osci();
- void SetTable(Table *table);
- int Connect(char* mess, void* input);
+  ~Osci();
+  void SetTable(Table *table);
+  int Connect(char* mess, void* input);
 
- short DoProcess();
+  short DoProcess();
 
 
 };

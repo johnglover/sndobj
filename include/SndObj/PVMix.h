@@ -12,15 +12,15 @@
 
 class PVMix : public SpecMult  
 {
-protected:
+ protected:
 
-public:
+ public:
 
-	PVMix();
-	PVMix(SndObj* input, SndObj* input2=0, 
-		 int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
-	~PVMix();
-	short DoProcess();
+  PVMix();
+  PVMix(SndObj* input, SndObj* input2=0, 
+	int vecsize=DEF_FFTSIZE, float sr=DEF_SR);
+  ~PVMix();
+  short DoProcess();
 
 
 };

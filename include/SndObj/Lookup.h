@@ -19,7 +19,7 @@ enum { LIMIT=0, WRAP_AROUND};
 
 class Lookup : public SndObj {
 
-                       protected:
+ protected:
 
   Table* m_ptable;         // reference to a Table obj    
   
@@ -28,11 +28,11 @@ class Lookup : public SndObj {
   int m_mode;
   int m_normal;
 
-			 public:
+ public:
   Lookup();
   Lookup(Table* table, long offset, SndObj* InObj, 
-	  int mode = WRAP_AROUND,
-	  int normal=RAW_VALUE, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+	 int mode = WRAP_AROUND,
+	 int normal=RAW_VALUE, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   void SetMode(int mode, int normal){ m_mode = mode; m_normal = normal; }
   ~Lookup();
   void Offset(long offset){ m_offset = offset; }  
@@ -43,6 +43,6 @@ class Lookup : public SndObj {
 
   short DoProcess();
   
-                              };
+};
 
 #endif

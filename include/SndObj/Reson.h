@@ -17,22 +17,22 @@
 class Reson : public Filter
  
 {
-protected:
-SndObj* m_inputfr;
-SndObj* m_inputbw;
+ protected:
+  SndObj* m_inputfr;
+  SndObj* m_inputbw;
 
-public:
+ public:
 
-Reson();
-Reson(float fr, float bw, SndObj* inObj, SndObj* inputfreq = 0, 
-      SndObj* inputbw = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-void SetFreq(float fr, SndObj* InFrObj);
-void SetBW(float bw, SndObj* InBWObj);
+  Reson();
+  Reson(float fr, float bw, SndObj* inObj, SndObj* inputfreq = 0, 
+	SndObj* inputbw = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  void SetFreq(float fr, SndObj* InFrObj);
+  void SetBW(float bw, SndObj* InBWObj);
 
- ~Reson();
+  ~Reson();
 
-int Connect(char* mess, void* input);
-short DoProcess();
+  int Connect(char* mess, void* input);
+  short DoProcess();
 
 };
 

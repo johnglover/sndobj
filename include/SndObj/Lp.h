@@ -13,32 +13,32 @@
 
 
 class Lp: public Reson {
-   protected:
+ protected:
 
-   void inline SetLPparam(float fr, float bw);
+  void inline SetLPparam(float fr, float bw);
 
-   public:
+ public:
 
-   // constructors / destructor
-   Lp();
-   Lp(float fr, float BW, SndObj* inObj, SndObj* inputfreq = 0, 
-      SndObj* inputBW = 0, int vecisize=DEF_VECSIZE, float sr=DEF_SR);
-   ~Lp();
+  // constructors / destructor
+  Lp();
+  Lp(float fr, float BW, SndObj* inObj, SndObj* inputfreq = 0, 
+     SndObj* inputBW = 0, int vecisize=DEF_VECSIZE, float sr=DEF_SR);
+  ~Lp();
 
   void SetSr(float sr){
-	  m_sr = sr;
-	  SetLPparam(m_fr, m_bw);
+    m_sr = sr;
+    SetLPparam(m_fr, m_bw);
   }
   int Set(char* mess, float value);
 
-   short DoProcess();
+  short DoProcess();
 };
 
 void Lp::SetLPparam(float fr, float bw){
-float Q = fr/bw; 
-m_b1 = (100./Q*sqrt(fr))-1.;
-m_b2 = 100./fr;
-m_a = 1 + m_b1 + m_b2;
+  float Q = fr/bw; 
+  m_b1 = (100./Q*sqrt(fr))-1.;
+  m_b2 = 100./fr;
+  m_a = 1 + m_b1 + m_b2;
 }
 
 

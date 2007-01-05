@@ -31,7 +31,7 @@ struct wave_head{
   long	aver;			// Average bytes/sec !! 
   short	nBlockAlign;		// (rate*nch +7)/8 
   short	size;			// size of each sample (8,16,32) 
-                };
+};
 
 struct wave_data {
   long	magic3;			// 'data' 
@@ -40,33 +40,33 @@ struct wave_data {
 
 
 
- class SndWave : public SndFIO {
+class SndWave : public SndFIO {
 
-		protected:
-			bool m_iswave;
+ protected:
+  bool m_iswave;
         
-		int   m_wchkpos;
-		int m_len;
-		int m_format;
-		int m_hdrsize;
-        wave_head m_header;
-       	wave_data m_wdata;
-        short ReadHeader();
-        wave_head PutHeader(long databytes=0, int hdrsize=36, int len=16,
-				   int format=1); 
+  int   m_wchkpos;
+  int m_len;
+  int m_format;
+  int m_hdrsize;
+  wave_head m_header;
+  wave_data m_wdata;
+  short ReadHeader();
+  wave_head PutHeader(long databytes=0, int hdrsize=36, int len=16,
+		      int format=1); 
 
-        public:	
+ public:	
 
-        wave_head GetHeader(){ return m_header;}
-        SndWave(char* name, short mode = OVERWRITE, short channels=1,  short bits=16,
-             SndObj** inputlist=0, float spos= 0.f, int vecsize = DEF_VECSIZE, float sr = DEF_SR); 
-        ~SndWave();
-		short Read();
-        short Write();
-		bool IsWave(){ return m_iswave;}
-		char* ErrorMessage();
+  wave_head GetHeader(){ return m_header;}
+  SndWave(char* name, short mode = OVERWRITE, short channels=1,  short bits=16,
+	  SndObj** inputlist=0, float spos= 0.f, int vecsize = DEF_VECSIZE, float sr = DEF_SR); 
+  ~SndWave();
+  short Read();
+  short Write();
+  bool IsWave(){ return m_iswave;}
+  char* ErrorMessage();
 
-                          };
+};
 
 #endif
 

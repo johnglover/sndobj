@@ -11,11 +11,11 @@ class AdSyn : public ReSyn {
 
  public:
 
- AdSyn();
- AdSyn(SinAnal* input, int maxtracks, Table* table,
-	    float pitch = 1.f, float scale=1.f, 
-		int vecsize=DEF_VECSIZE, float sr=DEF_SR);
- ~AdSyn();
+  AdSyn();
+  AdSyn(SinAnal* input, int maxtracks, Table* table,
+	float pitch = 1.f, float scale=1.f, 
+	int vecsize=DEF_VECSIZE, float sr=DEF_SR);
+  ~AdSyn();
   short DoProcess();
 
 
