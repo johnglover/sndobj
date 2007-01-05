@@ -13,7 +13,7 @@
 #define _FFT_H
 #include "SndObj.h"
 #include "Table.h"
-#include <rfftw.h>
+#include <rfftw/rfftw.h>
 
 class FFT : public SndObj {
 

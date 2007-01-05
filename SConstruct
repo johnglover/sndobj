@@ -40,12 +40,12 @@ opt.AddOptions(
 	BoolOption('oss',  'on unix or linux, build with OSS support', False),
         BoolOption('jack', 'on linux or OSX, build with Jack support', True),
 	('flags', 'additional compile flags', ""),
-	('prefix', 'install prefix of headers, static lib and shared lib (not on OSX: see install_name option)', '/usr/local'), 
+	('prefix', 'install prefix of headers, static lib and shared lib', '/usr/local'), 
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
         BoolOption('javamodule', 'build java module', False),
-        ('install_name', 'on OSX, the dynamic library full install pathname', 'lib/libsndobj.dylib'),
+        ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python install path (defaults to usual places)', ''),
         ('javapath', 'java headers path (defaults to usual places)', ''),
 	)
@@ -58,6 +58,7 @@ configure = env.Configure()
 
 print "Checking for Realtime IO support..." 
 if getPlatform() == 'linux':
+        msvctools = False
         print "OS is Linux..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	alsaFound = configure.CheckHeader("alsa/asoundlib.h", language = "C")
@@ -92,6 +93,7 @@ if getPlatform() == 'win':
 	env.Append(CPPDEFINES="WIN")
         swigdef = ['-DWIN', '-DSWIGFIX', '-D_MSBC']
         if 'msvc'in env['TOOLS']: # MSVC
+          msvctools = True
           hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy  src\\*.h include\\SndObj")
           separateLibs = False
           print 'using MSVC...'
@@ -101,6 +103,7 @@ if getPlatform() == 'win':
           pythonlib=''
           env.Append(LIBS=['pthreadVC'])
         else: # mingw ? Set any outstanding mingwin paths here
+          msvctools = False
           hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
           separateLibs = True
           print 'using MINGW...'
@@ -126,6 +129,7 @@ if getPlatform() == 'win':
 
 if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
+        msvctools = False
 	env.Append(CPPDEFINES=['WIN', 'GCC'])
         swigdef = ['-DWIN', '-DSWIGFIX', '-D_MBCS']
         env.Append(LIBS=['winmm', 'pthread'])
@@ -143,6 +147,7 @@ if getPlatform() == 'cygwin':
 
 if getPlatform() == 'macosx':
         print "OS is MacOSX"
+        msvctools = False
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
 	env.Append(CPPDEFINES="MACOSX")
         swigdef = ['-DMACOSX']
@@ -167,6 +172,7 @@ if getPlatform() == 'macosx':
 
 if getPlatform() == 'sgi':
         print "OS is SGI/Irix..."
+        msvctools = False
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
         env.Append(CPPDEFINES="SGI")
         swigdef = ['-DSGI']
@@ -195,7 +201,7 @@ if getPlatform() == 'unsupported':
        else: 
           javapath = env['javapath']
 
-if not 'msvc' in env['TOOLS']:
+if not msvctools:
    flags = "-O3 " + env['flags']
 else:
    flags = "-GX -GB -O2" + env['flags']
@@ -207,7 +213,7 @@ if sys.byteorder == "big":
 else:
     print "Host is little endian"
 
-env.Prepend(CPPPATH= ['include'])
+env.Prepend(CPPPATH= ['include', 'include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
@@ -318,18 +324,45 @@ Depends(sndobjlib, hdrs)
 #
 # install
 
-if getPlatform() != 'win':
-  if getPlatform() != 'macosx':
+if not msvctools:
+  if getPlatform() == 'linux':
     libdest = env['prefix']+'/lib/libsndobj.so'
     env.InstallAs(libdest, sndobjlib)
+
+  if getPlatform() == 'macosx':
+    libdest = env['prefix']+'/lib/libsndobj.dylib'
+    env.InstallAs(libdest, sndobjlib)
+    env.Program(libdest, "install_name_tool -change %s %s %s" + (env['install_name'], libdest, libdest))
+
+  if getPlatform() == 'win':
+    libdest = env['prefix']+'/lib/libsndobj.a'
+    env.InstallAs(libdest, sndobjlib)
+    if separateLibs:
+         rfftwlibdest = env['prefix']+'/lib/librfftw.a'
+         env.InstallAs(rfftwlibdest, rfftwlib)
+
   if not env['nostaticlib']:
 	env.Install(libdest, sndobjliba)
   incdest = env['prefix'] + '/include/SndObj/'
   headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
   for header in headers:
-    #	env.Execute(Chmod(header, 0555)
+    #  env.Execute(Chmod(header, 0555)
     if(header != './include/SndObj/CVS'):
   	env.Install(incdest, header)
+  rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
+  rfftw_incdest = env['prefix'] + '/include/rfftw/'
+  for header in rfftw_headers:
+    #	env.Execute(Chmod(header, 0555)
+    if(header != './include/rfftw/CVS'):
+  	env.Install(rfftw_incdest, header)
+  other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
+  other_incdest = env['prefix'] + '/include/'
+  for header in other_headers:
+    #  env.Execute(Chmod(header, 0555)
+    if(header != './include/rfftw'):
+       if(header != './include/CVS'):
+         if(header != './include/SndObj'):
+  	   env.Install(other_incdest, header)
 
 env.Alias('install', env['prefix'])
 

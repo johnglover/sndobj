@@ -13,7 +13,7 @@
 #define _ImpulseTable_H
 
 #include "SpecEnvTable.h"
-#include <rfftw.h>
+#include <rfftw/rfftw.h>
 
 class ImpulseTable : public SpecEnvTable {
  protected:

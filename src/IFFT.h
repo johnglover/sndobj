@@ -11,7 +11,7 @@
 
 #ifndef _IFFT_H
 #define _IFFT_H
-#include <rfftw.h>
+#include <rfftw/rfftw.h>
 #include "Table.h"
 #include "SndObj.h"
 
