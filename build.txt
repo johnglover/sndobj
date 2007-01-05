@@ -10,8 +10,9 @@ Build instructions
       On Linux either OSS (www.4front-tech.com) 
                or AlSA (www.alsa-project.org), 
                and/or JACK (jack.sf.net)
-      On Windows, OSX and SGI, the library
+      On OSX and SGI, the library
       uses the supplied system audio drivers.   
+      On Windows (under MSVC/mingw) ASIO is also used
 
 2. On the top-level directory, run 'scons'. If on
    Linux and using OSS, add option OSS=true
@@ -21,7 +22,7 @@ Build instructions
    and 'scons -h' (SndObj-specific options)
 
 The build system has been tested on Linux, OSX and
-Windows (under MSVC)
+Windows (under MSVC and mingw; but is untested under cygwin)
 
 Thanks to Tim Blechmann for the original 
 SConstruct code.
