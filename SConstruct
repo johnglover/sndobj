@@ -215,7 +215,7 @@ else:
 
 env.Prepend(CPPPATH= ['include', 'include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']
-print 'swig %s' % (["don't exist", "exists..."][int(swigcheck)])
+print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
 jsndobj = env.Copy()
 examples = env.Copy()
@@ -313,6 +313,7 @@ else:
    sndobjlib = env.Library('lib/sndobj', sndsources+asiosources, CCFLAGS=flags)
    deplibs = [sndobjlib, rfftwlib]
    baselibs = ['sndobj', 'rfftw']
+   libdest = 'libsndobj.a'
   else:
    sndobjlib = env.Library('lib/sndobj', sndsources+rfftsources+asiosources, CCFLAGS=flags)
    deplibs = [sndobjlib]
@@ -332,7 +333,7 @@ if not msvctools:
   if getPlatform() == 'macosx':
     libdest = env['prefix']+'/lib/libsndobj.dylib'
     env.InstallAs(libdest, sndobjlib)
-    env.Program(libdest, "install_name_tool -change %s %s %s" + (env['install_name'], libdest, libdest))
+    env.Command(libdest, sndobjlib,  "install_name_tool -id %s %s" % (libdest, libdest))
 
   if getPlatform() == 'win':
     libdest = env['prefix']+'/lib/libsndobj.a'
@@ -340,6 +341,7 @@ if not msvctools:
     if separateLibs:
          rfftwlibdest = env['prefix']+'/lib/librfftw.a'
          env.InstallAs(rfftwlibdest, rfftwlib)
+
 
   if not env['nostaticlib']:
 	env.Install(libdest, sndobjliba)

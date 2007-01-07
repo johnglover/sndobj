@@ -56,8 +56,8 @@ Instrument::Instrument()
   output = new SndRTIO(2,SND_OUTPUT, 1024, 4, SHORTSAM, outchannel);
 #else
   output = input;
-  output.SetOutput(1, strmix);
-  output.SetOutput(2, ap[1]);
+  output->SetOutput(1, strmix);
+  output->SetOutput(2, ap[1]);
 #endif
 
   /* processing thread */

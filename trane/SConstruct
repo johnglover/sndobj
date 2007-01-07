@@ -22,12 +22,14 @@ def getPlatform():
 
 print "Building The Trane Thing instrument"
 configure = env.Configure()
-env.Append(LIBS=['sndobj'])
+env.Append(LIBS=['sndobj', 'fltk'])
  
 if getPlatform() == 'linux':
         print "OS is Linux..."
 	alsaFound = configure.CheckHeader("alsa/asoundlib.h", language = "C")
 	ossFound = configure.CheckHeader("soundcard.h", language="C")
+        env.Append(CPPPATH=['/usr/local/include', '../include'])
+ 	env.Append(LIBPATH=['/usr/local/lib', '../lib'])
 	if alsaFound and env['alsa']:
 	  env.Append(CPPDEFINES="ALSA")
           env.Append(LIBS=['asound'])
@@ -61,7 +63,7 @@ elif getPlatform() == 'win':
         env.Append(CPPPATH=[includes, '../include'])
  	env.Append(LIBPATH=[libs])
  	env.Append(LIBPATH=['../lib'])
-        env.Append(LIBS=['winmm', 'fltk'])
+        env.Append(LIBS=['winmm'])
         fltkFound = configure.CheckHeader("FL/Fl.H", language = "C++")
         if not fltkFound:
             print "No FLTK... exiting"
@@ -87,6 +89,9 @@ else:
 
 trane = env.Program('trane', sources)
 if getPlatform() == 'macosx':
-   env.Command(trane, 'trane.app/Contents/MacOS/trane', 'cp -f trane trane.app/Contents/MacOS/')
+   env.Command('trane.app/Contents/MacOS/trane', 'trane', 'cp -f trane trane.app/Contents/MacOS/;install_name_tool -change lib/libsndobj.dylib @executable_path/../Resources/libsndobj.dylib; install_name_tool -change /usr/local/lib/libfltk1.1.dylib @executable_path/../Resources/libfltk1.1.dylib')
+   env.Command('trane.app/Contents/Resources/libsndobj.dylib', '../lib/libsndobj.dylib', 'cp -f ../lib/libsndobj.dylib trane.app/Contents/Resources;install_name_tool -id libsndobj.dylib trane.app/Contents/Resources/libsndobj.dylib')
+   env.Command('trane.app/Contents/Resources/libfltk1.1.dylib', '/usr/local/lib/libfltk1.1.dylib', 'cp -f /usr/local/lib/libfltk1.1.dylib trane.app/Contents/Resources;install_name_tool -id libfltk1.1.dylib trane.app/Contents/Resources/libfltk1.1.dylib')
+
 
 
