@@ -73,7 +73,7 @@ elif getPlatform() == 'macosx':
         print "OS is MacOSX"
 	env.Append(CPPDEFINES="MACOSX")
         swigdef = ['-DMACOSX']
-        env.Append(CPPPATH=['/usr/local/include', '../include'])
+        env.Append(CPPPATH=['/usr/local/include', '../include', '../include/rfftw'])
  	env.Append(LIBPATH=['/usr/local/lib', '../lib'])
 	env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
         env.Append(LINKFLAGS= ['-framework', 'coreaudio'])
@@ -89,9 +89,9 @@ else:
 
 trane = env.Program('trane', sources)
 if getPlatform() == 'macosx':
-   env.Command('trane.app/Contents/MacOS/trane', 'trane', 'cp -f trane trane.app/Contents/MacOS/;install_name_tool -change lib/libsndobj.dylib @executable_path/../Resources/libsndobj.dylib; install_name_tool -change /usr/local/lib/libfltk1.1.dylib @executable_path/../Resources/libfltk1.1.dylib')
+   env.Command('trane.app/Contents/MacOS/trane', 'trane', 'cp -f trane trane.app/Contents/MacOS/;install_name_tool -change lib/libsndobj.dylib @executable_path/../Resources/libsndobj.dylib trane.app/Contents/MacOS/trane; install_name_tool -change /usr/local/lib/libfltk1.1.dylib @executable_path/../Resources/libfltk1.1.dylib trane.app/Contents/MacOS/trane')
    env.Command('trane.app/Contents/Resources/libsndobj.dylib', '../lib/libsndobj.dylib', 'cp -f ../lib/libsndobj.dylib trane.app/Contents/Resources;install_name_tool -id libsndobj.dylib trane.app/Contents/Resources/libsndobj.dylib')
-   env.Command('trane.app/Contents/Resources/libfltk1.1.dylib', '/usr/local/lib/libfltk1.1.dylib', 'cp -f /usr/local/lib/libfltk1.1.dylib trane.app/Contents/Resources;install_name_tool -id libfltk1.1.dylib trane.app/Contents/Resources/libfltk1.1.dylib')
+   env.Command('trane.app/Contents/Resources/libfltk.1.1.dylib', '/usr/local/lib/libfltk.1.1.dylib', 'cp -f /usr/local/lib/libfltk.1.1.dylib trane.app/Contents/Resources;install_name_tool -id libfltk.1.1.dylib trane.app/Contents/Resources/libfltk.1.1.dylib')
 
 
 

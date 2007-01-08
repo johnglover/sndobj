@@ -332,8 +332,8 @@ if not msvctools:
 
   if getPlatform() == 'macosx':
     libdest = env['prefix']+'/lib/libsndobj.dylib'
-    env.InstallAs(libdest, sndobjlib)
-    env.Command(libdest, sndobjlib,  "install_name_tool -id %s %s" % (libdest, libdest))
+    inst = env.Command('libsndobj.dylib', sndobjlib, "cp ./lib/libsndobj.dylib .;install_name_tool -id %s %s" % (libdest, 'libsndobj.dylib'))
+    env.InstallAs(libdest, inst)
 
   if getPlatform() == 'win':
     libdest = env['prefix']+'/lib/libsndobj.a'
