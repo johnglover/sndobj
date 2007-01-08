@@ -21,7 +21,7 @@
 #ifndef RFFTW_H
 #define RFFTW_H
 
-#include <fftw.h>
+#include <rfftw/fftw.h>
 
 #ifdef __cplusplus
 extern "C" {

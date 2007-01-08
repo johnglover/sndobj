@@ -18,12 +18,12 @@
  */
 
 /* fftw.h -- system-wide definitions */
-/* $Id: fftw-int.h,v 1.1 2007/01/05 19:26:43 veplaini Exp $ */
+/* $Id: fftw-int.h,v 1.2 2007/01/08 10:53:29 veplaini Exp $ */
 
 #ifndef FFTW_INT_H
 #define FFTW_INT_H
-#include <config.h>
-#include <fftw.h>
+#include <rfftw/config.h>
+#include <rfftw/fftw.h>
 
 #ifdef __cplusplus
 extern "C" {
