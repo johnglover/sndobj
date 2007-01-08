@@ -213,7 +213,7 @@ if sys.byteorder == "big":
 else:
     print "Host is little endian"
 
-env.Prepend(CPPPATH= ['include', 'include/rfftw'])
+env.Prepend(CPPPATH= ['include','include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()

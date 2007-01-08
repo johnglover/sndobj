@@ -73,7 +73,7 @@ elif getPlatform() == 'macosx':
         print "OS is MacOSX"
 	env.Append(CPPDEFINES="MACOSX")
         swigdef = ['-DMACOSX']
-        env.Append(CPPPATH=['/usr/local/include', '../include', '../include/rfftw'])
+        env.Append(CPPPATH=['/usr/local/include', '../include'])
  	env.Append(LIBPATH=['/usr/local/lib', '../lib'])
 	env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
         env.Append(LINKFLAGS= ['-framework', 'coreaudio'])

@@ -20,7 +20,7 @@
 #ifndef F77_FUNC_H
 #define F77_FUNC_H
 
-#include <fftw-int.h>
+#include <rfftw/fftw-int.h>
 
 /* Define a macro to mangle function names so that they can be
    recognized by the Fortran linker.  Specifically, F77_FUNC_
