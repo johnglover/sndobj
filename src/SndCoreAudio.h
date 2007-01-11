@@ -35,18 +35,24 @@ class SndCoreAudio : public SndIO {
   unsigned int m_incount;
   bool* m_inused;
   bool* m_outused;
+  bool m_interleaved;
+  bool m_stopped;
   float m_norm;
 
  public:
 
   SndCoreAudio(int channels=2,int bufframes=512, int buffnos=4,  float norm=32767.f,
-	       SndObj** inObjs=0, AudioDeviceID dev=DEV_DEFAULT, 
+	       SndObj** inObjs=0, UInt32 dev=DEV_DEFAULT, 
 	       int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~SndCoreAudio();
 
   OSStatus
-    ADIOProc(const AudioBufferList *input, AudioBufferList *output, SndCoreAudio* cdata);
+    ADIOProc(AudioDeviceID indev,
+                        const AudioTimeStamp *inN, const AudioBufferList *input,
+		        const AudioTimeStamp *inT, AudioBufferList *output,
+	      const AudioTimeStamp *inOT, void* cdata);
 
+  void Stop(){ m_stopped = true; }
   short Read();
   short Write();
   void SetSleepTime(int t) { m_sleept = t; }

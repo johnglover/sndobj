@@ -10,7 +10,7 @@ import os
 
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 env.SConsignFile()
-env.CacheDir('./obj')
+# env.CacheDir('./obj')
 
 ######################################################################
 #

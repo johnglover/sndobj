@@ -30,11 +30,11 @@ if getPlatform() == 'linux':
 	ossFound = configure.CheckHeader("soundcard.h", language="C")
         env.Append(CPPPATH=['/usr/local/include', '../include'])
  	env.Append(LIBPATH=['/usr/local/lib', '../lib'])
-	if alsaFound and env['alsa']:
+	if alsaFound:
 	  env.Append(CPPDEFINES="ALSA")
           env.Append(LIBS=['asound'])
           print "using ALSA"
-	elif ossFound and env['oss']:
+	elif ossFound:
 	  env.Append(CPPDEFINES="OSS")
           print "using OSS"
         fltkFound = configure.CheckHeader("Fl/Fl.H", language = "C++")

@@ -5,18 +5,70 @@
 #ifdef MACOSX
 #include "SndCoreAudio.h"
 
+OSStatus
+SndCoreAudio::ADIOProc(AudioDeviceID indev,
+                        const AudioTimeStamp *inN, const AudioBufferList *input,
+		        const AudioTimeStamp *inT, AudioBufferList *output,
+			const AudioTimeStamp *inOT, void* p){
+
+  SndCoreAudio *cdata = (SndCoreAudio *)p;  
+  int chans = cdata->m_channels;
+  int buff = cdata->m_iocurbuff;
+  float *ibufp = cdata->m_inbuffs[buff];
+  float *obufp = cdata->m_outbuffs[buff];
+
+  if(!cdata->m_interleaved) {
+    int items = cdata->m_buffitems,i;
+    output->mNumberBuffers = 1;
+    output->mBuffers[0].mDataByteSize = cdata->m_buffsize;
+    output->mBuffers[0].mNumberChannels = chans;
+    float *outp = (float *) output->mBuffers[0].mData;
+    float *inp = (float *) input->mBuffers[0].mData;
+    for(i = 0; i < items; i++){
+      outp[i]  = obufp[i];
+      ibufp[i] = inp[i];
+      obufp[i] = 0;
+    }
+  }
+  else {
+    int  nibuffs = input->mNumberBuffers, buffs, i, j, cnt;
+    int  nobuffs = output->mNumberBuffers;
+    int items = cdata->m_bufframes * chans;
+    buffs = nibuffs > nobuffs ? nibuffs : nobuffs;
+    output->mNumberBuffers = buffs;
+    chans = chans > buffs ? buffs : chans;
+    float *outp, *inp;
+    for (j = 0; j < chans; j++) {
+      outp = (float *) output[0].mBuffers[j].mData;
+      inp = (float *) input[0].mBuffers[j].mData;
+      for (i = j, cnt = 0; i < items; i += chans, cnt++) {
+	outp[cnt] = obufp[i];
+	obufp[i] = 0.0f;
+	ibufp[i] = inp[cnt];
+      }
+      output->mBuffers[j].mDataByteSize = input[0].mBuffers[j].mDataByteSize;
+      output->mBuffers[j].mNumberChannels = 1;
+    }
+  }
+    
+  cdata->m_outused[buff] = cdata->m_inused[buff] = true;      
+  buff++;
+  if(buff == cdata->m_buffnos) buff=0;
+  cdata->m_iocurbuff = buff;
+  return 0;
+}
 
 OSStatus SndObj_IOProcEntry(AudioDeviceID indev,
 			    const AudioTimeStamp *inN, const AudioBufferList *input,
 			    const AudioTimeStamp *inT, AudioBufferList *output,
 			    const AudioTimeStamp *inOT, void* cdata){
 
-  return ((SndCoreAudio *)cdata)->ADIOProc(input,output,(SndCoreAudio *)cdata);
+  return ((SndCoreAudio *)cdata)->ADIOProc(indev,inN,input,inT,output,inOT,cdata);
 
 }
 
 SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, SndObj** inObjs, 
-			   AudioDeviceID dev,  int vecsize, float sr):
+			   UInt32 dev,  int vecsize, float sr):
   SndIO((channels < 2 ?  2 : channels), sizeof(float)*8, inObjs, vecsize, sr) {
                   
   UInt32 psize;
@@ -31,7 +83,7 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
 			     &psize, &m_dev);
   }
   else m_dev = dev;
-  m_sleept = 50;
+  m_sleept = 5;
   m_bufframes = bufframes;
   m_buffsize = bufframes*sizeof(float)*m_channels;
   m_buffitems = bufframes*m_channels;
@@ -56,7 +108,14 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   AudioDeviceGetProperty(m_dev,0,false,
 			 kAudioDevicePropertyBufferFrameSize,
 			 &psize, &obufframes);
-                                    
+
+  psize = sizeof(double);
+  float rsr = m_sr;
+  AudioDeviceSetProperty(m_dev, NULL, 0, true,
+			 kAudioDevicePropertyNominalSampleRate, psize, &rsr);
+  AudioDeviceSetProperty(m_dev, NULL, 0, false,
+			 kAudioDevicePropertyNominalSampleRate, psize, &rsr);   
+                               
   if(ibufframes != m_bufframes){            
     
     if(ibufframes == obufframes)
@@ -68,9 +127,15 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
     
   }
 
+  psize = sizeof(AudioStreamBasicDescription);
+  
+  AudioDeviceGetProperty(m_dev,0,false,      
+			 kAudioDevicePropertyStreamFormat,
+			 &psize, &format);
+
   m_format.mSampleRate = m_sr;
   m_format.mFormatID = kAudioFormatLinearPCM;
-  m_format.mFormatFlags = kAudioFormatFlagIsFloat;
+  m_format.mFormatFlags = kAudioFormatFlagIsFloat | format.mFormatFlags;
   m_format.mBytesPerPacket = sizeof(float)*m_channels;
   m_format.mFramesPerPacket = 1;
   m_format.mBytesPerFrame = format.mBytesPerPacket;
@@ -126,14 +191,26 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   m_incurbuff = m_outcurbuff = m_iocurbuff = 0;
   m_incount = m_outcount = m_buffitems;
 
-  AudioDeviceAddIOProc(m_dev, SndObj_IOProcEntry, this);
-  AudioDeviceStart(m_dev, SndObj_IOProcEntry);
+  if(AudioDeviceAddIOProc(m_dev, SndObj_IOProcEntry, this) != 0) {
+    m_error = 26;
+    return;
+  }
+  AudioDeviceGetProperty(m_dev,0,false,      
+			 kAudioDevicePropertyStreamFormat,
+			 &psize, &format);
+
+  if (format.mFormatFlags & kAudioFormatFlagIsNonInterleaved == kAudioFormatFlagIsNonInterleaved)
+    m_interleaved = true;
+  else
+    m_interleaved = false; 
+
+    m_stopped = true;
 }
     
 
 SndCoreAudio::~SndCoreAudio(){
 
-  AudioDeviceStop(m_dev, SndObj_IOProcEntry);
+    AudioDeviceStop(m_dev, SndObj_IOProcEntry);
 
   delete[] m_outbuffs;
   delete[] m_inbuffs;
@@ -142,40 +219,15 @@ SndCoreAudio::~SndCoreAudio(){
 
 }    
 
-OSStatus
-SndCoreAudio::ADIOProc(const AudioBufferList *input,
-		       AudioBufferList *output,
-		       SndCoreAudio* cdata){
-
-  int chans = cdata->m_channels;
-  int items = cdata->m_buffitems;
-  int buff = cdata->m_iocurbuff;
-  output->mNumberBuffers = 1;
-  output->mBuffers[0].mDataByteSize = cdata->m_buffsize;
-  output->mBuffers[0].mNumberChannels = chans;
-  float *outp = (float *) output->mBuffers[0].mData;
-  float *inp = (float *) input->mBuffers[0].mData;
-  float *ibufp = cdata->m_inbuffs[buff];
-  float *obufp = cdata->m_outbuffs[buff];
-
-  for(int i = 0; i < items; i++){
-    outp[i]  = obufp[i];
-    ibufp[i] = inp[i];
-    obufp[i] = 0;
-  }
-      
-  cdata->m_outused[buff] = cdata->m_inused[buff] = true;      
-  buff++;
-  if(buff == cdata->m_buffnos) buff=0;
-  cdata->m_iocurbuff = buff;
-
-  return 0;
-}
 
 short
 SndCoreAudio::Write(){
   if(!m_error){
     int i;
+    if(m_stopped){
+     AudioDeviceStart(m_dev, SndObj_IOProcEntry);
+     m_stopped = false;
+    }
     for(m_vecpos = 0; m_vecpos < m_vecsize; 
 	m_vecpos++){
       if(m_outcount == m_buffitems){           
@@ -203,7 +255,14 @@ short
 SndCoreAudio::Read(){
 
   if(!m_error){
- 
+    if(m_stopped){
+      if(AudioDeviceStart(m_dev, SndObj_IOProcEntry)==0)
+       m_stopped = false;
+      else {
+	m_error = 26;
+        return 0;
+      }
+    }
     for(m_vecpos = 0; m_vecpos < m_vecsize*m_channels; 
 	m_vecpos++){
       if(m_incount == m_buffitems){           
@@ -242,6 +301,9 @@ char* SndCoreAudio::ErrorMessage(){
     break;
   case 25:
     mess="error allocating memory for output\n";
+    break;
+  case 26:
+    mess="can't start device";
     break;
 
   default:
