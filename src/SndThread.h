@@ -51,6 +51,9 @@ class SndThread {
 
   int status;   // processing status ON, OFF
 
+  void (*ProcessCallback)(void *callbackdata);
+  void *callbackdata;
+
   // pthread-related  member variables
 #ifndef USE_WIN32THREADS
   pthread_attr_t  attrib;
@@ -73,6 +76,11 @@ class SndThread {
      
   int DeleteObj(SndObj *obj); // delete from lists
   int DeleteObj(SndIO *obj, int iolist);
+
+  void SetProcessCallback(void (*Callback)(void *), void *cbdata){
+    ProcessCallback = Callback;
+    callbackdata = cbdata;
+  }
 
   int GetStatus() { return status; }
   int GetSndObjNo() { return SndObjNo; }

@@ -59,6 +59,7 @@ Instrument::Instrument()
   output->SetOutput(1, strmix);
   output->SetOutput(2, ap[1]);
 #endif
+  
 
   /* processing thread */
   thread = new SndThread();
@@ -74,8 +75,7 @@ Instrument::Instrument()
   thread->AddObj(strmix);
   thread->AddObj(loopmix);
   thread->AddObj(ap[0]);
-  thread->AddObj(ap[1]);
-	
+  thread->AddObj(ap[1]);	
   thread->AddObj(input, SNDIO_IN);
   thread->AddObj(output, SNDIO_OUT);
   process_on = false;

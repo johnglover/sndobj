@@ -24,6 +24,7 @@ SndThread::SndThread(){
 #ifndef USE_WIN32THREADS
   pthread_attr_init(&attrib);
 #endif
+  ProcessCallback = NULL;
 }
 
 SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
@@ -41,6 +42,7 @@ SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
 #ifndef USE_WIN32THREADS
   pthread_attr_init(&attrib);
 #endif
+  ProcessCallback = NULL;
 }
 
 SndThread::~SndThread(){
@@ -255,6 +257,11 @@ SndProcessThread(SndThread* sndthread){
       itemp->obj->Read();
       itemp = itemp->next;
     }
+    // callback
+   if(sndthread->ProcessCallback != NULL)
+    sndthread->ProcessCallback(sndthread->callbackdata);
+          
+
     // sound processing 
     for(i = 0; i < sndthread->SndObjNo; i++){
       temp->obj->DoProcess();
