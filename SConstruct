@@ -250,7 +250,7 @@ SpecVoc.cpp""")
 sndiosources = Split("""SndIO.cpp SndRTIO.cpp SndFIO.cpp 
 SndWave.cpp SndAiff.cpp SndBuffer.cpp 
 SndMidi.cpp SndMidiIn.cpp SndWaveX.cpp 
-SndPVOCEX.cpp SndSinIO.cpp  SndCoreAudio.cpp SndJackIO.cpp SndAsio.cpp """)
+SndPVOCEX.cpp SndSinIO.cpp  SndCoreAudio.cpp SndJackIO.cpp SndASIO.cpp """)
 
 tablesources = Split("""HarmTable.cpp UsrHarmTable.cpp 
 TrisegTable.cpp SndTable.cpp PlnTable.cpp 
