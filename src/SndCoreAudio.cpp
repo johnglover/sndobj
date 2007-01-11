@@ -18,7 +18,8 @@ SndCoreAudio::ADIOProc(AudioDeviceID indev,
   float *obufp = cdata->m_outbuffs[buff];
 
   if(!cdata->m_interleaved) {
-    int items = cdata->m_buffitems,i;
+    int items = cdata->m_buffitems,i,maxi;
+    maxi = input->mBuffers[0].mDataByteSize/sizeof(float);
     output->mNumberBuffers = 1;
     output->mBuffers[0].mDataByteSize = cdata->m_buffsize;
     output->mBuffers[0].mNumberChannels = chans;
@@ -26,7 +27,8 @@ SndCoreAudio::ADIOProc(AudioDeviceID indev,
     float *inp = (float *) input->mBuffers[0].mData;
     for(i = 0; i < items; i++){
       outp[i]  = obufp[i];
-      ibufp[i] = inp[i];
+      if(i < maxi) ibufp[i] = inp[i];
+      else ibufp[i] = 0.f;
       obufp[i] = 0;
     }
   }
