@@ -376,6 +376,7 @@ if swigcheck and env['pythonmodule']:
   swigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
   pysndobj.Append(SWIGFLAGS=swigdef)
   pysndobj.Append(LIBPATH='./lib')
+  pysndobj.Append(CPPDEFINES='SWIG')
   pysndobj.Prepend(LIBS=baselibs)
   if getPlatform() == 'macosx':
     pysndobj.Prepend(CPPPATH=["%s/Headers" % pythonpath, 'src'])

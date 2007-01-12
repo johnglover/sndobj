@@ -34,6 +34,13 @@ struct SndLink{      // SndObj / SndIO lists links
 enum { SNDIO_IN, SNDIO_OUT }; // IO list names     
 enum { OFF=0, ON };           // processing status
 
+#ifdef SWIG
+struct pycallbackdata {
+  PyObject *func;
+  PyObject *data;
+};
+#endif
+
 class SndThread {
 
  protected:
@@ -63,6 +70,10 @@ class SndThread {
 #endif
  
  public:
+
+#ifdef SWIG
+  pycallbackdata pydata;
+#endif
   
   SndThread();
   SndThread(int n, SndObj** objlist, SndIO *out, SndIO *in=0);

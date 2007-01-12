@@ -163,9 +163,6 @@
 %ignore SndObj::operator=(SndObj);
 %ignore Pitch::Pitch(float, SndObj*, int =0, int =DEF_VECSIZE, float =DEF_SR);
 
-#ifndef NOPTHREAD
-%include"SndThread.h" // needs pthread library
-#endif  
 
 %include"SndObj.h"
 %include"SndIO.h" 
@@ -184,6 +181,54 @@ typedef SndObj* sndobjp;
 %array_class(float, floatArray);
 %array_class(double, doubleArray)
 %array_class(sndobjp, sndobjArray);
+
+// typemap for callbacks
+%typemap(in) PyObject *pyfunc {
+  if(!PyCallable_Check($input)){
+    PyErr_SetString(PyExc_TypeError, "Not a callable object!");
+    return NULL;
+}
+$1 = $input;
+}
+ 
+
+%{
+// this will be used as an interface to the
+// callback
+
+struct Py_CallbackData {
+  PyObject *func;
+  PyObject *data;
+};
+
+
+static void PythonCallback(void *p){
+   PyGILState_STATE gstate;
+   PyObject *func, *arglist, *res;
+   gstate = PyGILState_Ensure();
+   Py_CallbackData *pdata = (Py_CallbackData *) p;
+   arglist = Py_BuildValue("(O)", pdata->data);
+    res = PyEval_CallObject(pdata->func,arglist);
+    //Py_DECREF(arglist);
+    //Py_DECREF(res);
+    PyGILState_Release(gstate);
+  }
+%}
+
+
+#ifndef NOPTHREAD
+%include"SndThread.h" // needs pthread library
+#endif 
+
+%extend SndThread {
+   // Set the Python callback
+   void SetPythonCallback(PyObject *pyfunc, PyObject *p){    
+    self->pydata.func = pyfunc;
+    self->pydata.data = p;
+    self->SetProcessCallback(PythonCallback, (void *)&(self->pydata));
+    Py_XINCREF(pyfunc);
+  }
+}
 
 // SndObj-derived
 %include"Oscil.h"    // Oscillators

@@ -258,9 +258,8 @@ SndProcessThread(SndThread* sndthread){
       itemp = itemp->next;
     }
     // callback
-   if(sndthread->ProcessCallback != NULL)
-    sndthread->ProcessCallback(sndthread->callbackdata);
-          
+    if(sndthread->ProcessCallback != NULL)
+    sndthread->ProcessCallback(sndthread->callbackdata);          
 
     // sound processing 
     for(i = 0; i < sndthread->SndObjNo; i++){
