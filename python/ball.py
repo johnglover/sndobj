@@ -93,7 +93,7 @@ class Application(Frame):
         red = (self.size/10)*0.8
         yellow = (self.size/10)*0.6
         for i in self.vu:
-          if level > cnt*100:
+          if level > cnt*200:
            if cnt > red:
             self.canvas.itemconfigure(i, fill="red")
            elif cnt > yellow:
