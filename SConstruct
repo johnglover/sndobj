@@ -195,6 +195,8 @@ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
        rtio = False
+       env.Append(LIBS=['pthread'])
+       msvctools = False
        jackFound = False
        if env['pythonpath'] == '':
           pythonpath = '/usr/include/python%c%c' % (getVersion()[0], getVersion()[2])
