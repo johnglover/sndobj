@@ -15,6 +15,9 @@
 #include <math.h>
 #include <iostream>
 #include <string>
+#ifndef WIN
+#include <unistd.h>
+#endif
 
 using namespace std;
 

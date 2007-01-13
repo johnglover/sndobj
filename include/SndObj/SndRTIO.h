@@ -25,7 +25,6 @@ const int DEF_PERIOD = 4;
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include <fcntl.h>
-#include <unistd.h>
 typedef int AudioDeviceID;
 #define DEF_DEV  "/dev/dsp"
 const int DEF_BSIZE = 512;

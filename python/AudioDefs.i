@@ -196,22 +196,21 @@ $1 = $input;
 // this will be used as an interface to the
 // callback
 
-struct Py_CallbackData {
-  PyObject *func;
-  PyObject *data;
-};
-
-
 static void PythonCallback(void *p){
-   PyGILState_STATE gstate;
-   PyObject *func, *arglist, *res;
-   gstate = PyGILState_Ensure();
-   Py_CallbackData *pdata = (Py_CallbackData *) p;
-   arglist = Py_BuildValue("(O)", pdata->data);
-    res = PyEval_CallObject(pdata->func,arglist);
-    //Py_DECREF(arglist);
-    //Py_DECREF(res);
-    PyGILState_Release(gstate);
+    PyGILState_STATE gstate;
+    PyObject *res;
+    SndThread *t = (SndThread *) p;
+    gstate = PyGILState_Ensure();
+    res = PyEval_CallObject(t->pydata.func, t->pydata.data);
+    Py_DECREF(res);
+    if(t->GetStatus() == 1){
+            PyGILState_Release(gstate);
+    } else 
+#ifdef WIN       
+       Sleep(1000);
+#else
+       usleep(1000);
+#endif
   }
 %}
 
@@ -224,8 +223,8 @@ static void PythonCallback(void *p){
    // Set the Python callback
    void SetPythonCallback(PyObject *pyfunc, PyObject *p){    
     self->pydata.func = pyfunc;
-    self->pydata.data = p;
-    self->SetProcessCallback(PythonCallback, (void *)&(self->pydata));
+    self->pydata.data = Py_BuildValue("(O)", p);
+    self->SetProcessCallback(PythonCallback, (void *)self);
     Py_XINCREF(pyfunc);
   }
 }

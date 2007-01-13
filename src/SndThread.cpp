@@ -223,15 +223,13 @@ SndThread::ProcOn(){
 #ifndef USE_WIN32THREADS
   if(pthread_create(&thread, &attrib, 
 		    (void * (*)(void *)) SndProcessThread,
-		    (void *)this)) return 0; 
+		    (void *)this)) return status; 
 #else 
-  DWORD threadID;
-  HANDLE hThread;
-  if(_beginthread(
+  if(hThread = _beginthread(
 		  (void(*)(void *))SndProcessThread, 4096, (void *)this)
-     ) return 0;        
+     ) return status;        
 #endif   
-  return status;
+  return 0;
 
 }
 
@@ -274,8 +272,11 @@ SndProcessThread(SndThread* sndthread){
 		
     }
   }
-  
+#ifndef USE_WIN32THREADS 
   return;
+#else
+  _endthread();
+#endif
 }
 
 

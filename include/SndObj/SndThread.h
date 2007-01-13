@@ -13,7 +13,8 @@
 #ifndef _SNDTHREAD_H
 #define _SNDTHREAD_H
 
-#include "AudioDefs.h"
+#include "SndObj.h"
+#include "SndIO.h"
 
 #ifdef WINPTHREAD
 #include <wpthread.h>
@@ -66,7 +67,7 @@ class SndThread {
   pthread_attr_t  attrib;
   pthread_t       thread;
 #else
-  SECURITY_ATTRIBUTES sa;
+  uintptr_t hThread;
 #endif
  
  public:

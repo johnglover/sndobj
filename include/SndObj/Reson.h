@@ -26,8 +26,8 @@ class Reson : public Filter
   Reson();
   Reson(float fr, float bw, SndObj* inObj, SndObj* inputfreq = 0, 
 	SndObj* inputbw = 0, int vecsize=DEF_VECSIZE, float sr=DEF_SR);
-  void SetFreq(float fr, SndObj* InFrObj);
-  void SetBW(float bw, SndObj* InBWObj);
+  void SetFreq(float fr, SndObj* InFrObj=NULL);
+  void SetBW(float bw, SndObj* InBWObj=NULL);
 
   ~Reson();
 
