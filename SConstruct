@@ -195,6 +195,7 @@ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
        rtio = False
+       swigdef = ['-DNO_RTIO']
        env.Append(LIBS=['pthread'])
        msvctools = False
        jackFound = False
