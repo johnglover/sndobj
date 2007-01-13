@@ -73,7 +73,10 @@ if getPlatform() == 'linux':
 	elif ossFound and env['oss']:
 	  env.Append(CPPDEFINES="OSS")
           print "The library realtime IO (class SndRTIO) will be configured for OSS"
-          rtio = True  
+          rtio = True
+        else:
+          print "No alsa or OSS RT support"
+          rtio = False  
 	if jackFound:
           env.Append(CPPDEFINES=Split('JACK'))
           env.Append(LIBS=['jack'])
@@ -190,6 +193,7 @@ if getPlatform() == 'sgi':
 
 if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
+       hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
        rtio = False
        jackFound = False
        if env['pythonpath'] == '':
@@ -212,6 +216,9 @@ if sys.byteorder == "big":
     env.Append(CPPFLAGS="-DWORDS_BIGENDIAN")
 else:
     print "Host is little endian"
+
+if not rtio:
+   env.Prepend(CPPDEFINES=['NO_RTIO'])
 
 env.Prepend(CPPPATH= ['include','include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']

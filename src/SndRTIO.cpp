@@ -9,6 +9,7 @@
 //  and Windows
 //
 
+#ifndef NO_RTIO
 #if defined (SGI) || defined (OSS) || defined (WIN) || defined (ALSA)
 
 #include "SndRTIO.h"
@@ -1819,7 +1820,7 @@ return mess;
 
 }
 
-
+#endif /* ifndef NO_RTIO */
 
 
 

@@ -12,6 +12,7 @@
 #ifndef _SNDRTIO_H 
 #define _SNDRTIO_H
 
+#ifndef NO_RTIO
 #include "SndIO.h"
 
 #ifdef MACOSX    // Mac CoreAudio
@@ -238,5 +239,5 @@ OSStatus ADIOProc(const AudioBufferList *input, AudioBufferList *output,
 
 };
 
-
+#endif /* ifndef NO_RTIO */
 #endif
