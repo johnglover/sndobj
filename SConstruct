@@ -335,22 +335,24 @@ Depends(sndobjlib, hdrs)
 # install
 
 if not msvctools:
-  if getPlatform() == 'linux':
-    libdest = env['prefix']+'/lib/libsndobj.so'
-    env.InstallAs(libdest, sndobjlib)
+ 
 
   if getPlatform() == 'macosx':
     libdest = env['prefix']+'/lib/libsndobj.dylib'
     inst = env.Command('libsndobj.dylib', sndobjlib, "cp ./lib/libsndobj.dylib .;install_name_tool -id %s %s" % (libdest, 'libsndobj.dylib'))
     env.InstallAs(libdest, inst)
 
-  if getPlatform() == 'win':
+  elif getPlatform() == 'win' or getPlatform() == 'cygwin':
+   if not msvctools:
     libdest = env['prefix']+'/lib/libsndobj.a'
     env.InstallAs(libdest, sndobjlib)
     if separateLibs:
          rfftwlibdest = env['prefix']+'/lib/librfftw.a'
          env.InstallAs(rfftwlibdest, rfftwlib)
-
+  # Linux or other OSs (unix-like)
+  else: 
+    libdest = env['prefix']+'/lib/libsndobj.so'
+    env.InstallAs(libdest, sndobjlib)
 
   if not env['nostaticlib']:
 	env.Install(libdest, sndobjliba)
@@ -396,7 +398,7 @@ if swigcheck and env['pythonmodule']:
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
     else:
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
-  elif getPlatform() == 'win':
+  elif getPlatform() == 'win' or getPlatform() == 'cygwin':
     pysndobj.Prepend(CPPPATH=[pythonpath+'\\include', 'src'])
     pysndobj.Prepend(LIBPATH=[pythonpath+'\\libs'])
     pysndobj.Append(LIBS=[pythonlib, 'ole32'])
