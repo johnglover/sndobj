@@ -38,6 +38,7 @@
 #include "Buzz.h"     // Buzzer
 
 #include "Balance.h"  // Balance of signals
+ 
 
 #include "DelayLine.h" // Delay line
 #include  "Tap.h"      // Truncating tap
@@ -66,7 +67,7 @@
 #include    "Hilb.h"     // Hilbert transformer
 
 #include    "SyncGrain.h" // granular synthesis
-
+ 
 #include    "Mix.h"      // Mixer
 #include    "Pan.h"     // panning
 #include    "Gain.h"    // gain 
@@ -217,8 +218,7 @@ static void PythonCallback(void *p){
 %ignore SndThread::SetProcessCallback(void (*Callback)(void *), void *cbdata);
 
 #ifndef NOPTHREAD
-%include"SndThread.h" // needs pthread library
-#endif 
+%include "SndThread.h" // needs pthread library
 
 %extend SndThread {
    // Set the Python callback
@@ -229,32 +229,33 @@ static void PythonCallback(void *p){
     Py_XINCREF(pyfunc);
   }
 }
+#endif 
 
 // SndObj-derived
-%include"Oscil.h"    // Oscillators
-%include"Oscilt.h"
-%include"Oscili.h"
-%include"FastOsc.h"
-%include"Osc.h"
-%include"Osci.h"
+%include "Oscil.h"    // Oscillators
+%include "Oscilt.h"
+%include "Oscili.h"
+%include "FastOsc.h"
+%include "Osc.h"
+%include "Osci.h"
 
-%include"SndIn.h"    // Sound input
-%include"SndRead.h"  // audio file input
+%include "SndIn.h"    // Sound input
+%include "SndRead.h"  // audio file input
 
 #if defined(OSS) || defined(SGI) || defined(WIN)
-%include"MidiIn.h"   // Midi input 
+%include "MidiIn.h"   // Midi input 
 %include "Bend.h"    // pitch bend
-%include"MidiMap.h" 
+%include "MidiMap.h" 
 #endif
 
-%include"ADSR.h"     // Envelopes
-%include"IADSR.h" 
+%include "ADSR.h"     // Envelopes
+%include "IADSR.h" 
 
-%include"Buzz.h"     // Buzzer
+%include "Buzz.h"     // Buzzer
 
-%include"Balance.h"  // Balance of signals
+%include "Balance.h"  // Balance of signals
 
-%include"DelayLine.h" // Delay line
+%include "DelayLine.h" // Delay line
 %include "Tap.h"      // Truncating tap
 %include "Tapi.h"     // Time-varying tap
 %include "Comb.h"     // Comb filter

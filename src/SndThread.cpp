@@ -280,9 +280,9 @@ void SndThread::UpdateLimit(){
   SndLink<SndObj>* temp = last;
   SndLink<SndIO>* itemp = input;
   SndLink<SndIO>* otemp = output;
-
+  
    for(i = 0; i < InputNo; i++){
-      itemp->obj->LimitVectorSize(m_vecsize);
+     itemp->obj->LimitVectorSize(m_vecsize);
       itemp = itemp->next;
     }
     for(i = 0; i < SndObjNo; i++){
@@ -293,6 +293,7 @@ void SndThread::UpdateLimit(){
       otemp->obj->LimitVectorSize(m_vecsize);
       otemp = otemp->next;
     }
+  
 }
 void SndThread::UpdateRestore(){
 

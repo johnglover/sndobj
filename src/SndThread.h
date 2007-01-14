@@ -73,7 +73,7 @@ class SndThread {
   int m_vecsize_max;
   float m_sr;
   bool m_changed;
-  bool m_parid[3];
+  bool m_parid[4];
 
   void UpdateSr();
   void UpdateVecsize();
@@ -90,7 +90,7 @@ class SndThread {
     if(m_parid[2]){
       UpdateLimit(); m_parid[2] = false;
     }
-    if(m_parid[2]){
+    if(m_parid[3]){
       UpdateRestore(); m_parid[3] = false;
     }
     m_changed = false;
@@ -102,7 +102,7 @@ class SndThread {
 #ifdef SWIG
   pycallbackdata pydata;
 #endif
-  
+
   SndThread();
   SndThread(int n, SndObj** objlist, SndIO *out, SndIO *in=0);
   ~SndThread();
@@ -138,7 +138,7 @@ class SndThread {
 
   void LimitVectorSize(int limit){
     m_vecsize = limit; 
-    m_changed = m_parid[2] = true;
+     m_changed = m_parid[2] = true;
     if(status==OFF) Update();
   }
   void RestoreVectorSize(){

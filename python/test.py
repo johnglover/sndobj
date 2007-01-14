@@ -25,6 +25,12 @@ t.AddObj(osc)
 t.AddObj(outp, SNDIO_OUT)
 t.ProcOn()
 time.sleep(2)
+t.LimitVectorSize(64)
+tes.set(100)
+time.sleep(2)
+tes.set(100)
+t.RestoreVectorSize()
+time.sleep(2)
 t.ProcOff()
 
 #while(True):
