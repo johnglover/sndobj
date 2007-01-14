@@ -24,7 +24,7 @@ SndPVOCEX::SndPVOCEX(char* name, short mode, int analformat, int windowtype,
     int mask;
     short sbits;
     m_hopsize = hopsize;
-    m_vecsize = fftsize;
+    SetVectorSize (fftsize);
     GUID subfmt;
     cbsize = SHORT_LE((short)62);
     PutHeader(0,m_hdrsize,m_len, m_format);

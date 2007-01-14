@@ -13,15 +13,7 @@
 
 SndObj::SndObj(){ 
 
-  m_vecsize = DEF_VECSIZE;
-  m_vecpos = m_altvecpos = 0;
-  if(!(m_output = new float[m_vecsize])){
-    m_error = 1;
-#ifdef DEBUG
-    cout << ErrorMessage();
-#endif
-    return;
-  }
+  SetVectorSize(DEF_VECSIZE);
   m_input = 0;
   m_sr = DEF_SR;
   m_error =0;
@@ -38,17 +30,7 @@ SndObj::SndObj(){
 
 SndObj::SndObj(SndObj* input, int vecsize, float sr){
 
-  m_vecsize = vecsize;
-  m_vecpos = m_altvecpos = 0;
-    
-  if(!(m_output = new float[m_vecsize])){
-    m_error = 1;
-#ifdef DEBUG
-    cout << ErrorMessage();
-#endif
-    return;
-  }
-	
+  SetVectorSize(vecsize);	
   m_input = input; 
   m_sr = sr;
   m_error = 0;
@@ -66,19 +48,11 @@ SndObj::SndObj(SndObj* input, int vecsize, float sr){
 
 SndObj::SndObj(SndObj& obj){
 
-  m_vecsize = obj.GetVectorSize();
-  m_vecpos = m_altvecpos = 0;
-  if(!(m_output = new float[m_vecsize])){
-    m_error = 1;
-#ifdef DEBUG
-    cout << ErrorMessage();
-#endif
-    return;
-  }
+  SetVectorSize(obj.GetVectorSize());
+  SetSr(obj.GetSr());
 	
   for(int n=0; n<m_vecsize;n++)m_output[n]=obj.Output(n);
   m_input = obj.GetInput();
-  m_sr = obj.GetSr();
   m_error =0;
 
   m_msgtable = new msg_link;
@@ -172,10 +146,12 @@ SndObj::SetVectorSize(int vecsize){
 #ifdef DEBUG
     cout << ErrorMessage();
 #endif
+    m_vecsize = m_vecsize_max = 0;
     return;
   }
   m_vecsize = vecsize;
-  m_vecpos = 0;
+  m_vecsize_max = vecsize;
+  m_altvecpos = m_vecpos = 0;
 }
 
 short

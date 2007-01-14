@@ -239,6 +239,79 @@ SndThread::ProcOff(){
   return status;
 }
 
+void SndThread::UpdateSr(){
+
+  int i;
+  SndLink<SndObj>* temp = last;
+
+    for(i = 0; i < SndObjNo; i++){
+      temp->obj->SetSr(m_sr);
+      temp = temp->next;
+    } 
+
+}
+
+void SndThread::UpdateVecsize(){
+
+  int i;
+  SndLink<SndObj>* temp = last;
+  SndLink<SndIO>* itemp = input;
+  SndLink<SndIO>* otemp = output;
+
+   for(i = 0; i < InputNo; i++){
+     itemp->obj->SetVectorSize(m_vecsize_max);
+      itemp = itemp->next;
+    }
+    for(i = 0; i < SndObjNo; i++){
+      temp->obj->SetVectorSize(m_vecsize_max);
+      temp = temp->next;
+    } 
+    for(i = 0; i < OutputNo; i++){ 
+      otemp->obj->SetVectorSize(m_vecsize_max);
+      otemp = otemp->next;
+    }
+}
+
+void SndThread::UpdateLimit(){
+
+  int i;
+  SndLink<SndObj>* temp = last;
+  SndLink<SndIO>* itemp = input;
+  SndLink<SndIO>* otemp = output;
+
+   for(i = 0; i < InputNo; i++){
+      itemp->obj->LimitVectorSize(m_vecsize);
+      itemp = itemp->next;
+    }
+    for(i = 0; i < SndObjNo; i++){
+      temp->obj->LimitVectorSize(m_vecsize);
+      temp = temp->next;
+    } 
+    for(i = 0; i < OutputNo; i++){ 
+      otemp->obj->LimitVectorSize(m_vecsize);
+      otemp = otemp->next;
+    }
+}
+void SndThread::UpdateRestore(){
+
+  int i;
+  SndLink<SndObj>* temp = last;
+  SndLink<SndIO>* itemp = input;
+  SndLink<SndIO>* otemp = output;
+
+   for(i = 0; i < InputNo; i++){
+      itemp->obj->RestoreVectorSize();
+      itemp = itemp->next;
+    }
+    for(i = 0; i < SndObjNo; i++){
+      temp->obj->RestoreVectorSize();
+      temp = temp->next;
+    } 
+    for(i = 0; i < OutputNo; i++){ 
+      otemp->obj->RestoreVectorSize();
+      otemp = otemp->next;
+    }
+}
 void
 SndProcessThread(SndThread* sndthread){
     
@@ -250,6 +323,8 @@ SndProcessThread(SndThread* sndthread){
   while(sndthread->status){
  
     //... processing loop...
+
+    sndthread->Update();
     
     for(i = 0; i < sndthread->InputNo; i++){
       itemp->obj->Read();

@@ -69,7 +69,34 @@ class SndThread {
 #else
   uintptr_t hThread;
 #endif
- 
+  int m_vecsize;
+  int m_vecsize_max;
+  float m_sr;
+  bool m_changed;
+  bool m_parid[3];
+
+  void UpdateSr();
+  void UpdateVecsize();
+  void UpdateLimit();
+  void UpdateRestore();
+
+  void  Update(){ if(m_changed){
+    if(m_parid[0]){
+      UpdateSr(); m_parid[0] = false;
+    }
+    if(m_parid[1]){
+      UpdateVecsize(); m_parid[1] = false;
+    }
+    if(m_parid[2]){
+      UpdateLimit(); m_parid[2] = false;
+    }
+    if(m_parid[2]){
+      UpdateRestore(); m_parid[3] = false;
+    }
+    m_changed = false;
+  }
+  }
+
  public:
 
 #ifdef SWIG
@@ -103,6 +130,27 @@ class SndThread {
   void SetAttrib(pthread_attr_t att) { attrib = att; }
 #endif
 
+  void SetVectorSize(int vecsize){
+    m_vecsize_max = vecsize; 
+    m_changed = m_parid[1] = true;
+    if(status==OFF) Update();
+  }
+
+  void LimitVectorSize(int limit){
+    m_vecsize = limit; 
+    m_changed = m_parid[2] = true;
+    if(status==OFF) Update();
+  }
+  void RestoreVectorSize(){
+    m_changed = m_parid[3] = true;
+    if(status==OFF) Update();
+  }
+  void SetSr(float sr){
+    m_sr = sr;
+    m_changed = m_parid[0] = true;
+    if(status==OFF) Update();
+  };
+ 
   int ProcOn(); // start processing thread 
   int ProcOff(); // kill processing thread
     

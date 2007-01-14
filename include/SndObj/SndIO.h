@@ -69,6 +69,7 @@ class SndIO {
   short m_channels;
   short m_bits;
   int m_vecsize;
+  int m_vecsize_max;
   int m_vecpos;
   int m_error;
   int m_samples;
@@ -83,6 +84,14 @@ class SndIO {
          
   float GetSr(){ return m_sr; }
   int   GetVectorSize() { return m_vecsize; }
+  void SetVectorSize(int vecsize);
+  void LimitVectorSize(int limit) {
+    if(limit <= m_vecsize_max){      
+              m_vecsize = limit; 
+	      m_samples = m_vecsize*m_channels;
+    }
+  }
+  void RestoreVectorSize(){ m_vecsize = m_vecsize_max; }
   short GetChannels() { return m_channels; }
   short GetSize() { return m_bits; }
   float Output(int pos){ return m_output[pos]; }

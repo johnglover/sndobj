@@ -27,6 +27,8 @@ t.ProcOn()
 time.sleep(2)
 t.ProcOff()
 
-
+#while(True):
+ # osc.DoProcess()
+ # outp.Write()
 
 

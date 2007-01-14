@@ -45,7 +45,6 @@ m_buffno = buffno;
 m_encoding = encoding;
 m_ndx = 0;
 m_dev = dev;
-m_vecsize = vecsize;
 m_firsttime = true;
 		
 m_items = buffsize*m_channels;
@@ -919,7 +918,6 @@ short
 SndRTIO::Write(){
 
 if(!m_error && m_mode == SND_OUTPUT){
-   	// m_vecsize = m_IOobjs[0]->GetVectorSize();
 	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
 	(m_encoding == SHORTSAM ? Writes() : Writec());
      m_count+=m_channels;
@@ -1196,7 +1194,6 @@ short
 SndRTIO::Write(){
   
 if(!m_error && m_mode == SND_OUTPUT){
-	// m_vecsize = m_IOobjs[0]->GetVectorSize();
 	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
    (m_encoding == BYTESAM ?  Writec() : Writes() );
     m_count+=m_channels; 
@@ -1341,7 +1338,6 @@ short
 SndRTIO::Write(){
   
 if(!m_error && m_mode == SND_OUTPUT){
-	// m_vecsize = m_IOobjs[0]->GetVectorSize();
 	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
        m_encoding == BYTESAM ?  Writec() : 
 	       (m_encoding == SHORTSAM ?

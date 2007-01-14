@@ -93,7 +93,7 @@
 #include "SinAnal.h"    // sinusoidal analysis
 #include "SinSyn.h"     // sinusoidal resynthesis
 #include "AdSyn.h"		// additive resynthesis
-#include "ReSyn.h"      // additive resynthesis
+#include "ReSyn.h"      // additive resynthesis if(m_status==OFF) Update();
 #include  "IFAdd.h"      // additive resynthesis
 
 #include  "SpecMult.h"    // spectral multiplication
@@ -214,6 +214,7 @@ static void PythonCallback(void *p){
   }
 %}
 
+%ignore SndThread::SetProcessCallback(void (*Callback)(void *), void *cbdata);
 
 #ifndef NOPTHREAD
 %include"SndThread.h" // needs pthread library

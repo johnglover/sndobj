@@ -100,7 +100,7 @@ IFFT::SetFFTSize(int fftsize){
 
 void
 IFFT::SetHopSize(int hopsize){
-  m_vecsize =m_hopsize = hopsize;
+  SetVectorSize(m_hopsize = hopsize);
   ReInit();
 }
 

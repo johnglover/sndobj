@@ -25,7 +25,7 @@ SndSinIO::SndSinIO(char* name, int maxtracks, float threshold, int windowtype, s
     short sbits;      
 		
     m_hopsize = hopsize;
-    m_vecsize = fftsize;
+    SetVectorSize(maxtracks*3);
     GUID subfmt;
     cbsize = SHORT_LE((short)46);
     PutHeader(0,m_hdrsize,m_len, m_format);

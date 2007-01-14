@@ -10,11 +10,11 @@
 IFFT::IFFT(){
 rfftw_destroy_plan(m_plan);
 m_plan = rfftw_create_plan(m_fftsize, FFTW_COMPLEX_TO_REAL, FFTW_ESTIMATE);
-m_vecsize = m_hopsize;
 }
 
-IFFT::IFFT(Table* window, SndObj* input, int fftsize, int hopsize, int vecsize, 
-		   float sr):
+IFFT::IFFT(Table* window, SndObj* input, int fftsize, 
+           int hopsize, int vecsize, 
+	   float sr):
        FFT(window, input, 1.f, fftsize, hopsize, vecsize, sr)
 {
 rfftw_destroy_plan(m_plan);

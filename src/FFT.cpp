@@ -98,7 +98,7 @@ FFT::~FFT(){
 
 void
 FFT::SetFFTSize(int fftsize){
-  m_vecsize = m_fftsize = fftsize;
+  SetVectorSize(m_fftsize = fftsize);
   ReInit();
 }
 

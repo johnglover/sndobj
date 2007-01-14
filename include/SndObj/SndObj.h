@@ -42,6 +42,7 @@ class SndObj {
   float  m_sr;    // sampling rate
   int    m_vecsize; //vector size
   int    m_vecpos; // vector pos counter
+  int    m_vecsize_max; // for limiting operation
   int    m_altvecpos; // secondary counter
   int    m_error;     // error code
   short  m_enable;  // enable object
@@ -220,6 +221,11 @@ class SndObj {
 
   int GetVectorSize() { return m_vecsize; } 
   void SetVectorSize(int vecsize);
+  void LimitVectorSize(int limit) {
+        if(limit <= m_vecsize_max)      
+                 m_vecsize = limit; 
+  }
+  void RestoreVectorSize(){ m_vecsize = m_vecsize_max; }
   float  GetSr(){ return m_sr;}
   virtual void SetSr(float sr){ m_sr = sr;}
   virtual int Set(char* mess, float value);

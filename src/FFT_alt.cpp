@@ -15,7 +15,7 @@ m_table = 0;
 // we have to de-allocate
 
 m_fftsize = DEF_FFTSIZE;
-m_vecsize = DEF_FFTSIZE;
+SetVectorSize(DEF_FFTSIZE);
 m_hopsize = DEF_VECSIZE;
 
 delete[] m_output;
@@ -94,7 +94,7 @@ delete[] m_ffttmp;
 
 void
 FFT::SetFFTSize(int fftsize){
-m_vecsize = m_fftsize = fftsize;
+SetVectorSize(m_fftsize = fftsize);
 ReInit();
 }
 
