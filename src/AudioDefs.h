@@ -7,7 +7,8 @@
 
 
 #ifndef NOPTHREAD
-#include "SndThread.h" // needs pthread library
+#include "SndThread.h" // needs thread support
+#include "SndRTThread.h"
 #endif  
 
 #include "SndObj.h"

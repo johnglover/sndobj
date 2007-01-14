@@ -7,7 +7,8 @@
 %{
 
 #ifndef NOPTHREAD
-#include "SndThread.h" // needs pthread library
+#include "SndThread.h" 
+#include "SndRTThread.h"
 #endif  
 
 // Base Classes
@@ -218,8 +219,7 @@ static void PythonCallback(void *p){
 %ignore SndThread::SetProcessCallback(void (*Callback)(void *), void *cbdata);
 
 #ifndef NOPTHREAD
-%include "SndThread.h" // needs pthread library
-
+%include "SndThread.h" 
 %extend SndThread {
    // Set the Python callback
    void SetPythonCallback(PyObject *pyfunc, PyObject *p){    
@@ -229,6 +229,8 @@ static void PythonCallback(void *p){
     Py_XINCREF(pyfunc);
   }
 }
+
+%include "SndRTThread.h"
 #endif 
 
 // SndObj-derived

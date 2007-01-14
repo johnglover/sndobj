@@ -25,7 +25,9 @@ SndThread::SndThread(){
   pthread_attr_init(&attrib);
 #endif
   ProcessCallback = NULL;
+  SndProcessThread = threadfunc;
   m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
+  processing = false;
 }
 
 SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
@@ -44,7 +46,9 @@ SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
   pthread_attr_init(&attrib);
 #endif
   ProcessCallback = NULL;
+  SndProcessThread = threadfunc;
   m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
+  processing = false;
 }
 
 SndThread::~SndThread(){
@@ -71,23 +75,23 @@ SndThread::~SndThread(){
 
 int
 SndThread::AddObj(SndObj* obj){
-  SndLink<SndObj>* NewLink;
+  
+ SndLink<SndObj> *NewLink, *temp;
   if(!( NewLink = new SndLink<SndObj>))
     return 0; // failed to allocate memory
-  NewLink->obj = obj;
-
-  if(SndObjNo>0) // if at least 1 link exists
-    NewLink->next = last->next; // make the new link next 
-                                // point to the prev next
-
-  else    // if this is the first link
-    last = NewLink; // it is also the last
-
-  last->next = NewLink; // the next link to the last
-                        // is the top of the list
- 
+  
+  temp = last; 
+  last = NewLink; // NewLink is always last
+  last->obj = obj; 
+  if(SndObjNo>0) { // if at least 1 link exists
+   last->next = temp->next; // last always points to 1st 
+   temp->next = last;   // next to last points to last
+  } 
+  else
+    last->next = last; // points to itself (1st)
   SndObjNo++; // increment the number of SndObjs 
-  return 1;   // Added Link will always be at the top
+  return 1;   // Added Link will always be at the end
+  
 }
 
 int
@@ -127,7 +131,7 @@ SndThread::DeleteObj(SndObj* obj){
   SndLink<SndObj>* temp1; 
   SndLink<SndObj>* temp2;
 
-  // search start from top
+  // search start from last
   // temp1 is the link to be deleted
   temp1 = last->next; 
   // temp2 is the link before it
@@ -138,14 +142,15 @@ SndThread::DeleteObj(SndObj* obj){
     // temp2 & temp1 move to the next links
     temp2 = temp1; 
     temp1 = temp1->next;
-    // if the search is back at the top, return  
+    // if the search is back at the last, return  
     if(temp1 == last->next) return 0;
   }
   // link the previous to the next
+  if(temp1 == last) last = temp2;
   temp2->next = temp1->next;
+  SndObjNo--; 
   // delete the link
   delete temp1;
-  SndObjNo--;  
   return 1;
 }
 
@@ -166,6 +171,7 @@ SndThread::DeleteObj(SndIO* obj, int iolist){
       temp1 = temp1->next;
       if(temp1 == input->next) return 0;
     }
+    if(temp1 == input) input = temp2;
     temp2->next = temp1->next;
     delete temp1;
     InputNo--;  
@@ -180,6 +186,7 @@ SndThread::DeleteObj(SndIO* obj, int iolist){
       temp1 = temp1->next;
       if(temp1 == output->next) return 0;
     }
+    if(temp1 == output) output = temp2;
     temp2->next = temp1->next;
     delete temp1; 
     OutputNo--; 
@@ -316,15 +323,20 @@ void SndThread::UpdateRestore(){
     }
 }
 void
-SndProcessThread(SndThread* sndthread){
+threadfunc(void* data){
     
   int i;
-  SndLink<SndObj>* temp = sndthread->last;
-  SndLink<SndIO>* itemp = sndthread->input;
-  SndLink<SndIO>* otemp = sndthread->output;
-
-  while(sndthread->status){
+  SndThread *sndthread = (SndThread *) data;
+  SndLink<SndObj>* temp;
+  SndLink<SndIO>* itemp;
+  SndLink<SndIO>* otemp;
  
+  while(sndthread->status){
+
+   temp = sndthread->last;
+   itemp = sndthread->input;
+   otemp = sndthread->output;
+
     //... processing loop...
 
     sndthread->Update();
@@ -338,11 +350,14 @@ SndProcessThread(SndThread* sndthread){
     sndthread->ProcessCallback(sndthread->callbackdata);          
 
     // sound processing 
+
+    sndthread->processing = true;
     for(i = 0; i < sndthread->SndObjNo; i++){
-      temp->obj->DoProcess();
       temp = temp->next;
+      temp->obj->DoProcess();
     } 
-    
+    sndthread->processing = false;
+
     // output processing   
     for(i = 0; i < sndthread->OutputNo; i++){ 
       otemp->obj->Write();

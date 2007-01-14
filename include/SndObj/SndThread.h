@@ -60,8 +60,10 @@ class SndThread {
   int status;   // processing status ON, OFF
 
   void (*ProcessCallback)(void *callbackdata);
+  void (*SndProcessThread)(void *data);
   void *callbackdata;
 
+  bool processing;
   // pthread-related  member variables
 #ifndef USE_WIN32THREADS
   pthread_attr_t  attrib;
@@ -105,7 +107,7 @@ class SndThread {
 
   SndThread();
   SndThread(int n, SndObj** objlist, SndIO *out, SndIO *in=0);
-  ~SndThread();
+  virtual ~SndThread();
  
   int AddObj(SndObj *obj); // add to lists
   int AddObj(SndIO *obj, int iolist);
@@ -155,12 +157,12 @@ class SndThread {
   int ProcOff(); // kill processing thread
     
   // external thread function
-  friend void SndProcessThread(SndThread* sndthread); 
+  friend void threadfunc(void* sndthread); 
      
 
 };
 
-void SndProcessThread(SndThread* sndthread);
+void threadfunc(void* sndthread);
 
 #endif         
 
