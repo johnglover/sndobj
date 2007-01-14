@@ -25,6 +25,7 @@ SndThread::SndThread(){
   pthread_attr_init(&attrib);
 #endif
   ProcessCallback = NULL;
+  m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
 }
 
 SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
@@ -43,6 +44,7 @@ SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
   pthread_attr_init(&attrib);
 #endif
   ProcessCallback = NULL;
+  m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
 }
 
 SndThread::~SndThread(){
