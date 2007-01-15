@@ -1,0 +1,12 @@
+
+
+veplaini <Victor.Lazzarini@nuim.ie>
+	
+* fixed some issues in SndThread.h regarding list
+  position
+* added SndRTTThread class to facilitate RT processing
+	threads.
+	
+veplaini <Victor.Lazzarini@nuim.ie> 
+	
+ * Change.log started 15/01/07 (please add changes at the top)
