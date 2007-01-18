@@ -8,7 +8,7 @@
 
 #ifndef NOPTHREAD
 #include "SndThread.h" 
-#include "SndRTThread.h"
+// #include "SndRTThread.h"
 #endif  
 
 // Base Classes
@@ -230,7 +230,7 @@ static void PythonCallback(void *p){
   }
 }
 
-%include "SndRTThread.h"
+//%include "SndRTThread.h"
 #endif 
 
 // SndObj-derived
