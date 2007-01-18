@@ -1,11 +1,14 @@
+veplaini <Victor.Lazzarini@nuim.ie> 18/01/07
+	
+* implemented Python callbacks for SndThread.
+* implemented dynamic vector size change in SndObj and SndIO
+* added vectorsize and sr setting methods to SndThread.
+  
 
-
-veplaini <Victor.Lazzarini@nuim.ie>
+veplaini <Victor.Lazzarini@nuim.ie> 15/01/07
 	
 * fixed some issues in SndThread.h regarding list
   position
-* added SndRTTThread class to facilitate RT processing
-	threads.
 	
 veplaini <Victor.Lazzarini@nuim.ie> 
 	

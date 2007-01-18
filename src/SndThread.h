@@ -26,6 +26,7 @@
 #endif
 
 
+
 template<class s>  
 struct SndLink{      // SndObj / SndIO lists links       
   SndLink<s>* next;  // next link
@@ -98,11 +99,19 @@ class SndThread {
     m_changed = false;
   }
   }
+#ifdef SWIG
+  PyThreadState *_tstate;
+  pycallbackdata pydata;
+#endif
 
  public:
 
 #ifdef SWIG
-  pycallbackdata pydata;
+  pycallbackdata GetPydata(){ return pydata; }
+  void SetPydata(pycallbackdata p) { pydata = p; }
+  PyThreadState *GetThreadState(){ return _tstate;}
+  void SetThreadState(PyThreadState *p) { _tstate = p; }
+  void *GetProcessCallback() { return (void *)ProcessCallback; }
 #endif
 
   SndThread();

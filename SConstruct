@@ -90,7 +90,7 @@ if getPlatform() == 'linux':
           javapath = '/usr/lib/java/jvm/include'
         else: 
           javapath = env['javapath']
-
+   
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
 	env.Append(CPPDEFINES="WIN")
@@ -411,6 +411,7 @@ if swigcheck and env['pythonmodule']:
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
   Depends(pymod,sndobjlib)
+
 
 ####################################################################
 # 

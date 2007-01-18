@@ -28,6 +28,7 @@ SndThread::SndThread(){
   SndProcessThread = threadfunc;
   m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
   processing = false;
+  
 }
 
 SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
@@ -49,6 +50,7 @@ SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
   SndProcessThread = threadfunc;
   m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
   processing = false;
+  
 }
 
 SndThread::~SndThread(){
@@ -70,7 +72,6 @@ SndThread::~SndThread(){
     iotemp = output->next;
     DeleteObj(iotemp->obj, SNDIO_OUT);
   }
-  
 }
 
 int
@@ -330,6 +331,7 @@ threadfunc(void* data){
   SndLink<SndObj>* temp;
   SndLink<SndIO>* itemp;
   SndLink<SndIO>* otemp;
+
  
   while(sndthread->status){
 

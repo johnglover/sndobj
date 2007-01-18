@@ -199,21 +199,17 @@ $1 = $input;
 // callback
 
 static void PythonCallback(void *p){
-    PyGILState_STATE gstate;
+
     PyObject *res;
     SndThread *t = (SndThread *) p;
-    gstate = PyGILState_Ensure();
-    res = PyEval_CallObject(t->pydata.func, t->pydata.data);
-    Py_DECREF(res);
-    if(t->GetStatus() == 1){
-         PyGILState_Release(gstate);
-    } else 
-#ifdef WIN       
-       Sleep(1000);
-#else
-       usleep(1000);
-#endif
-  }
+    if(t->GetThreadState() == NULL)
+        t->SetThreadState(PyThreadState_New(PyInterpreterState_New())); 
+    PyEval_AcquireThread(t->GetThreadState());    
+    res = PyEval_CallObject(t->GetPydata().func, t->GetPydata().data);
+    Py_DECREF(res);    
+    PyEval_ReleaseThread(t->GetThreadState());
+
+}
 %}
 
 %ignore SndThread::SetProcessCallback(void (*Callback)(void *), void *cbdata);
@@ -222,9 +218,17 @@ static void PythonCallback(void *p){
 %include "SndThread.h" 
 %extend SndThread {
    // Set the Python callback
-   void SetPythonCallback(PyObject *pyfunc, PyObject *p){    
-    self->pydata.func = pyfunc;
-    self->pydata.data = Py_BuildValue("(O)", p);
+   void SetProcessCallback(PyObject *pyfunc, PyObject *p){
+    pycallbackdata d; 
+    if(self->GetProcessCallback() == NULL) {
+       PyEval_InitThreads();
+       self->SetThreadState(NULL);
+     }
+
+     else Py_XDECREF(self->GetPydata().func);
+    d.func = pyfunc;
+    d.data = Py_BuildValue("(O)", p);
+    self->SetPydata(d);
     self->SetProcessCallback(PythonCallback, (void *)self);
     Py_XINCREF(pyfunc);
   }
