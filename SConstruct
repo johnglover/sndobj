@@ -45,9 +45,10 @@ opt.AddOptions(
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
         BoolOption('javamodule', 'build java module', False),
+        BoolOption('lispmodule', 'build CFFI module', False),
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python install path (defaults to usual places)', ''),
-        ('javapath', 'java headers path (defaults to usual places)', ''),
+        ('javapath', 'java headers path (defaults to usual places)', '')
 	)
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -55,6 +56,8 @@ Help(opt.GenerateHelpText(env))
 
 print "Building the Sound Object Library"
 configure = env.Configure()
+
+cffipath = ''
 
 print "Checking for Realtime IO support..." 
 if getPlatform() == 'linux':
@@ -228,6 +231,7 @@ swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
 pysndobj = env.Copy()
 jsndobj = env.Copy()
+cffisndobj = env.Copy()
 examples = env.Copy()
 
 ######################################################################
@@ -388,7 +392,7 @@ if swigcheck and env['pythonmodule']:
   swigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
   pysndobj.Append(SWIGFLAGS=swigdef)
   pysndobj.Append(LIBPATH='./lib')
-  pysndobj.Append(CPPDEFINES='SWIG')
+  pysndobj.Append(CPPDEFINES=['SWIG','PYTHON_WRAP'])
   pysndobj.Prepend(LIBS=baselibs)
   if getPlatform() == 'macosx':
     pysndobj.Prepend(CPPPATH=["%s/Headers" % pythonpath, 'src'])
@@ -425,8 +429,8 @@ if swigcheck and env['javamodule']:
   if getPlatform() == 'macosx':
     jsndobj.Prepend(CPPPATH=["%s/Headers" % javapath, 'src'])
     jsndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'JavaVM'])
-    pywrap = jsndobj.SharedObject('java/AudioDefs.i', CCFLAGS=flags)
-    pymod = jsndobj.Program('java/lib_sndobj.jnilib', pywrap)
+    jwrap = jsndobj.SharedObject('java/AudioDefs.i', CCFLAGS=flags)
+    jmod = jsndobj.Program('java/lib_sndobj.jnilib', pywrap)
     if env['install_name'] == 'lib/libsndobj.dylib':
        jsndobj.Command('link', 'lib/libsndobj.dylib', 'cd java/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
     else:
@@ -448,6 +452,37 @@ if swigcheck and env['javamodule']:
   jcode =  jsndobj.Java(target = './java/JSndObj', source = './java')
   #sndobjar = jsndobj.Jar('sndobj.jar', ['.'], JARCHDIR = './java/JSndObj')
   #Depends(sndobjar, jcode)
+
+###################################################################
+# Common Lisp - CFFI module
+#
+
+if swigcheck and env['lispmodule']:
+  swigdef.append(['-lcarrays.i', '-c++', '-cffi','-Isrc', '-Iinclude', '-v'])
+  cffisndobj.Append(SWIGFLAGS=swigdef)
+  cffisndobj.Append(LIBPATH='./lib')
+  cffisndobj.Prepend(LIBS=baselibs)
+  if getPlatform() == 'macosx':
+    cffisndobj.Prepend(CPPPATH=["%s/Headers" % lisppath, 'src'])
+    cffisndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'JavaVM'])
+    cffiwrap = cffisndobj.SharedObject('cffi/AudioDefs.i', CCFLAGS=flags)
+    cffimod = cffisndobj.Program('cffi/cffi_sndobj.dylib', pywrap)
+    if env['install_name'] == 'lib/libsndobj.dylib':
+       jsndobj.Command('link', 'lib/libsndobj.dylib', 'cd cffi/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
+    else:
+       jsndobj.Command('link', 'lib/libsndobj.dylib', 'cd cffi/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
+  elif getPlatform() == 'win':
+    cffisndobj.Prepend(CPPPATH=[cffipath+'\\include', 'src',cffipath+'\\include\win32'])
+    cffisndobj.Prepend(LIBPATH=[cffipath+'\\libs'])
+    cffiwrap = cffisndobj.SharedObject('cffi/AudioDefs.i', CCFLAGS=flags)
+    cffimod = cffisndobj.SharedLibrary('cffi/sndobj', cffiwrap, SHLIBPREFIX='_')
+  else:
+    cffisndobj.Prepend(CPPPATH=[cffipath, 'src'])
+    cffiwrap = cffisndobj.SharedObject('cffi/AudioDefs.i', CCFLAGS=flags)
+    cffimod = cffisndobj.SharedLibrary('cffi/sndobj', cffiwrap, SHLIBPREFIX='lib_')
+  Depends(cffimod,sndobjlib)
+
+
 
 ####################################################################
 #

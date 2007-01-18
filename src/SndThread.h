@@ -36,7 +36,7 @@ struct SndLink{      // SndObj / SndIO lists links
 enum { SNDIO_IN, SNDIO_OUT }; // IO list names     
 enum { OFF=0, ON };           // processing status
 
-#ifdef SWIG
+#ifdef PYTHON_WRAP
 struct pycallbackdata {
   PyObject *func;
   PyObject *data;
@@ -99,14 +99,14 @@ class SndThread {
     m_changed = false;
   }
   }
-#ifdef SWIG
+#ifdef PYTHON_WRAP
   PyThreadState *_tstate;
   pycallbackdata pydata;
 #endif
 
  public:
 
-#ifdef SWIG
+#ifdef PYTHON_WRAP
   pycallbackdata GetPydata(){ return pydata; }
   void SetPydata(pycallbackdata p) { pydata = p; }
   PyThreadState *GetThreadState(){ return _tstate;}
