@@ -37,7 +37,7 @@ SndIO::SndIO(short channels, short bits, SndObj** inputlist,
       }
     else 
       for(n=0;n<m_channels;n++) m_IOobjs[n] = 0; // zero the pointers
-
+    m_output = NULL;
     // vecsize is in frames! m_samples is vecsize in samples
     SetVectorSize(vecsize);
     if(m_vecsize == 0){
