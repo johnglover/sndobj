@@ -12,7 +12,7 @@
 #include "SndIO.h"
 
 SndObj::SndObj(){ 
-
+  m_output = NULL;
   SetVectorSize(DEF_VECSIZE);
   m_input = 0;
   m_sr = DEF_SR;
@@ -29,7 +29,7 @@ SndObj::SndObj(){
 }
 
 SndObj::SndObj(SndObj* input, int vecsize, float sr){
-
+  m_output = NULL;
   SetVectorSize(vecsize);	
   m_input = input; 
   m_sr = sr;
@@ -47,7 +47,7 @@ SndObj::SndObj(SndObj* input, int vecsize, float sr){
 
 
 SndObj::SndObj(SndObj& obj){
-
+  m_output = NULL;
   SetVectorSize(obj.GetVectorSize());
   SetSr(obj.GetSr());
 	

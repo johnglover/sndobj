@@ -206,7 +206,7 @@ static void PythonCallback(void *p){
     res = PyEval_CallObject(t->pydata.func, t->pydata.data);
     Py_DECREF(res);
     if(t->GetStatus() == 1){
-            PyGILState_Release(gstate);
+            // PyGILState_Release(gstate);
     } else 
 #ifdef WIN       
        Sleep(1000);
