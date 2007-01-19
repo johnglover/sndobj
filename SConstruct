@@ -460,6 +460,7 @@ if swigcheck and env['javamodule']:
 if swigcheck and env['lispmodule']:
   swigdef.append(['-lcarrays.i', '-c++', '-cffi','-Isrc', '-Iinclude', '-v'])
   cffisndobj.Append(SWIGFLAGS=swigdef)
+  cffisndobj.Append(CPPDEFINES=['SWIG','SWIGCFFI'])
   cffisndobj.Append(LIBPATH='./lib')
   cffisndobj.Prepend(LIBS=baselibs)
   if getPlatform() == 'macosx':
