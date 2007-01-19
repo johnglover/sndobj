@@ -1,7 +1,13 @@
+###############################################
+# A little toy demonstrating PySndObj
+#
+
 from Tkinter import *
 import sndobj
 import math
 
+# this is our computer instrument
+# basically an oscillator and a filter
 class Instrument:
 
     def Output(self):
@@ -30,7 +36,7 @@ class Instrument:
         self.tab = sndobj.HarmTable(16384, 25, sndobj.SQUARE)
         self.env = sndobj.Interp(0, 0, 0.02)
         self.osc = sndobj.Oscili(self.tab, 440, 0, None, self.env)
-        self.fil = sndobj.Lp(100,1,self.osc)
+        self.fil = sndobj.Lp(100,0.5,self.osc)
         self.outp = sndobj.SndRTIO(self.fil)
         self.thread = sndobj.SndThread(0, None, self.outp)
         self.thread.AddObj(self.env)
@@ -109,7 +115,7 @@ class Application(Frame):
         self.master.destroy()
 
     def __init__(self,master=None):
-        master.title("Csound + Tkinter: just click and play")
+        master.title("PySndObj + Tkinter: just click and play")
         self.items = []
         self.notes = []
         Frame.__init__(self,master)

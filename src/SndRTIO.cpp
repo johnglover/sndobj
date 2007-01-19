@@ -690,8 +690,6 @@ if(snd_pcm_hw_params_set_periods(m_dev, hwparams, buffno, 0) < 0){
   //return;
  }
  
-
-
 // buffsize is number of buffer frames !
 if(snd_pcm_hw_params_set_buffer_size(m_dev, hwparams, 
        buffsize*buffno) < 0)
@@ -706,7 +704,14 @@ if(snd_pcm_hw_params(m_dev, hwparams) < 0)
 m_error = 19; // couldn't st the params
 return;   
 	}
-
+/*
+snd_pcm_sw_params_t *swparams;
+snd_pcm_sw_params_current(m_dev, swparams);
+snd_pcm_sw_params_set_start_threshold(m_dev,swparams,buffsize);
+snd_pcm_sw_params_set_avail_min(m_dev,swparams, buffsize);
+snd_pcm_sw_params_set_xfer_align(m_dev,swparams,1);
+snd_pcm_sw_params(m_dev,swparams);
+*/
 #endif // if defined ALSA !!!!!!!!!!!!!!!!!!!
 m_error  = 0;
 
@@ -1211,15 +1216,22 @@ SndRTIO::Write(){
 void inline
 SndRTIO::Readc(){
   
-  if(m_count == m_items){
-    m_items  = snd_pcm_readi(m_dev, m_cp, m_items/m_channels);
-    if (m_items == -EPIPE) {
-      snd_pcm_prepare(m_dev);
+  if(m_count == m_items){while((m_items = snd_pcm_readi(m_dev, m_cp, m_items/m_channels))< 0){
+      if (m_items == -EPIPE) {
+	int err = snd_pcm_prepare(m_dev);
+	if(err<0){
+	  m_error = 100;
+	  return;
+	}
+	else continue;
+      }
+      else if (m_items == -ESTRPIPE) {
+	while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
+	snd_pcm_prepare(m_dev);
+      }
+      else if(m_items == -EAGAIN) continue;
     }
-    else if (m_items == -ESTRPIPE) {
-      while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
-      snd_pcm_prepare(m_dev);
-    }
+   
     m_items *= m_channels;
     m_count = 0;         
     for(int n = 0; n < m_channels; n++)
@@ -1238,13 +1250,20 @@ SndRTIO::Readc(){
 void inline
 SndRTIO::Reads(){   
   if(m_count == m_items){
-    m_items  = snd_pcm_readi(m_dev, m_sp, m_items/m_channels);
-    if (m_items == -EPIPE) {
-      snd_pcm_prepare(m_dev);
-    }
-    else if (m_items == -ESTRPIPE) {
-      while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
-      snd_pcm_prepare(m_dev);
+    while((m_items = snd_pcm_readi(m_dev, m_sp, m_items/m_channels))< 0){
+      if (m_items == -EPIPE) {
+	int err = snd_pcm_prepare(m_dev);
+	if(err<0){
+	  m_error = 100;
+	  return;
+	}
+	else continue;
+      }
+      else if (m_items == -ESTRPIPE) {
+	while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
+	snd_pcm_prepare(m_dev);
+      }
+      else if(m_items == -EAGAIN) continue;
     }
     m_items *= m_channels;
     m_count = 0;         
@@ -1261,13 +1280,20 @@ SndRTIO::Reads(){
 void inline
 SndRTIO::Readl(){   
   if(m_count == m_items){
-    m_items  = snd_pcm_readi(m_dev, m_lp, m_items/m_channels);
-    if (m_items == -EPIPE) {
-      snd_pcm_prepare(m_dev);
-    }
-    else if (m_items == -ESTRPIPE) {
-      while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
-      snd_pcm_prepare(m_dev);
+    while((m_items = snd_pcm_readi(m_dev, m_lp, m_items/m_channels))< 0){
+      if (m_items == -EPIPE) {
+	int err = snd_pcm_prepare(m_dev);
+	if(err<0){
+	  m_error = 100;
+	  return;
+	}
+	else continue;
+      }
+      else if (m_items == -ESTRPIPE) {
+	while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
+	snd_pcm_prepare(m_dev);
+      }
+      else if(m_items == -EAGAIN) continue;
     }
     m_items *= m_channels;
     m_count = 0;         
@@ -1301,16 +1327,22 @@ void inline
 SndRTIO::Writec(){
   int err;
   if(m_count == m_items){
-	   
-    while( (err == snd_pcm_writei(m_dev, m_cp, m_items/m_channels)) < 0){
+    while((err = snd_pcm_writei(m_dev, m_cp, m_items/m_channels)) < 0){
       if (err == -EPIPE) {
-        snd_pcm_prepare(m_dev);
+	err = snd_pcm_prepare(m_dev);
+        if(err<0){
+	  m_error = 100;
+	  return;     
+	}
+	else continue; 
       }
       else if (err == -ESTRPIPE) {
 	while (snd_pcm_resume(m_dev) == -EAGAIN) usleep(1);
 	snd_pcm_prepare(m_dev);
       }
-    }
+      else if(err == -EAGAIN) continue;
+    }	   
+    
     m_count = 0;
     for(int n = 0; n < m_channels; n++)
       if(m_IOobjs[n])
@@ -1329,12 +1361,18 @@ SndRTIO::Writes(){
   if(m_count == m_items){
     while((err = snd_pcm_writei(m_dev, m_sp, m_items/m_channels)) < 0){
       if (err == -EPIPE) {
-        snd_pcm_prepare(m_dev);
+	err = snd_pcm_prepare(m_dev);
+        if(err<0){
+	  m_error = 100;
+	  return;     
+	}
+	else continue; 
       }
       else if (err == -ESTRPIPE) {
 	while (snd_pcm_resume(m_dev) == -EAGAIN) usleep(1);
 	snd_pcm_prepare(m_dev);
       }
+      else if(err == -EAGAIN) continue;
     }
 
     m_count = 0;
@@ -1353,15 +1391,22 @@ void inline
 SndRTIO::Writel(){
   int err;
   if(m_count == m_items){
-    while( (err == snd_pcm_writei(m_dev, m_lp, m_items/m_channels)) < 0){
+    while((err = snd_pcm_writei(m_dev, m_lp, m_items/m_channels)) < 0){
       if (err == -EPIPE) {
-        snd_pcm_prepare(m_dev);
+	err = snd_pcm_prepare(m_dev);
+        if(err<0){
+	  m_error = 100;
+	  return;     
+	}
+	else continue; 
       }
       else if (err == -ESTRPIPE) {
 	while (snd_pcm_resume(m_dev) == -EAGAIN) usleep(1);
 	snd_pcm_prepare(m_dev);
       }
+      else if(err == -EAGAIN) continue;
     }
+    
     m_count = 0;
     for(int n = 0; n < m_channels; n++)
       if(m_IOobjs[n])
