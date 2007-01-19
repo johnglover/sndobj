@@ -272,7 +272,7 @@ HammingTable.cpp NoteTable.cpp UsrDefTable.cpp
 LoPassTable.cpp ImpulseTable.cpp 
 SpecEnvTable.cpp  EnvTable.cpp PVEnvTable.cpp PVTable.cpp""")
 					 
-sndthrsources = Split("""SndThread.cpp """) # SndRTThread.cpp""")
+sndthrsources = Split("""SndThread.cpp SndRTThread.cpp""")
 
 fftwsources = Split("""config.c  fcr_9.c fhf_6.c fn_8.c  frc_1.c  ftw_16.c ftwi_7.c \
 executor.c fftwnd.c fhf_7.c fn_9.c  frc_10.c ftw_2.c  ftwi_8.c 

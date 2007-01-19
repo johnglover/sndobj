@@ -31,11 +31,12 @@ if sys.platform[:6] == "darwin":
 else:
   outp = SndRTIO(osc)
 
+inp = SndRTIO(1, SND_INPUT, 2048,4)
 t.SetProcessCallback(callb, dat)
 t.AddObj(osc)
 t.AddObj(mod)
 t.AddObj(outp, SNDIO_OUT)
-
+t.AddObj(inp, SNDIO_IN)
 t.ProcOn()
 time.sleep(2)
 t.LimitVectorSize(64)

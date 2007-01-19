@@ -18,7 +18,7 @@ def callc(data):
     data[0].SetFreq(data[1].get(),data[2])
     data[1].set(data[1].get()-1)
 
-t = SndThread()
+t = SndRTThread()
 
 harm = HarmTable(10000,1,1)
 osc = Oscili(harm, 440, 10000)
@@ -26,16 +26,11 @@ mod = Oscili(harm, 2, 5)
 osc.SetFreq(440, mod)
 tes = test(100)
 dat = (osc, tes, mod)
-if sys.platform[:6] == "darwin":
-  outp = SndCoreAudio(2, 2048, 2)
-  outp.SetOutput(1, osc)
-else:
-  outp = SndRTIO(osc)
 
 t.SetProcessCallback(callb, dat)
-t.AddObj(osc)
 t.AddObj(mod)
-t.AddObj(outp, SNDIO_OUT)
+t.AddOutput(1, osc)
+
 t.ProcOn()
 time.sleep(2)
 t.LimitVectorSize(64)
@@ -47,9 +42,7 @@ tes.set(1000)
 t.RestoreVectorSize()
 time.sleep(2)
 t.ProcOff()
-#time.sleep(2)
-#while(True):
- # osc.DoProcess()
- # outp.Write()
+
+
 
 

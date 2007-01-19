@@ -8,7 +8,7 @@
 
 #ifndef NOPTHREAD
 #include "SndThread.h" 
-// #include "SndRTThread.h"
+#include "SndRTThread.h"
 #endif  
 
 // Base Classes
@@ -193,48 +193,76 @@ typedef SndObj* sndobjp;
 $1 = $input;
 }
  
-
+#ifndef NOPTHREAD
 %{
 // this will be used as an interface to the
 // callback
+
 
 static void PythonCallback(void *p){
 
     PyObject *res;
     SndThread *t = (SndThread *) p;
-    if(t->GetThreadState() == NULL)
-        t->SetThreadState(PyThreadState_New(PyInterpreterState_New())); 
-    PyEval_AcquireThread(t->GetThreadState());    
-    res = PyEval_CallObject(t->GetPydata().func, t->GetPydata().data);
+    if(t->_tstate == NULL)
+        t->_tstate = PyThreadState_New(PyInterpreterState_New()); 
+    PyEval_AcquireThread(t->_tstate);    
+    res = PyEval_CallObject(t->pydata.func, t->pydata.data);
     Py_DECREF(res);    
-    PyEval_ReleaseThread(t->GetThreadState());
+    PyEval_ReleaseThread(t->_tstate);
 
 }
+
+static void PythonCallback1(void *p){
+
+    PyObject *res;
+    SndRTThread *t = (SndRTThread *) p;
+    if(t->_tstate1 == NULL)
+        t->_tstate1 = PyThreadState_New(PyInterpreterState_New()); 
+    PyEval_AcquireThread(t->_tstate1);    
+    res = PyEval_CallObject(t->pydata1.func, t->pydata1.data);
+    Py_DECREF(res);    
+    PyEval_ReleaseThread(t->_tstate1);
+
+}
+
 %}
 
 %ignore SndThread::SetProcessCallback(void (*Callback)(void *), void *cbdata);
-
-#ifndef NOPTHREAD
 %include "SndThread.h" 
+
+%include "SndRTThread.h"
 %extend SndThread {
    // Set the Python callback
    void SetProcessCallback(PyObject *pyfunc, PyObject *p){
-    pycallbackdata d; 
     if(self->GetProcessCallback() == NULL) {
        PyEval_InitThreads();
-       self->SetThreadState(NULL);
+       self->_tstate = NULL;
      }
-
-     else Py_XDECREF(self->GetPydata().func);
-    d.func = pyfunc;
-    d.data = Py_BuildValue("(O)", p);
-    self->SetPydata(d);
+     else Py_XDECREF(self->pydata.func);  
+    self->pydata.func = pyfunc;
+    self->pydata.data = Py_BuildValue("(O)", p);
     self->SetProcessCallback(PythonCallback, (void *)self);
     Py_XINCREF(pyfunc);
+
   }
 }
 
-//%include "SndRTThread.h"
+
+%extend SndRTThread {
+   // Set the Python callback
+   void SetProcessCallback(PyObject *pyfunc, PyObject *p){
+    if(self->GetProcessCallback() == NULL) {
+       PyEval_InitThreads();
+       self->_tstate1 = NULL;
+     }
+     else Py_XDECREF(self->pydata1.func);  
+    self->pydata1.func = pyfunc;
+    self->pydata1.data = Py_BuildValue("(O)", p);
+    self->SetProcessCallback(PythonCallback1, (void *)self);
+    Py_XINCREF(pyfunc);
+
+  }
+}
 #endif 
 
 // SndObj-derived

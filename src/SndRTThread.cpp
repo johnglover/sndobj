@@ -38,6 +38,19 @@ SndRTThread::SndRTThread(int channels,
   Init();
 }
 
+void SndRTThread::AddOutput(int channel, SndObj *in){
+    if(channel > 0 && channel <= m_channels){
+    AddObj(in);
+    ochannel[channel-1]->AddObj(in);
+    }
+  }
+void SndRTThread::DeleteOutput(int channel, SndObj *in){
+    if(channel > 0 && channel <= m_channels){
+    DeleteObj(in);
+    ochannel[channel-1]->DeleteObj(in);
+    }
+  }
+
 SndRTThread::SndRTThread(int n, SndObj** objlist, int channels, 
        int buffsize, int periods) :
   SndThread(n,objlist,0){
@@ -75,7 +88,7 @@ void SndRTThread::Init(){
 }
 
 SndRTThread::~SndRTThread(){
-  delete[] ochannel;
+   delete[] ochannel;
   delete[] sound;
   delete in;
   delete out;
@@ -95,22 +108,23 @@ rtthreadfunc(void* data){
   Mixer **ochannel = sndthread->ochannel;
 
   while(sndthread->status){
- 
+    
     //... processing loop...
    temp = sndthread->last;
    itemp = sndthread->input;
    otemp = sndthread->output;
-
+  
     sndthread->Update();
-    
+      
     for(i = 0; i < sndthread->InputNo; i++){
       itemp->obj->Read();
       itemp = itemp->next;
     }
+    
     // callback
     if(sndthread->ProcessCallback != NULL)
     sndthread->ProcessCallback(sndthread->callbackdata);          
-
+   
     // sound processing 
     // inputs
     for(i = 0; i < channels; i++)
@@ -126,13 +140,14 @@ rtthreadfunc(void* data){
     // outputs
     for(i = 0; i < channels; i++)
       ochannel[i]->DoProcess();
-
+      
     // output processing   
     for(i = 0; i < sndthread->OutputNo; i++){ 
       otemp->obj->Write();
       otemp = otemp->next;
 		
-    }
+      }
+    
   }
 #ifndef USE_WIN32THREADS 
   return;

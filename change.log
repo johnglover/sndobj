@@ -1,6 +1,9 @@
 veplaini <Victor.Lazzarini@nuim.ie> 19/01/07
 	
+* Added SndRTThread class (also to PySndObj)	
 * fixed SndCoreAudio to allow for calling Write() only (without Read())
+* Added CFFI module target to SConstruct (however the CFFI interface
+	is not building at the moment)
 	
 veplaini <Victor.Lazzarini@nuim.ie> 18/01/07
 	

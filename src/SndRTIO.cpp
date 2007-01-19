@@ -810,121 +810,121 @@ return;
 void inline
 SndRTIO::Readc(){
 
-if(m_count == m_items){
+  if(m_count == m_items){
 
-if(m_firsttime || (m_pwhdr[m_cur]->dwFlags & WHDR_DONE)){
-waveInAddBuffer(m_hwi, m_pwhdr[m_cur], sizeof(WAVEHDR));
-m_cur++;
-if(m_cur == m_buffno)
+    if(m_firsttime || (m_pwhdr[m_cur]->dwFlags & WHDR_DONE)){
+      waveInAddBuffer(m_hwi, m_pwhdr[m_cur], sizeof(WAVEHDR));
+      m_cur++;
+      if(m_cur == m_buffno)
 	m_cur = 0;
-}
-m_cp = (char *) m_buffer[m_ndx];
-m_ndx++;
-m_count = 0;
-if(m_ndx == m_buffno){
-	m_ndx = 0;    
-m_firsttime = false;
-}	
-}
+    }
+    m_cp = (char *) m_buffer[m_ndx];
+    m_ndx++;
+    m_count = 0;
+    if(m_ndx == m_buffno){
+      m_ndx = 0;    
+      m_firsttime = false;
+    }	
+  }
 
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE))
-    Sleep(1);
-for(int n = 0; n < m_channels; n++)
-		m_output[m_vecpos+n] = (float) m_cp[n+m_count];	 
-return;
+  if(!m_firsttime)
+    while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE))
+      Sleep(1);
+  for(int n = 0; n < m_channels; n++)
+    m_output[m_vecpos+n] = (float) m_cp[n+m_count];	 
+  return;
 
 }
 
 
 short 
 SndRTIO::Read(){ // remember: m_vecsize is measured in frames!
-	if(!m_error && m_mode == SND_INPUT){
- for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
-	(m_encoding == SHORTSAM ? Reads() : Readc());
-     m_count+=m_channels;
- }
-return 1;
-	} else return 0;
+  if(!m_error && m_mode == SND_INPUT){
+    for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
+      (m_encoding == SHORTSAM ? Reads() : Readc());
+      m_count+=m_channels;
+    }
+    return 1;
+  } else return 0;
 }
 
 
 void inline
 SndRTIO::Writes(){
 	 
-if(m_count == m_items){
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
-waveOutWrite(m_hwo, m_pwhdr[m_ndx], sizeof(WAVEHDR));
-m_count = 0;
-m_ndx++;
-if(m_ndx == m_buffno) {
-	m_ndx = 0;
-	m_firsttime = false;
-}
-m_sp = (short *)m_buffer[m_ndx];
+  if(m_count == m_items){
+    if(!m_firsttime)
+      while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
+    waveOutWrite(m_hwo, m_pwhdr[m_ndx], sizeof(WAVEHDR));
+    m_count = 0;
+    m_ndx++;
+    if(m_ndx == m_buffno) {
+      m_ndx = 0;
+      m_firsttime = false;
+    }
+    m_sp = (short *)m_buffer[m_ndx];
 
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
-for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
-}
+    if(!m_firsttime)
+      while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+  }
 
-else{
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
- for(int n = 0; n < m_channels; n++)
-	if(m_IOobjs[n])
+  else{
+    if(!m_firsttime)
+      while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
 	m_sp[n+m_count] =  (short) m_IOobjs[n]->Output(m_vecpos);
-return;
-}
+    return;
+  }
 }
 
 void inline
 SndRTIO::Writec(){ 
 	 
-if(m_count == m_items){
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
-waveOutWrite(m_hwo, m_pwhdr[m_ndx], sizeof(WAVEHDR));
-m_count = 0;
-m_ndx++;
-if(m_ndx == m_buffno) {
-	m_ndx = 0;
-    m_firsttime = false;
-}
-m_cp = (char *) m_buffer[m_ndx];
+  if(m_count == m_items){
+    if(!m_firsttime)
+      while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
+    waveOutWrite(m_hwo, m_pwhdr[m_ndx], sizeof(WAVEHDR));
+    m_count = 0;
+    m_ndx++;
+    if(m_ndx == m_buffno) {
+      m_ndx = 0;
+      m_firsttime = false;
+    }
+    m_cp = (char *) m_buffer[m_ndx];
 
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
-for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_cp[n+m_count] = (char) m_IOobjs[n]->Output(m_vecpos);
-}
+    if(!m_firsttime)
+      while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char) m_IOobjs[n]->Output(m_vecpos);
+  }
 
-else {
-if(!m_firsttime)
-while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
-for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_cp[n+m_count] =  (char) m_IOobjs[n]->Output(m_vecpos);	 
-}
+  else {
+    if(!m_firsttime)
+      while(!(m_pwhdr[m_ndx]->dwFlags & WHDR_DONE)) Sleep(1);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] =  (char) m_IOobjs[n]->Output(m_vecpos);	 
+  }
 
-return;
+  return;
 }
 
 short 
 SndRTIO::Write(){
 
-if(!m_error && m_mode == SND_OUTPUT){
-	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
-	(m_encoding == SHORTSAM ? Writes() : Writec());
-     m_count+=m_channels;
-	}
-	return 1;
-}
-else return 0;
+  if(!m_error && m_mode == SND_OUTPUT){
+    for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
+      (m_encoding == SHORTSAM ? Writes() : Writec());
+      m_count+=m_channels;
+    }
+    return 1;
+  }
+  else return 0;
 }
 
 #endif // WIN
@@ -934,15 +934,15 @@ else return 0;
 void inline
 SndRTIO::Readf(){
 
-    if(m_count == m_items){
-       alReadFrames(m_port, m_fp, m_buffsize);
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = m_fp[n+m_count];
-           }
-    else
-     for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = m_fp[n+m_count]; 
+  if(m_count == m_items){
+    alReadFrames(m_port, m_fp, m_buffsize);
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = m_fp[n+m_count];
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = m_fp[n+m_count]; 
  	
 
   
@@ -952,15 +952,15 @@ SndRTIO::Readf(){
 void inline
 SndRTIO::Readc(){
 
-    if(m_count == m_items){
-       alReadFrames(m_port, m_cp, m_buffsize);
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) m_cp[n+m_count];
-           }
-    else
-     for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) m_cp[n+m_count];  
+  if(m_count == m_items){
+    alReadFrames(m_port, m_cp, m_buffsize);
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_cp[n+m_count];
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_cp[n+m_count];  
 }
 
 
@@ -969,15 +969,15 @@ void inline
 SndRTIO::Reads(){
 
  
-    if(m_count == m_items){
-       alReadFrames(m_port, m_sp, m_buffsize);
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) m_sp[n+m_count];
-           }
-    else
-     for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) m_sp[n+m_count]; 
+  if(m_count == m_items){
+    alReadFrames(m_port, m_sp, m_buffsize);
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_sp[n+m_count];
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_sp[n+m_count]; 
     
     
   
@@ -988,15 +988,15 @@ void inline
 SndRTIO::Readl(){
 
  
-    if(m_count == m_items){
-       alReadFrames(m_port, m_lp, m_buffsize);
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) m_lp[n+m_count];
-           }
-    else
-     for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) m_lp[n+m_count]; 
+  if(m_count == m_items){
+    alReadFrames(m_port, m_lp, m_buffsize);
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_lp[n+m_count];
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_lp[n+m_count]; 
     
    
 }
@@ -1004,33 +1004,33 @@ SndRTIO::Readl(){
 short
 SndRTIO::Read(){
   
-if(!m_error && m_mode == SND_INPUT){
-	// remember: m_vecsize is measured in frames!
- for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
-  (m_encoding == FLOATSAM ? Readf() : 
-   (m_encoding == SHORTSAM ?  Reads() :
-    (m_encoding == LONGSAM ?  Readl() : Readc())));  
-     m_count+=m_channels;      
-       } 
- return 1;
-}
-else return 0;
+  if(!m_error && m_mode == SND_INPUT){
+    // remember: m_vecsize is measured in frames!
+    for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
+      (m_encoding == FLOATSAM ? Readf() : 
+       (m_encoding == SHORTSAM ?  Reads() :
+	(m_encoding == LONGSAM ?  Readl() : Readc())));  
+      m_count+=m_channels;      
+    } 
+    return 1;
+  }
+  else return 0;
 }
 void inline
 SndRTIO::Writef(){
 
   if(m_count == m_items){
-	alWriteFrames(m_port, m_fp, m_buffsize);
+    alWriteFrames(m_port, m_fp, m_buffsize);
     m_count = 0;
 
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_fp[n+m_count] = m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_fp[n+m_count] = m_IOobjs[n]->Output(m_vecpos);
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_fp[n+m_count] = m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_fp[n+m_count] = m_IOobjs[n]->Output(m_vecpos);
 }
 
 
@@ -1038,34 +1038,34 @@ void inline
 SndRTIO::Writec(){
 
   if(m_count == m_items){
-	alWriteFrames(m_port, m_cp, m_buffsize);
+    alWriteFrames(m_port, m_cp, m_buffsize);
     m_count = 0;
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_cp[n+m_count] = (char)m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char)m_IOobjs[n]->Output(m_vecpos);
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_cp[n+m_count] = (char)m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char)m_IOobjs[n]->Output(m_vecpos);
 }
 
 void inline
 SndRTIO::Writes(){
   
   if(m_count == m_items){
-   alWriteFrames(m_port, m_sp, m_buffsize);
+    alWriteFrames(m_port, m_sp, m_buffsize);
     m_count = 0;
  
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
           
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
                    
 }
 
@@ -1073,31 +1073,31 @@ void inline
 SndRTIO::Writel(){
 
   if(m_count == m_items){
-	alWriteFrames(m_port, m_lp, m_buffsize);
+    alWriteFrames(m_port, m_lp, m_buffsize);
     m_count = 0;
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_lp[n+m_count] = (long) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_lp[n+m_count] = (long) m_IOobjs[n]->Output(m_vecpos);
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_lp[n+m_count] = (long) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_lp[n+m_count] = (long) m_IOobjs[n]->Output(m_vecpos);
 }
 
 short
 SndRTIO::Write(){
 
-if(!m_error && m_mode == SND_OUTPUT){
-	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
-	 (m_encoding == FLOATSAM ? Writef() : 
-      (m_encoding == SHORTSAM ?  Writes() :
+  if(!m_error && m_mode == SND_OUTPUT){
+    for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
+      (m_encoding == FLOATSAM ? Writef() : 
+       (m_encoding == SHORTSAM ?  Writes() :
         (m_encoding == LONGSAM ?  Writel() : Writec())));
-     m_count+=m_channels;
-	}
-	return 1;
-}
-else return 0;
+      m_count+=m_channels;
+    }
+    return 1;
+  }
+  else return 0;
 
 }
 
@@ -1109,15 +1109,15 @@ else return 0;
 void inline
 SndRTIO::Readc(){
   
-    if(m_count == m_items){
-       m_items  = read(m_dev, m_cp, m_buffsize);
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128);
-           }
-    else
-     for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128); 
+  if(m_count == m_items){
+    m_items  = read(m_dev, m_cp, m_buffsize);
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128);
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128); 
     
 
   
@@ -1127,17 +1127,17 @@ SndRTIO::Readc(){
 
 void inline
 SndRTIO::Reads(){   
-    if(m_count == m_items){
-      m_items = read(m_dev, m_sp, m_buffsize);
-      m_items /= 2;
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-	 m_output[n+m_vecpos] = (float) m_sp[n+m_count];
+  if(m_count == m_items){
+    m_items = read(m_dev, m_sp, m_buffsize);
+    m_items /= 2;
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_sp[n+m_count];
           
-           }
-    else
-      for(int n = 0; n < m_channels; n++)
-	m_output[n+m_vecpos] = (float)  m_sp[n+m_count]; 
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float)  m_sp[n+m_count]; 
        
 }
 
@@ -1145,30 +1145,30 @@ SndRTIO::Reads(){
 short
 SndRTIO::Read(){
   
-if(!m_error && m_mode == SND_INPUT){
-   for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
-    (m_encoding == BYTESAM ?  Readc() : Reads());
-     m_count+=m_channels;   
-   }
-   return 1; 
-       }
- else return 0;	
+  if(!m_error && m_mode == SND_INPUT){
+    for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
+      (m_encoding == BYTESAM ?  Readc() : Reads());
+      m_count+=m_channels;   
+    }
+    return 1; 
+  }
+  else return 0;	
      
 }
 void inline
 SndRTIO::Writec(){
 
-      if(m_count == m_items){
-	   write(m_dev, m_cp, m_buffsize);
-       m_count = 0;
-      for(int n = 0; n < m_channels; n++)
-		if(m_IOobjs[n])
-	     m_cp[n+m_count] = (char) (m_IOobjs[n]->Output(m_vecpos) + 128);
-	       }
-           else
-           for(int n = 0; n < m_channels; n++)
-		 if(m_IOobjs[n])
-          m_cp[n+m_count] = (char)( m_IOobjs[n]->Output(m_vecpos) + 128);
+  if(m_count == m_items){
+    write(m_dev, m_cp, m_buffsize);
+    m_count = 0;
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char) (m_IOobjs[n]->Output(m_vecpos) + 128);
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char)( m_IOobjs[n]->Output(m_vecpos) + 128);
            
 }
 
@@ -1176,16 +1176,16 @@ void inline
 SndRTIO::Writes(){
 
   if(m_count == m_items){
-	write(m_dev, m_sp, m_buffsize);
+    write(m_dev, m_sp, m_buffsize);
     m_count = 0;
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
 
 }
 
@@ -1193,14 +1193,14 @@ SndRTIO::Writes(){
 short
 SndRTIO::Write(){
   
-if(!m_error && m_mode == SND_OUTPUT){
-	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
-   (m_encoding == BYTESAM ?  Writec() : Writes() );
-    m_count+=m_channels; 
-	}
-   return 1;
-}
-else return 0;	     
+  if(!m_error && m_mode == SND_OUTPUT){
+    for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
+      (m_encoding == BYTESAM ?  Writec() : Writes() );
+      m_count+=m_channels; 
+    }
+    return 1;
+  }
+  else return 0;	     
 }
 
 #endif // OSS
@@ -1211,17 +1211,23 @@ else return 0;
 void inline
 SndRTIO::Readc(){
   
-    if(m_count == m_items){
-       while((m_items  = snd_pcm_readi(m_dev, m_cp, m_items/m_channels)) < 0)
-		   snd_pcm_prepare(m_dev);
-	   m_items *= m_channels;
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128);
-           }
-    else
-     for(int n = 0; n < m_channels; n++)
-          m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128); 
+  if(m_count == m_items){
+    m_items  = snd_pcm_readi(m_dev, m_cp, m_items/m_channels);
+    if (m_items == -EPIPE) {
+      snd_pcm_prepare(m_dev);
+    }
+    else if (m_items == -ESTRPIPE) {
+      while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
+      snd_pcm_prepare(m_dev);
+    }
+    m_items *= m_channels;
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128);
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128); 
     
 
   
@@ -1231,35 +1237,47 @@ SndRTIO::Readc(){
 
 void inline
 SndRTIO::Reads(){   
-    if(m_count == m_items){
-      while((m_items  = snd_pcm_readi(m_dev, m_sp, m_items/m_channels))< 0) 
-               snd_pcm_prepare(m_dev);
-      m_items *= m_channels;
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-	 m_output[n+m_vecpos] = (float) m_sp[n+m_count];
+  if(m_count == m_items){
+    m_items  = snd_pcm_readi(m_dev, m_sp, m_items/m_channels);
+    if (m_items == -EPIPE) {
+      snd_pcm_prepare(m_dev);
+    }
+    else if (m_items == -ESTRPIPE) {
+      while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
+      snd_pcm_prepare(m_dev);
+    }
+    m_items *= m_channels;
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_sp[n+m_count];
           
-           }
-    else
-      for(int n = 0; n < m_channels; n++)
-	m_output[n+m_vecpos] = (float)  m_sp[n+m_count]; 
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float)  m_sp[n+m_count]; 
        
 }
 
 void inline
 SndRTIO::Readl(){   
-    if(m_count == m_items){
-       while((m_items = snd_pcm_readi(m_dev, m_sp, m_items/m_channels)) < 0)
-		   snd_pcm_prepare(m_dev);
-      m_items *= m_channels;
-       m_count = 0;         
-       for(int n = 0; n < m_channels; n++)
-	 m_output[n+m_vecpos] = (float) m_lp[n+m_count];
+  if(m_count == m_items){
+    m_items  = snd_pcm_readi(m_dev, m_lp, m_items/m_channels);
+    if (m_items == -EPIPE) {
+      snd_pcm_prepare(m_dev);
+    }
+    else if (m_items == -ESTRPIPE) {
+      while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
+      snd_pcm_prepare(m_dev);
+    }
+    m_items *= m_channels;
+    m_count = 0;         
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float) m_lp[n+m_count];
           
-           }
-    else
-      for(int n = 0; n < m_channels; n++)
-	m_output[n+m_vecpos] = (float)  m_lp[n+m_count]; 
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      m_output[n+m_vecpos] = (float)  m_lp[n+m_count]; 
        
 }
 
@@ -1267,68 +1285,92 @@ SndRTIO::Readl(){
 short
 SndRTIO::Read(){
   
-if(!m_error && m_mode == SND_INPUT){
-   for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
-    m_encoding == BYTESAM ?  Readc() : 
-	       (m_encoding == SHORTSAM ?
-			   Reads() : Readl() );
-     m_count+=m_channels;   
-   }
-   return 1; 
-       }
- else return 0;	
+  if(!m_error && m_mode == SND_INPUT){
+    for(m_vecpos = 0; m_vecpos < m_samples; m_vecpos+=m_channels){
+      m_encoding == BYTESAM ?  Readc() : 
+	(m_encoding == SHORTSAM ?
+	 Reads() : Readl() );
+      m_count+=m_channels;   
+    }
+    return 1; 
+  }
+  else return 0;	
      
 }
 void inline
 SndRTIO::Writec(){
-
-      if(m_count == m_items){
-	   while(snd_pcm_writei(m_dev, m_cp, m_items/m_channels) < 0)
-		   snd_pcm_prepare(m_dev);
-       m_count = 0;
-      for(int n = 0; n < m_channels; n++)
-		if(m_IOobjs[n])
-	     m_cp[n+m_count] = (char) (m_IOobjs[n]->Output(m_vecpos) + 128);
-	       }
-           else
-           for(int n = 0; n < m_channels; n++)
-		 if(m_IOobjs[n])
-          m_cp[n+m_count] = (char)( m_IOobjs[n]->Output(m_vecpos) + 128);
+  int err;
+  if(m_count == m_items){
+	   
+    while( (err == snd_pcm_writei(m_dev, m_cp, m_items/m_channels)) < 0){
+      if (err == -EPIPE) {
+        snd_pcm_prepare(m_dev);
+      }
+      else if (err == -ESTRPIPE) {
+	while (snd_pcm_resume(m_dev) == -EAGAIN) usleep(1);
+	snd_pcm_prepare(m_dev);
+      }
+    }
+    m_count = 0;
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char) (m_IOobjs[n]->Output(m_vecpos) + 128);
+  }
+  else
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_cp[n+m_count] = (char)( m_IOobjs[n]->Output(m_vecpos) + 128);
            
 }
 
 void inline
 SndRTIO::Writes(){
-
+  int err;
   if(m_count == m_items){
-  while(snd_pcm_writei(m_dev, m_sp, m_items/m_channels)< 0)
-			  snd_pcm_prepare(m_dev);
+    while((err = snd_pcm_writei(m_dev, m_sp, m_items/m_channels)) < 0){
+      if (err == -EPIPE) {
+        snd_pcm_prepare(m_dev);
+      }
+      else if (err == -ESTRPIPE) {
+	while (snd_pcm_resume(m_dev) == -EAGAIN) usleep(1);
+	snd_pcm_prepare(m_dev);
+      }
+    }
+
     m_count = 0;
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
 
 }
 
 void inline
 SndRTIO::Writel(){
+  int err;
   if(m_count == m_items){
-	while(snd_pcm_writei(m_dev, m_lp, m_items/m_channels) < 0)
-		   snd_pcm_prepare(m_dev);
+    while( (err == snd_pcm_writei(m_dev, m_lp, m_items/m_channels)) < 0){
+      if (err == -EPIPE) {
+        snd_pcm_prepare(m_dev);
+      }
+      else if (err == -ESTRPIPE) {
+	while (snd_pcm_resume(m_dev) == -EAGAIN) usleep(1);
+	snd_pcm_prepare(m_dev);
+      }
+    }
     m_count = 0;
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-	 m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
   }
   else
-  for(int n = 0; n < m_channels; n++)
-     if(m_IOobjs[n])
-     m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
+    for(int n = 0; n < m_channels; n++)
+      if(m_IOobjs[n])
+	m_sp[n+m_count] = (short) m_IOobjs[n]->Output(m_vecpos);
 
 }
 
@@ -1337,16 +1379,16 @@ SndRTIO::Writel(){
 short
 SndRTIO::Write(){
   
-if(!m_error && m_mode == SND_OUTPUT){
-	for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
-       m_encoding == BYTESAM ?  Writec() : 
-	       (m_encoding == SHORTSAM ?
-			   Writes() : Writel() );
-    m_count+=m_channels; 
-	}
-   return 1;
-}
-else return 0;	     
+  if(!m_error && m_mode == SND_OUTPUT){
+    for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
+      m_encoding == BYTESAM ?  Writec() : 
+	(m_encoding == SHORTSAM ?
+	 Writes() : Writel() );
+      m_count+=m_channels; 
+    }
+    return 1;
+  }
+  else return 0;	     
 }
 
 
@@ -1355,199 +1397,199 @@ else return 0;
 
 char* SndRTIO::ErrorMessage(){
 
-	char* message;
+  char* message;
 
-	switch(m_error){
+  switch(m_error){
 
 #ifdef WIN
-	case 14:
+  case 14:
     message = "Memory allocation error. \n";
-	break;
-    case 21:
-	message = "Device is already allocated.\n";
-	break;
-	case 22:
-	message = "Bad device ID. \n";
-	break;
-	case 23:
-	message = "No driver. \n";
-	break;
-	case 24:
-	message = "No memory.\n";
-	break;
-	case 25:
-	message = "Bad audio format. \n";
-	break;
+    break;
+  case 21:
+    message = "Device is already allocated.\n";
+    break;
+  case 22:
+    message = "Bad device ID. \n";
+    break;
+  case 23:
+    message = "No driver. \n";
+    break;
+  case 24:
+    message = "No memory.\n";
+    break;
+  case 25:
+    message = "Bad audio format. \n";
+    break;
 #endif
 #ifdef SGI
   case 11:
-  message = "Error allocating DAC buffer memory.\n";
-  break;
+    message = "Error allocating DAC buffer memory.\n";
+    break;
 
   case 12:
-  message = "Bad encoding format\n";
-  break;
+    message = "Bad encoding format\n";
+    break;
   
   case 13:
-  message = "alNewConfig() failed.\n";
-  break;
+    message = "alNewConfig() failed.\n";
+    break;
 
   case 14:
-  message =  "alSetQueueSize() failed.\n";
-  break;
+    message =  "alSetQueueSize() failed.\n";
+    break;
 
   case 15:
-  message = "alSetChannels() failed.\n";
-  break;
+    message = "alSetChannels() failed.\n";
+    break;
 
   case 16:
-  message = "alSetSampFmt() failed.\n";
-  break;
+    message = "alSetSampFmt() failed.\n";
+    break;
 
   case 17:
-  message = "alSetWidth() failed.\n";
-  break;
+    message = "alSetWidth() failed.\n";
+    break;
 
   case 18:
-  message = "alSetDevice() failed.\n";
-  break;
+    message = "alSetDevice() failed.\n";
+    break;
 
   case 19:
-  message = "alSetParams() failed.\n";
-  break;
+    message = "alSetParams() failed.\n";
+    break;
 
   case 21:
-  message = "Error opening audio device.\n";
-  break;
+    message = "Error opening audio device.\n";
+    break;
 
 #endif
 #ifdef OSS
   
   case 10:
-  message = "Bad output format.";
-  break;  
+    message = "Bad output format.";
+    break;  
 
   case 11:
-  message = "Error allocating buffer memory.";
-  break;
+    message = "Error allocating buffer memory.";
+    break;
 
   case 12:
-  message = "device open error.";
-  break;
+    message = "device open error.";
+    break;
 
   case 13:
-  message =  "DMA buffer size error";
-  break;
+    message =  "DMA buffer size error";
+    break;
 
   case 14:
-  message = "could not select number of output channels.";
-  break;
+    message = "could not select number of output channels.";
+    break;
 
   case 15:
-  message = "could not set output format";
-  break;
+    message = "could not set output format";
+    break;
 
   case 16:
-  message = "could not set output SR";
-  break;
+    message = "could not set output SR";
+    break;
 
 #endif
 
 #ifdef ALSA
   
   case 10:
-  message = "Bad output format.";
-  break;  
+    message = "Bad output format.";
+    break;  
 
   case 11:
-  message = "Error allocating buffer memory.";
-  break;
+    message = "Error allocating buffer memory.";
+    break;
 
   case 12:
-  message = "device open error.";
-  break;
+    message = "device open error.";
+    break;
 
   case 13:
-  message =  "error setting periods";
-  break;
+    message =  "error setting periods";
+    break;
 
   case 14:
-  message = "could not select number of output channels.";
-  break;
+    message = "could not select number of output channels.";
+    break;
 
   case 15:
-  message = "could not set output format";
-  break;
+    message = "could not set output format";
+    break;
 
   case 16:
-  message = "could not set output SR";
-  break;
+    message = "could not set output SR";
+    break;
 
-    case 17:
-  message = "error setting buffersize";
-  break;
+  case 17:
+    message = "error setting buffersize";
+    break;
 
 
-    case 18:
-  message = "error setting access";
-  break;
+  case 18:
+    message = "error setting access";
+    break;
 
 #endif
 
-    default:
-	message  = SndIO::ErrorMessage();
+  default:
+    message  = SndIO::ErrorMessage();
     break;
 
-	}
-	return message;
+  }
+  return message;
 }
 #ifdef WIN
 
 void
 ListDevices(){
-WAVEOUTCAPS outcaps;
-WAVEINCAPS  incaps;
-unsigned int j;
-cout << "Input devices:\ndevice ID: device name\n";
-   for(j = 0; j < waveInGetNumDevs(); j++){
-   waveInGetDevCaps(j, &incaps, sizeof(incaps)); 
-   cout << j << "        : "<< incaps.szPname;
-   if(incaps.wChannels == 2)  cout << " stereo\n";
-   else {
-	if(incaps.wChannels == 1) cout << " mono\n";
-    else cout << "\n";
-   }
-   }
+  WAVEOUTCAPS outcaps;
+  WAVEINCAPS  incaps;
+  unsigned int j;
+  cout << "Input devices:\ndevice ID: device name\n";
+  for(j = 0; j < waveInGetNumDevs(); j++){
+    waveInGetDevCaps(j, &incaps, sizeof(incaps)); 
+    cout << j << "        : "<< incaps.szPname;
+    if(incaps.wChannels == 2)  cout << " stereo\n";
+    else {
+      if(incaps.wChannels == 1) cout << " mono\n";
+      else cout << "\n";
+    }
+  }
 
-cout << "Output devices:\ndevice ID: device name\n";
-   for(j = 0; j < waveOutGetNumDevs(); j++){
-   waveOutGetDevCaps(j, &outcaps, sizeof(outcaps)); 
-   cout << j << "        : "<< outcaps.szPname;
-   if(outcaps.wChannels == 2)  cout << " stereo\n";
-   else {
-	if(outcaps.wChannels == 1) cout << " mono\n";
-    else cout << "\n";
-   }
-   }
+  cout << "Output devices:\ndevice ID: device name\n";
+  for(j = 0; j < waveOutGetNumDevs(); j++){
+    waveOutGetDevCaps(j, &outcaps, sizeof(outcaps)); 
+    cout << j << "        : "<< outcaps.szPname;
+    if(outcaps.wChannels == 2)  cout << " stereo\n";
+    else {
+      if(outcaps.wChannels == 1) cout << " mono\n";
+      else cout << "\n";
+    }
+  }
 
 }
 
 char* InputDeviceName(int dev, char* name){
 
-WAVEINCAPS  incaps;
+  WAVEINCAPS  incaps;
 
-if(dev >= 0 &&  dev < (int)waveInGetNumDevs()){
-	waveInGetDevCaps(dev, &incaps, sizeof(incaps));
-	return strcpy(name, incaps.szPname);
-} else return 0;
+  if(dev >= 0 &&  dev < (int)waveInGetNumDevs()){
+    waveInGetDevCaps(dev, &incaps, sizeof(incaps));
+    return strcpy(name, incaps.szPname);
+  } else return 0;
 
 }
 char* OutputDeviceName(int dev, char* name){
-WAVEOUTCAPS outcaps;
-   if(dev >= 0 &&  dev < (int)waveOutGetNumDevs()){
-   waveOutGetDevCaps(dev, &outcaps, sizeof(outcaps));
-   return strcpy(name, outcaps.szPname);
-   } else return 0;
+  WAVEOUTCAPS outcaps;
+  if(dev >= 0 &&  dev < (int)waveOutGetNumDevs()){
+    waveOutGetDevCaps(dev, &outcaps, sizeof(outcaps));
+    return strcpy(name, outcaps.szPname);
+  } else return 0;
 }
 
 
@@ -1561,258 +1603,258 @@ WAVEOUTCAPS outcaps;
 
 
 OSStatus SndRTIO_IOProcEntry(AudioDeviceID indev,
-const AudioTimeStamp *inN, const AudioBufferList *input,
-const AudioTimeStamp *inT, AudioBufferList *output,
-const AudioTimeStamp *inOT, void* cdata){
+			     const AudioTimeStamp *inN, const AudioBufferList *input,
+			     const AudioTimeStamp *inT, AudioBufferList *output,
+			     const AudioTimeStamp *inOT, void* cdata){
 
-return ((SndRTIO *)cdata)->ADIOProc(input,output,(SndRTIO *)cdata);
+  return ((SndRTIO *)cdata)->ADIOProc(input,output,(SndRTIO *)cdata);
 
 }
 void
 SndRTIO::SndRTIO_init(short channels, int mode, int buffsize, int buffno,
-		  int encoding, SndObj** inputs, int vecsize, 
-		   float sr, AudioDeviceID dev){
+		      int encoding, SndObj** inputs, int vecsize, 
+		      float sr, AudioDeviceID dev){
                   
-UInt32 psize;
-int i;
-UInt32 obufframes, ibufframes, bufframes=buffsize;
-AudioStreamBasicDescription format;
-m_encoding = encoding;
-m_mode = mode;
+  UInt32 psize;
+  int i;
+  UInt32 obufframes, ibufframes, bufframes=buffsize;
+  AudioStreamBasicDescription format;
+  m_encoding = encoding;
+  m_mode = mode;
 
-switch(m_encoding){
-case BYTESAM:
-m_norm = 256.f;
-break;
-case SHORTSAM:
-m_norm = 32767.f;
-break;
-case LONGSAM:
-m_norm = (float)pow(2., 32);
-break;
-case FLOATSAM:
-m_norm = 1.f;
-break;
-}
+  switch(m_encoding){
+  case BYTESAM:
+    m_norm = 256.f;
+    break;
+  case SHORTSAM:
+    m_norm = 32767.f;
+    break;
+  case LONGSAM:
+    m_norm = (float)pow(2., 32);
+    break;
+  case FLOATSAM:
+    m_norm = 1.f;
+    break;
+  }
 
 
-if(dev=DEF_DEV){
-psize = sizeof(AudioDeviceID);
-AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
-                     &psize, &m_dev);
-}
-else m_dev = dev;
+  if(dev=DEF_DEV){
+    psize = sizeof(AudioDeviceID);
+    AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
+			     &psize, &m_dev);
+  }
+  else m_dev = dev;
 
-m_bufframes = bufframes;
-m_buffsize = bufframes*sizeof(float)*m_channels;
-m_buffitems = bufframes*m_channels;
-m_buffnos = buffno;
+  m_bufframes = bufframes;
+  m_buffsize = bufframes*sizeof(float)*m_channels;
+  m_buffitems = bufframes*m_channels;
+  m_buffnos = buffno;
 
-psize = 4;
-// set the buffer size
-// output
-AudioDeviceSetProperty(m_dev,NULL,0,false,
-            kAudioDevicePropertyBufferFrameSize,
-            psize, &m_bufframes);
-// input            
-AudioDeviceSetProperty(m_dev,NULL,0,true,
-            kAudioDevicePropertyBufferFrameSize,
-            psize, &m_bufframes);
+  psize = 4;
+  // set the buffer size
+  // output
+  AudioDeviceSetProperty(m_dev,NULL,0,false,
+			 kAudioDevicePropertyBufferFrameSize,
+			 psize, &m_bufframes);
+  // input            
+  AudioDeviceSetProperty(m_dev,NULL,0,true,
+			 kAudioDevicePropertyBufferFrameSize,
+			 psize, &m_bufframes);
             
-// check that it matches the expected size
-AudioDeviceGetProperty(m_dev,0,true,
-            kAudioDevicePropertyBufferFrameSize,
-            &psize, &ibufframes);
+  // check that it matches the expected size
+  AudioDeviceGetProperty(m_dev,0,true,
+			 kAudioDevicePropertyBufferFrameSize,
+			 &psize, &ibufframes);
             
-AudioDeviceGetProperty(m_dev,0,false,
-            kAudioDevicePropertyBufferFrameSize,
-            &psize, &obufframes);
+  AudioDeviceGetProperty(m_dev,0,false,
+			 kAudioDevicePropertyBufferFrameSize,
+			 &psize, &obufframes);
                                     
-if(ibufframes != m_bufframes){            
+  if(ibufframes != m_bufframes){            
     
     if(ibufframes == obufframes)
-    m_bufframes = obufframes;
+      m_bufframes = obufframes;
     else {
-    m_error = 21;
-    return;
+      m_error = 21;
+      return;
     }
     
-}
+  }
 
-   m_format.mSampleRate = m_sr;
-   m_format.mFormatID = kAudioFormatLinearPCM;
-   m_format.mFormatFlags = kAudioFormatFlagIsFloat;
-   m_format.mBytesPerPacket = sizeof(float)*m_channels;
-   m_format.mFramesPerPacket = 1;
-   m_format.mBytesPerFrame = format.mBytesPerPacket;
-   m_format.mChannelsPerFrame = m_channels;
-   m_format.mBitsPerChannel = sizeof(float);
+  m_format.mSampleRate = m_sr;
+  m_format.mFormatID = kAudioFormatLinearPCM;
+  m_format.mFormatFlags = kAudioFormatFlagIsFloat;
+  m_format.mBytesPerPacket = sizeof(float)*m_channels;
+  m_format.mFramesPerPacket = 1;
+  m_format.mBytesPerFrame = format.mBytesPerPacket;
+  m_format.mChannelsPerFrame = m_channels;
+  m_format.mBitsPerChannel = sizeof(float);
 
-psize = sizeof(AudioStreamBasicDescription);
+  psize = sizeof(AudioStreamBasicDescription);
 
-AudioDeviceSetProperty(m_dev,NULL,0,true,      
-     kAudioDevicePropertyStreamFormat,
-     psize, &m_format);
+  AudioDeviceSetProperty(m_dev,NULL,0,true,      
+			 kAudioDevicePropertyStreamFormat,
+			 psize, &m_format);
 
-AudioDeviceSetProperty(m_dev,NULL,0,false,      
-     kAudioDevicePropertyStreamFormat,
-     psize, &m_format);
+  AudioDeviceSetProperty(m_dev,NULL,0,false,      
+			 kAudioDevicePropertyStreamFormat,
+			 psize, &m_format);
 
-AudioDeviceGetProperty(m_dev,0,false,      
-     kAudioDevicePropertyStreamFormat,
-     &psize, &format);
+  AudioDeviceGetProperty(m_dev,0,false,      
+			 kAudioDevicePropertyStreamFormat,
+			 &psize, &format);
 
-if(format.mSampleRate != m_sr){
+  if(format.mSampleRate != m_sr){
     
-       m_error = 22;
-     return;         
-}
+    m_error = 22;
+    return;         
+  }
 
-if(format.mChannelsPerFrame != m_channels){
+  if(format.mChannelsPerFrame != m_channels){
     
-     m_error = 23;
-     return;         
-}
+    m_error = 23;
+    return;         
+  }
 
-m_outbuffs = new float*[m_buffnos];
-m_inbuffs = new float*[m_buffnos];
-m_inused = new bool[m_buffnos];
-m_outused = new bool[m_buffnos];
+  m_outbuffs = new float*[m_buffnos];
+  m_inbuffs = new float*[m_buffnos];
+  m_inused = new bool[m_buffnos];
+  m_outused = new bool[m_buffnos];
 
-for(i=0; i < m_buffnos; i++){
+  for(i=0; i < m_buffnos; i++){
 
-if(!(m_inbuffs[i] = new float[m_bufframes*m_channels])){
-m_error = 24;
-return;
-}
-if(!(m_outbuffs[i] = new float[m_bufframes*m_channels])){
-m_error = 25;
-return;
-}
-m_inused[i] = m_outused[i] = true;
-}
+    if(!(m_inbuffs[i] = new float[m_bufframes*m_channels])){
+      m_error = 24;
+      return;
+    }
+    if(!(m_outbuffs[i] = new float[m_bufframes*m_channels])){
+      m_error = 25;
+      return;
+    }
+    m_inused[i] = m_outused[i] = true;
+  }
 
-m_incurbuff = m_outcurbuff = m_iocurbuff = 0;
-m_incount = m_outcount = 0;
+  m_incurbuff = m_outcurbuff = m_iocurbuff = 0;
+  m_incount = m_outcount = 0;
 
-AudioDeviceAddIOProc(m_dev, SndRTIO_IOProcEntry, this);
-AudioDeviceStart(m_dev, SndRTIO_IOProcEntry);
+  AudioDeviceAddIOProc(m_dev, SndRTIO_IOProcEntry, this);
+  AudioDeviceStart(m_dev, SndRTIO_IOProcEntry);
 }
     
 
 SndRTIO::~SndRTIO(){
 
-AudioDeviceStop(m_dev, SndRTIO_IOProcEntry);
+  AudioDeviceStop(m_dev, SndRTIO_IOProcEntry);
 
-delete[] m_outbuffs;
-delete[] m_inbuffs;
-delete[] m_inused;
-delete[] m_outused;
+  delete[] m_outbuffs;
+  delete[] m_inbuffs;
+  delete[] m_inused;
+  delete[] m_outused;
 
 }    
 
 OSStatus
 SndRTIO::ADIOProc(const AudioBufferList *input,
-AudioBufferList *output,
-SndRTIO* cdata){
+		  AudioBufferList *output,
+		  SndRTIO* cdata){
 
-int chans = cdata->m_channels;
-int items = cdata->m_buffitems;
-int buff = cdata->m_iocurbuff;
-output->mNumberBuffers = 1;
-output->mBuffers[0].mDataByteSize = cdata->m_buffsize;
-output->mBuffers[0].mNumberChannels = chans;
-float *outp = (float *) output->mBuffers[0].mData;
-float *inp = (float *) input->mBuffers[0].mData;
-float *ibufp = cdata->m_inbuffs[buff];
-float *obufp = cdata->m_outbuffs[buff];
+  int chans = cdata->m_channels;
+  int items = cdata->m_buffitems;
+  int buff = cdata->m_iocurbuff;
+  output->mNumberBuffers = 1;
+  output->mBuffers[0].mDataByteSize = cdata->m_buffsize;
+  output->mBuffers[0].mNumberChannels = chans;
+  float *outp = (float *) output->mBuffers[0].mData;
+  float *inp = (float *) input->mBuffers[0].mData;
+  float *ibufp = cdata->m_inbuffs[buff];
+  float *obufp = cdata->m_outbuffs[buff];
 
-for(int i = 0; i < items; i++){
-      outp[i]  = obufp[i];
-      ibufp[i] = inp[i];
-      }
+  for(int i = 0; i < items; i++){
+    outp[i]  = obufp[i];
+    ibufp[i] = inp[i];
+  }
       
-cdata->m_outused[buff] = cdata->m_inused[buff] = true;      
-buff++;
-buff %= cdata->m_buffnos;
-cdata->m_iocurbuff = buff;
+  cdata->m_outused[buff] = cdata->m_inused[buff] = true;      
+  buff++;
+  buff %= cdata->m_buffnos;
+  cdata->m_iocurbuff = buff;
 
-return 0;
+  return 0;
 }
 
 short
 SndRTIO::Write(){
- if(!m_error && m_mode != SND_INPUT){
-int i;
- for(m_vecpos = 0; m_vecpos < m_vecsize; 
-              m_vecpos++){ 
+  if(!m_error && m_mode != SND_INPUT){
+    int i;
+    for(m_vecpos = 0; m_vecpos < m_vecsize; 
+	m_vecpos++){ 
       for(i = 0; i < m_channels; i++){
         m_outbuffs[m_outcurbuff][m_outcount+i] = (m_IOobjs[i] ?
-           m_IOobjs[i]->Output(m_vecpos)/m_norm: 0.f);
-           } 
+						  m_IOobjs[i]->Output(m_vecpos)/m_norm: 0.f);
+      } 
       m_outcount+=m_channels;
       if(m_outcount == m_buffitems){           
-            m_outused[m_outcurbuff] = false;  
-            m_outcurbuff++;
-            m_outcurbuff %= m_buffnos;
-            m_outcount = 0; 
-            while(!m_outused[m_outcurbuff]) usleep(100);
-                  }
-  } // for
+	m_outused[m_outcurbuff] = false;  
+	m_outcurbuff++;
+	m_outcurbuff %= m_buffnos;
+	m_outcount = 0; 
+	while(!m_outused[m_outcurbuff]) usleep(100);
+      }
+    } // for
   
-  return 1;
- } // if no error
- return 0;
+    return 1;
+  } // if no error
+  return 0;
 }    
 
 
 short
 SndRTIO::Read(){
 
- if(!m_error && m_mode != SND_OUTPUT){
- while(!m_inused[m_incurbuff]) usleep(100);
+  if(!m_error && m_mode != SND_OUTPUT){
+    while(!m_inused[m_incurbuff]) usleep(100);
  
- for(m_vecpos = 0; m_vecpos < m_vecsize*m_channels; 
-              m_vecpos++){
+    for(m_vecpos = 0; m_vecpos < m_vecsize*m_channels; 
+	m_vecpos++){
       m_output[m_vecpos] = m_inbuffs[m_incurbuff][m_incount]*m_norm;
       m_incount++;
       if(m_incount == m_buffitems){           
-            m_inused[m_incurbuff] = false;  
-            m_incurbuff++;
-            m_incurbuff %= m_buffnos;
-            m_incount = 0;
-       }
-  } // for
-  return 1;
- } // if no error
- return 0;
+	m_inused[m_incurbuff] = false;  
+	m_incurbuff++;
+	m_incurbuff %= m_buffnos;
+	m_incount = 0;
+      }
+    } // for
+    return 1;
+  } // if no error
+  return 0;
 }
 
 char* SndRTIO::ErrorMessage(){
 
-char* mess;
+  char* mess;
 
-switch(m_error){
-case 21:
-mess="cannot set the requested buffer size \n";
-break;
-case 22:
-mess="error setting the sampling rate \n";
-break;
-case 23:
-mess="error setting the number of channels \n";
-break;
-case 24:
-mess="error allocating memory for input\n";
-break;
-case 25:
-mess="error allocating memory for output\n";
-break;
+  switch(m_error){
+  case 21:
+    mess="cannot set the requested buffer size \n";
+    break;
+  case 22:
+    mess="error setting the sampling rate \n";
+    break;
+  case 23:
+    mess="error setting the number of channels \n";
+    break;
+  case 24:
+    mess="error allocating memory for input\n";
+    break;
+  case 25:
+    mess="error allocating memory for output\n";
+    break;
 
-default:
-return SndIO::ErrorMessage();
-}
-return mess;
+  default:
+    return SndIO::ErrorMessage();
+  }
+  return mess;
 
 }
 

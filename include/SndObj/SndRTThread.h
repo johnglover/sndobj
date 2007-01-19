@@ -36,14 +36,8 @@ class SndRTThread : public SndThread {
   SndRTThread(int n, SndObj** objlist, int channels=2, int buffsize=1024, int periods=4);
   ~SndRTThread();
 
-  void AddOutput(int channel, SndObj *in){
-    AddObj(in);
-    ochannel[channel]->AddObj(in);
-  }
-  void DeleteOutput(int channel, SndObj *in){
-    DeleteObj(in);
-    ochannel[channel]->DeleteObj(in);
-  }
+  void AddOutput(int channel, SndObj *in);
+  void DeleteOutput(int channel, SndObj *in);
 
   SndObj *GetInput(int channel) { return sound[channel]; }   
 

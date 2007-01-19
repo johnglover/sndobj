@@ -99,20 +99,15 @@ class SndThread {
     m_changed = false;
   }
   }
-#ifdef PYTHON_WRAP
-  PyThreadState *_tstate;
-  pycallbackdata pydata;
-#endif
+
 
  public:
 
 #ifdef PYTHON_WRAP
-  pycallbackdata GetPydata(){ return pydata; }
-  void SetPydata(pycallbackdata p) { pydata = p; }
-  PyThreadState *GetThreadState(){ return _tstate;}
-  void SetThreadState(PyThreadState *p) { _tstate = p; }
-  void *GetProcessCallback() { return (void *)ProcessCallback; }
+  PyThreadState *_tstate;
+  pycallbackdata pydata;
 #endif
+  void *GetProcessCallback() { return (void *)ProcessCallback; }
 
   SndThread();
   SndThread(int n, SndObj** objlist, SndIO *out, SndIO *in=0);
