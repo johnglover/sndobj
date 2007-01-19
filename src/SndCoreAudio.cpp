@@ -205,8 +205,8 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
     m_interleaved = true;
   else
     m_interleaved = false; 
-
-    m_stopped = true;
+  m_called_read = false;  
+  m_stopped = true;
 }
     
 
@@ -230,6 +230,7 @@ SndCoreAudio::Write(){
      AudioDeviceStart(m_dev, SndObj_IOProcEntry);
      m_stopped = false;
     }
+    if(!m_called_read) Read();
     for(m_vecpos = 0; m_vecpos < m_vecsize; 
 	m_vecpos++){
       if(m_outcount == m_buffitems){           
@@ -246,7 +247,7 @@ SndCoreAudio::Write(){
       m_outcount+=m_channels;
       
     } // for
-  
+    m_called_read = false;
     return 1;
   } // if no error
   return 0;
@@ -279,6 +280,7 @@ SndCoreAudio::Read(){
       m_incount++;
       
     } // for
+    m_called_read = true;
     return 1;
   } // if no error
   return 0;

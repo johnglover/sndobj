@@ -37,6 +37,7 @@ class SndCoreAudio : public SndIO {
   bool* m_outused;
   bool m_interleaved;
   bool m_stopped;
+  bool m_called_read;
   float m_norm;
 
  public:

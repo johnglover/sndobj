@@ -1,3 +1,7 @@
+veplaini <Victor.Lazzarini@nuim.ie> 19/01/07
+	
+* fixed SndCoreAudio to allow for calling Write() only (without Read())
+	
 veplaini <Victor.Lazzarini@nuim.ie> 18/01/07
 	
 * implemented Python callbacks for SndThread.

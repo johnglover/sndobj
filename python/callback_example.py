@@ -19,7 +19,6 @@ def callc(data):
     data[1].set(data[1].get()-1)
 
 t = SndThread()
-
 harm = HarmTable(10000,1,1)
 osc = Oscili(harm, 440, 10000)
 mod = Oscili(harm, 2, 5)
@@ -36,20 +35,20 @@ t.SetProcessCallback(callb, dat)
 t.AddObj(osc)
 t.AddObj(mod)
 t.AddObj(outp, SNDIO_OUT)
+
 t.ProcOn()
 time.sleep(2)
 t.LimitVectorSize(64)
-tes.set(100)
 
+tes.set(100)
 time.sleep(2)
+
 t.SetProcessCallback(callc,dat)
 tes.set(1000)
 t.RestoreVectorSize()
 time.sleep(2)
+
 t.ProcOff()
-#time.sleep(2)
-#while(True):
- # osc.DoProcess()
- # outp.Write()
+
 
 
