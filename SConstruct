@@ -464,10 +464,11 @@ if swigcheck and env['lispmodule']:
   cffisndobj.Append(LIBPATH='./lib')
   cffisndobj.Prepend(LIBS=baselibs)
   if getPlatform() == 'macosx':
+    cffisndobj.Prepend(CCFLAGS='-fpascal-strings')
     cffisndobj.Prepend(CPPPATH=["%s/Headers" % lisppath, 'src'])
-    cffisndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'JavaVM'])
+    cffisndobj.Prepend(LINKFLAGS=['-framework', 'Carbon', '-framework', 'CoreMIDI',  '-framework', 'OpenGL', '-framework', 'AGL', '-framework', 'QuickTime'])
     cffiwrap = cffisndobj.SharedObject('cffi/AudioDefs.i', CCFLAGS=flags)
-    cffimod = cffisndobj.Program('cffi/cffi_sndobj.dylib', pywrap)
+    cffimod = cffisndobj.ShareLibrary('cffi/sndobj', cffiwrap)
     if env['install_name'] == 'lib/libsndobj.dylib':
        jsndobj.Command('link', 'lib/libsndobj.dylib', 'cd cffi/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
     else:
