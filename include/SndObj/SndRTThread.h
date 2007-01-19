@@ -30,7 +30,12 @@ class SndRTThread : public SndThread {
   void Init();
 
  public:
- 
+
+#ifdef PYTHON_WRAP
+  PyThreadState *_tstate1;
+  pycallbackdata pydata1;
+#endif
+
   SndRTThread();
   SndRTThread(int channels, int buffsize=1024, int periods=4);
   SndRTThread(int n, SndObj** objlist, int channels=2, int buffsize=1024, int periods=4);
@@ -39,7 +44,7 @@ class SndRTThread : public SndThread {
   void AddOutput(int channel, SndObj *in);
   void DeleteOutput(int channel, SndObj *in);
 
-  SndObj *GetInput(int channel) { return sound[channel]; }   
+  SndObj *GetInput(int channel);   
 
   friend void rtthreadfunc(void *);
 };

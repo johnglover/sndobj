@@ -44,7 +44,7 @@ class SndRTThread : public SndThread {
   void AddOutput(int channel, SndObj *in);
   void DeleteOutput(int channel, SndObj *in);
 
-  SndObj *GetInput(int channel) { return sound[channel]; }   
+  SndObj *GetInput(int channel);   
 
   friend void rtthreadfunc(void *);
 };

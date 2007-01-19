@@ -60,6 +60,8 @@ SndRTThread::SndRTThread(int n, SndObj** objlist, int channels,
   m_periods = periods;
   Init();
 }
+SndObj *SndRTThread::GetInput(int channel) 
+               { return sound[channel]; }   
 
 void SndRTThread::Init(){
   int i;
