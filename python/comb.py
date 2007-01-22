@@ -1,3 +1,4 @@
+#!/usr/bin/python
 ###################################
 # Stereo echo demonstrating the SndRTThread class
 #
@@ -14,13 +15,14 @@ else:
 
 # SndRTThread object has its own IO objects
 # by the default it is created wth 2 channels
-t = SndRTThread()
+t = SndRTThread(2)
 # Echo objects take input from SndRTThread inputs
 comb_left =  Comb(0.48, 0.5, t.GetInput(1))
 comb_right = Comb(0.52, 0.5, t.GetInput(1))
 # We add the echo objects to the output channels
 t.AddOutput(1, comb_left)
 t.AddOutput(2, comb_right)
+t.Direct(1)
 # Processing
 t.ProcOn()
 time.sleep(float(dur))

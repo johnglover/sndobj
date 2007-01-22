@@ -1216,23 +1216,23 @@ SndRTIO::Write(){
 void inline
 SndRTIO::Readc(){
   
-  if(m_count == m_items){while((m_items = snd_pcm_readi(m_dev, m_cp, m_items/m_channels))< 0){
-      if (m_items == -EPIPE) {
-	int err = snd_pcm_prepare(m_dev);
+  if(m_count == m_items){
+    int err;
+    while((err = snd_pcm_readi(m_dev, m_cp, m_items/m_channels))< 0){
+      if (err == -EPIPE) {
+	err = snd_pcm_prepare(m_dev);
 	if(err<0){
 	  m_error = 100;
 	  return;
 	}
 	else continue;
       }
-      else if (m_items == -ESTRPIPE) {
+      else if (err == -ESTRPIPE) {
 	while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
 	snd_pcm_prepare(m_dev);
       }
-      else if(m_items == -EAGAIN) continue;
+      else if(err == -EAGAIN) continue;
     }
-   
-    m_items *= m_channels;
     m_count = 0;         
     for(int n = 0; n < m_channels; n++)
       m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128);
@@ -1240,9 +1240,6 @@ SndRTIO::Readc(){
   else
     for(int n = 0; n < m_channels; n++)
       m_output[n+m_vecpos] = (float) (m_cp[n+m_count] - 128); 
-    
-
-  
 }
 
 
@@ -1250,22 +1247,22 @@ SndRTIO::Readc(){
 void inline
 SndRTIO::Reads(){   
   if(m_count == m_items){
-    while((m_items = snd_pcm_readi(m_dev, m_sp, m_items/m_channels))< 0){
-      if (m_items == -EPIPE) {
-	int err = snd_pcm_prepare(m_dev);
+    int err;
+    while((err = snd_pcm_readi(m_dev, m_sp, m_items/m_channels))< 0){
+      if (err == -EPIPE) {
+	err= snd_pcm_prepare(m_dev);
 	if(err<0){
 	  m_error = 100;
 	  return;
 	}
 	else continue;
       }
-      else if (m_items == -ESTRPIPE) {
+      else if (err == -ESTRPIPE) {
 	while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
 	snd_pcm_prepare(m_dev);
       }
-      else if(m_items == -EAGAIN) continue;
+      else if(err == -EAGAIN) continue;
     }
-    m_items *= m_channels;
     m_count = 0;         
     for(int n = 0; n < m_channels; n++)
       m_output[n+m_vecpos] = (float) m_sp[n+m_count];
@@ -1280,8 +1277,9 @@ SndRTIO::Reads(){
 void inline
 SndRTIO::Readl(){   
   if(m_count == m_items){
-    while((m_items = snd_pcm_readi(m_dev, m_lp, m_items/m_channels))< 0){
-      if (m_items == -EPIPE) {
+    int err;
+    while((err = snd_pcm_readi(m_dev, m_lp, m_items/m_channels))< 0){
+      if (err == -EPIPE) {
 	int err = snd_pcm_prepare(m_dev);
 	if(err<0){
 	  m_error = 100;
@@ -1289,13 +1287,12 @@ SndRTIO::Readl(){
 	}
 	else continue;
       }
-      else if (m_items == -ESTRPIPE) {
+      else if (err == -ESTRPIPE) {
 	while (snd_pcm_resume(m_dev) == -EAGAIN) sleep(1);
 	snd_pcm_prepare(m_dev);
       }
-      else if(m_items == -EAGAIN) continue;
+      else if(err == -EAGAIN) continue;
     }
-    m_items *= m_channels;
     m_count = 0;         
     for(int n = 0; n < m_channels; n++)
       m_output[n+m_vecpos] = (float) m_lp[n+m_count];
@@ -1405,8 +1402,7 @@ SndRTIO::Writel(){
 	snd_pcm_prepare(m_dev);
       }
       else if(err == -EAGAIN) continue;
-    }
-    
+    }    
     m_count = 0;
     for(int n = 0; n < m_channels; n++)
       if(m_IOobjs[n])

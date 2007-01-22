@@ -84,7 +84,7 @@ class Spectrum(Oscilloscope):
             del self.spec[0:s]
 
 
-      def __init__(self,master,size,end,line="black",bg="white",width=2):
+      def __init__(self,master,size,end,line="black",bg="white",width=1):
           Oscilloscope.__init__(self,master,size,end,line,bg)
           master.title("Spectrum")
           self.cnt = 0

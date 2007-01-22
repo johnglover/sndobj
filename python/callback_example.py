@@ -1,3 +1,10 @@
+#!/usr/bin/python
+##########################################
+#
+#  Example using python callbacks
+#
+#  VL, 01/07
+
 from sndobj import *
 import time
 import sys

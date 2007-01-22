@@ -1,3 +1,4 @@
+#!/usr/bin/python
 ###############################################
 # A little toy demonstrating PySndObj
 #

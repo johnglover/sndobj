@@ -1,3 +1,4 @@
+#!/usr/bin/python
 #####################################
 #  spectrum example
 #  
@@ -13,7 +14,7 @@ import display
 window_size = 300
 time_interval = 0.1
 norm = 32768.0/10
-highest = 5000
+highest = 10000
 
 # display callback
 def callb(data):
@@ -31,9 +32,10 @@ def callb(data):
     
 # SndObj chain and process thread       
 win = HammingTable(1024,0.5)
-thread = SndRTThread(1, 4096)
-thread.Direct(1)
-fft = FFT(win,thread.GetInput(1))
+thread = SndThread()
+inp = SndRTIO(1, SND_INPUT)
+sig = SndIn(inp, 1)
+fft = FFT(win,sig);
 
 # display object
 disp = display.Spectrum(Tk(), window_size, thread.ProcOff, "red", "blue")
@@ -41,6 +43,8 @@ dat = (fft,disp)
 
 # thread set-up
 thread.SetProcessCallback(callb, dat)
+thread.AddObj(inp, SNDIO_IN)
+thread.AddObj(sig)
 thread.AddObj(fft)
 thread.ProcOn()
 
