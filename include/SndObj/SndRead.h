@@ -17,7 +17,7 @@ class SndRead : public SndObj {
   SndFIO* m_ioinput;
   SndObj** m_outobj;
   float m_pitch;
-  float m_pos;
+  double m_pos;
   float m_scale;
   int m_channels;
   int m_count;

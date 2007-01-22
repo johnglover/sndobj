@@ -23,8 +23,8 @@ class Oscil : public SndObj {
   
   float m_fr; 
   float m_amp;
-  float m_index;
-  float m_incr;
+  double m_index;
+  double m_incr;
   long  m_size; 
 
   SndObj* m_inputamp;

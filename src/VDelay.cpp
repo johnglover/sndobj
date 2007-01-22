@@ -15,7 +15,7 @@
 VDelay::VDelay(){
 
   Enable();
-  m_vrpointer = 0.f;
+  m_vrpointer = 0.0;
   m_vdtime = 0.f;
   m_inputvdt= 0;
   m_fdbgain = 0.f;
@@ -41,7 +41,7 @@ VDelay::VDelay(float maxdelaytime, float fdbgain, float fwdgain,
 
 
   m_wpointer = 0;
-  m_vrpointer = (m_size/2.f);
+  m_vrpointer = (m_size/2.);
   m_vdtime = m_vrpointer/m_sr;
   m_inputvdt = InVdtime;
   m_fdbgain = fdbgain;

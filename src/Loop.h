@@ -22,7 +22,7 @@ class SndLoop : public DelayLine
   float m_xfade; // crossfade time in samples
   float m_count; // count
   short m_sample; // sample on/off
-  float m_point;
+  double m_point;
   float m_pitch;
 
 

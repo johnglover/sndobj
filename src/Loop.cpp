@@ -99,7 +99,8 @@ SndLoop::DoProcess(){
 	    m_output[m_vecpos] = GetSample();
 	    m_point += m_pitch;
 	    m_rpointer = (long)m_point;
-	    while(m_point > m_size) m_point -= m_size;
+	    while(m_point >= m_size) m_point -= m_size;
+            while(m_point < 0) m_point += m_size;
 	  }    
 	}
 	else m_output[m_vecpos] = 0.f;

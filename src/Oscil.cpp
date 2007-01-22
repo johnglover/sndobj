@@ -17,7 +17,7 @@ Oscil::Oscil(){
   m_fr = 440.f;
   m_amp = 1.f;
   m_inputamp = 0;
-  m_index = 0.f;
+  m_index = 0.;
   m_size = 0;
 
   AddMsg("frequency", 21);
@@ -37,7 +37,7 @@ Oscil::Oscil(Table* table, float fr, float amp,
   m_size = m_ptable->GetLen();
   m_fr = fr;
   m_amp = amp;
-  m_index = 0.f;
+  m_index = 0.;
 
   m_inputamp = inputamp;
 

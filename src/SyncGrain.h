@@ -29,8 +29,8 @@ class SyncGrain: public SndObj {
   SndObj* m_inputfr;
   float m_pitch;     // grain pitch
   SndObj* m_inputpitch;
-  float* m_index;    // index into wavetable
-  float* m_envindex; // index into envtable
+  double* m_index;    // index into wavetable
+  double* m_envindex; // index into envtable
 
   float m_start;  // grain start index 
   float m_grsize; // size of grains (secs)

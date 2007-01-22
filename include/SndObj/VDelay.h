@@ -23,7 +23,7 @@ class VDelay : public DelayLine
   float m_fdbgain;
   float m_fwdgain;
   float m_vdtime;      
-  float m_vrpointer;
+  double m_vrpointer;
     
   SndObj* m_inputvdt;
   SndObj* m_inputfdbg; 

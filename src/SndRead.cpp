@@ -9,7 +9,7 @@
 SndRead::SndRead(){
 	
   m_pitch = 1.f;
-  m_pos = 0.f;
+  m_pos = 0.;
   m_scale = 1.f;
   m_ioinput = 0;
   m_outobj = 0;
@@ -27,7 +27,7 @@ SndRead::SndRead(char* name, float pitch,
 	
   m_pitch= fabs(pitch);
   m_count = 0;
-  m_pos = 0.f;
+  m_pos = 0.;
   m_scale = scale;
   int i;
   int type = 0;
@@ -165,7 +165,7 @@ SndRead::DoProcess(){
 	if(m_count && m_enable){
 	  for(int i=0; i < m_channels; i++){
 						
-	    out = m_scale*m_ioinput->Output((int)m_pos, i+1);
+	    out = m_scale*m_ioinput->Output(Ftoi(m_pos), i+1);
 	    outsum += out;
 	    *(m_outobj[i]) << out;
 						

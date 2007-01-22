@@ -27,11 +27,11 @@ SyncGrain::SyncGrain(){
 
   m_point = 0;
 
-  if(!(m_index = new float[m_olaps])){
+  if(!(m_index = new double[m_olaps])){
     m_error = 11;
     return;  // index into wavetable
   }
-  if(!(m_envindex = new float[m_olaps])){
+  if(!(m_envindex = new double[m_olaps])){
     m_error = 11;
     return;
   } // index into envtable
@@ -81,11 +81,11 @@ SyncGrain::SyncGrain(Table* wavetable, Table* envtable, float fr, float amp,
   m_inputgrsize = inputgrsize;
   m_olaps = olaps;  // max number of streams (overlaps)
 
-  if(!(m_index = new float[m_olaps])){
+  if(!(m_index = new double[m_olaps])){
     m_error = 11;
     return;  // index into wavetable
   }
-  if(!(m_envindex = new float[m_olaps])){
+  if(!(m_envindex = new double[m_olaps])){
     m_error = 11;
     return;
   } // index into envtable
@@ -102,7 +102,7 @@ SyncGrain::SyncGrain(Table* wavetable, Table* envtable, float fr, float amp,
 
   for(int i = 0; i < olaps; i++){
     m_streamon[i] = 0;
-    m_index[i] = m_envindex[i] = 0.f;
+    m_index[i] = m_envindex[i] = 0.;
   }
   m_start = 0.f;
   m_point = prate;

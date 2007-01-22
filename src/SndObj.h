@@ -89,6 +89,7 @@ class SndObj {
   }
 #else 
   int Ftoi(float fval) { return (int) fval; }
+  int Ftoi(double fval) { return (int) fval; }
 #endif
 
  public:
