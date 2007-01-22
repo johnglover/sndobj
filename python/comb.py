@@ -17,12 +17,13 @@ else:
 # by the default it is created wth 2 channels
 t = SndRTThread(2)
 # Echo objects take input from SndRTThread inputs
-comb_left =  Comb(0.48, 0.5, t.GetInput(1))
-comb_right = Comb(0.52, 0.5, t.GetInput(1))
+comb_left =  Comb(0.48, 0.6, t.GetInput(1))
+comb_right = Comb(0.52, 0.6, t.GetInput(1))
 # We add the echo objects to the output channels
 t.AddOutput(1, comb_left)
 t.AddOutput(2, comb_right)
 t.Direct(1)
+t.Direct(2)
 # Processing
 t.ProcOn()
 time.sleep(float(dur))
