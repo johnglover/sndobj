@@ -60,8 +60,31 @@ SndRTThread::SndRTThread(int n, SndObj** objlist, int channels,
   m_periods = periods;
   Init();
 }
+
 SndObj *SndRTThread::GetInput(int channel) 
-               { return sound[channel]; }   
+{ 
+  if(channel > 0 && channel <= m_channels) 
+                   return sound[channel-1];
+  else return NULL;
+ }   
+
+void
+SndRTThread::Direct(int channel, bool yes){
+  if(channel > 0 && channel <= m_channels) 
+    if(yes) ochannel[channel-1]->AddObj(sound[channel-1]);
+    else ochannel[channel-1]->DeleteObj(sound[channel-1]);
+}
+
+void SndRTThread::ConnectOutput(int channel, SndObj *in){
+ if(channel > 0 && channel <= m_channels)
+    ochannel[channel-1]->AddObj(in);
+}
+
+void SndRTThread::DisconnectOutput(int channel, SndObj *in){
+ if(channel > 0 && channel <= m_channels)
+    ochannel[channel-1]->DeleteObj(in);
+}
+
 
 void SndRTThread::Init(){
   int i;

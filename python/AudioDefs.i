@@ -207,9 +207,11 @@ static void PythonCallback(void *p){
         t->_tstate = PyThreadState_New(PyInterpreterState_New()); 
     PyEval_AcquireThread(t->_tstate);    
     res = PyEval_CallObject(t->pydata.func, t->pydata.data);
-    Py_DECREF(res);    
-    PyEval_ReleaseThread(t->_tstate);
-
+    if (res == NULL){
+    PyErr_SetString(PyExc_TypeError, "Exception in callback");
+     }
+    else Py_DECREF(res);    
+   PyEval_ReleaseThread(t->_tstate);
 }
 
 static void PythonCallback1(void *p){
@@ -220,9 +222,11 @@ static void PythonCallback1(void *p){
         t->_tstate1 = PyThreadState_New(PyInterpreterState_New()); 
     PyEval_AcquireThread(t->_tstate1);    
     res = PyEval_CallObject(t->pydata1.func, t->pydata1.data);
-    Py_DECREF(res);    
+    if (res == NULL){
+    PyErr_SetString(PyExc_TypeError, "Exception in callback");
+     }
+    else Py_DECREF(res);     
     PyEval_ReleaseThread(t->_tstate1);
-
 }
 
 %}

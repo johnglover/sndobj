@@ -43,9 +43,10 @@ class SndRTThread : public SndThread {
 
   void AddOutput(int channel, SndObj *in);
   void DeleteOutput(int channel, SndObj *in);
-
+  void DisconnectOutput(int channel, SndObj *in);
+  void ConnectOutput(int channel, SndObj *in);
   SndObj *GetInput(int channel);   
-
+  void Direct(int channel, bool yes=true);
   friend void rtthreadfunc(void *);
 };
 

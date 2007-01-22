@@ -6,6 +6,7 @@
 from Tkinter import *
 import time
 import math
+import array
 
 class Oscilloscope(Frame):
                 
@@ -21,7 +22,7 @@ class Oscilloscope(Frame):
             count = 0
             for i in self.item:
                self.canvas.delete(i)
-            self.item = []
+            del self.item[0:len(self.item)]
             incr = s/self.size
             j = 0
             while(j < s):
@@ -30,7 +31,7 @@ class Oscilloscope(Frame):
               self.prev = y       
               count += 1
               j += incr
-            self.data = []
+            del self.data[0:s]
       
     def quit(self):
         self.close();
@@ -43,13 +44,11 @@ class Oscilloscope(Frame):
         self.close = end
         self.line = line
         self.bg = bg
-        self.items = []
-        self.notes = []
-        self.data = []
+        self.data = array.array('f')
         Frame.__init__(self,master)
         self.pack()
         self.createCanvas()
-        self.item = []
+        self.item = array.array('i')
         self.prev = 0
         self.n = 0
         self.master = master
@@ -57,11 +56,11 @@ class Oscilloscope(Frame):
 
 class Spectrum(Oscilloscope):
 
-      def draw(self,what,frames):
-         s = len(what)
+      def draw(self,re,im,frames):
+         s = len(re)
          for i in range(0, s):
-            y1 = what[i][0]
-            y2 = what[i][1]
+            y1 = re[i]
+            y2 = im[i]
             if self.cnt == 0:
               self.spec.append(y1*y1+y2*y2)
             else:
@@ -72,22 +71,24 @@ class Spectrum(Oscilloscope):
             count = 0
             for i in self.item:
                self.canvas.delete(i)
-            self.item = []
+            del self.item[0:len(self.item)]
             s = len(self.spec)
             j = 0.0
             incr = (float(s)/self.size)
             while(j < s):
-              y = -math.sqrt(self.spec[int(j)]/frames)*self.size + self.size
-              self.item.append(self.canvas.create_line(count, self.prev, count+1, y, fill=self.line))
+              y = -math.sqrt(self.spec[int(j)]/frames)*self.size + self.size 
+              self.item.append(self.canvas.create_line(count, self.prev, count+1, y, fill=self.line, width=self.width))
               self.prev = y       
               count += 1
               j += incr
-            self.spec = []
+            del self.spec[0:s]
 
 
-      def __init__(self,master,size,end,line="black",bg="white"):
+      def __init__(self,master,size,end,line="black",bg="white",width=2):
           Oscilloscope.__init__(self,master,size,end,line,bg)
           master.title("Spectrum")
           self.cnt = 0
-          self.spec = []
+          self.spec = array.array('f')
+          self.error = 0
+          self.width = width
           
