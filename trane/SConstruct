@@ -58,6 +58,7 @@ elif getPlatform() == 'win':
           includes = 'c:/msys/1.0/local/include'
           libs     = 'c:/msys/1.0/local/lib'
 	  env.Append(LINKFLAGS='-mwindows')
+          env.Append(LIBS=['pthreadVC', 'uuid', 'wsock32', 'comctl32', 'ole32'])
           res = env.Command("trane_res.o", "trane.rc", "windres -o trane_res.o trane.rc")
           sources = Split("""main.cpp Instrument.cpp trane_res.o""")
         env.Append(CPPPATH=[includes, '../include'])
