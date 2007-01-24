@@ -38,17 +38,22 @@ SndRTThread::SndRTThread(int channels,
   Init();
 }
 
-void SndRTThread::AddOutput(int channel, SndObj *in){
+int SndRTThread::AddOutput(int channel, SndObj *in){
     if(channel > 0 && channel <= m_channels){
-    AddObj(in);
-    ochannel[channel-1]->AddObj(in);
+    int res = AddObj(in);
+    if(res) ochannel[channel-1]->AddObj(in);
+    return res;
     }
+    else return 0;
   }
-void SndRTThread::DeleteOutput(int channel, SndObj *in){
+
+int SndRTThread::DeleteOutput(int channel, SndObj *in){
     if(channel > 0 && channel <= m_channels){
-    DeleteObj(in);
-    ochannel[channel-1]->DeleteObj(in);
+    int res = DeleteObj(in);
+    if(res) ochannel[channel-1]->DeleteObj(in);
+    return res;
     }
+    else return 0;
   }
 
 SndRTThread::SndRTThread(int n, SndObj** objlist, int channels, 

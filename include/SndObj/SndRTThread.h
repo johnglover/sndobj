@@ -41,8 +41,8 @@ class SndRTThread : public SndThread {
   SndRTThread(int n, SndObj** objlist, int channels=2, int buffsize=1024, int periods=4);
   ~SndRTThread();
 
-  void AddOutput(int channel, SndObj *in);
-  void DeleteOutput(int channel, SndObj *in);
+  int AddOutput(int channel, SndObj *in);
+  int DeleteOutput(int channel, SndObj *in);
   void DisconnectOutput(int channel, SndObj *in);
   void ConnectOutput(int channel, SndObj *in);
   SndObj *GetInput(int channel);   
