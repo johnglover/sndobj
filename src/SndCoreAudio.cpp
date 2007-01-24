@@ -79,6 +79,9 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   AudioStreamBasicDescription format;
   m_norm = norm ? norm : 1.f;
 
+  m_called_read = false;  
+  m_stopped = true;
+
   if(dev=DEV_DEFAULT){
     psize = sizeof(AudioDeviceID);
     AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
@@ -164,10 +167,15 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
     return;         
   }
 
+ if (format.mFormatFlags & kAudioFormatFlagIsNonInterleaved == kAudioFormatFlagIsNonInterleaved)
+    m_interleaved = true;
+ else m_interleaved = false;
+
   if(format.mChannelsPerFrame != m_channels){
-    
+    if(!m_interleaved) {
     m_error = 23;
-    return;         
+    return;
+    }         
   }
 
   m_outbuffs = new float*[m_buffnos];
@@ -200,19 +208,12 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   AudioDeviceGetProperty(m_dev,0,false,      
 			 kAudioDevicePropertyStreamFormat,
 			 &psize, &format);
-
-  if (format.mFormatFlags & kAudioFormatFlagIsNonInterleaved == kAudioFormatFlagIsNonInterleaved)
-    m_interleaved = true;
-  else
-    m_interleaved = false; 
-  m_called_read = false;  
-  m_stopped = true;
 }
     
 
 SndCoreAudio::~SndCoreAudio(){
 
-    AudioDeviceStop(m_dev, SndObj_IOProcEntry);
+  if(!m_stopped)  AudioDeviceStop(m_dev, SndObj_IOProcEntry);
 
   delete[] m_outbuffs;
   delete[] m_inbuffs;
