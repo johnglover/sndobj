@@ -33,8 +33,9 @@ osc.SetFreq(440, mod)
 tes = test(100)
 dat = (osc, tes, mod)
 if sys.platform[:6] == "darwin":
-  outp = SndCoreAudio(2, 2048, 2)
+  outp = SndCoreAudio(2)
   outp.SetOutput(1, osc)
+  outp.SetOutput(2, osc)
 else:
   outp = SndRTIO(osc)
 
