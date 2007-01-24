@@ -107,7 +107,7 @@ if getPlatform() == 'win':
           libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
           env.Append(CPPPATH=['msvc6.0'])
           pythonlib=''
-          env.Append(LIBS=['pthreadVC'])
+          env.Append(LIBS=['pthreadVC', 'advapi32', 'user32'])
         else: # mingw ? Set any outstanding mingwin paths here
           msvctools = False
           hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
@@ -389,8 +389,9 @@ env.Alias('install', env['prefix'])
 # Python module
 
 if swigcheck and env['pythonmodule']:
-  swigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
-  pysndobj.Append(SWIGFLAGS=swigdef)
+  pswigdef = swigdef
+  pswigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
+  pysndobj.Append(SWIGFLAGS=pswigdef)
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(CPPDEFINES=['SWIG','PYTHON_WRAP'])
   pysndobj.Prepend(LIBS=baselibs)
@@ -408,7 +409,7 @@ if swigcheck and env['pythonmodule']:
     pysndobj.Prepend(LIBPATH=[pythonpath+'\\libs'])
     pysndobj.Append(LIBS=[pythonlib, 'ole32'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
-    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
+    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_', SHLIBSUFFIX='.pyd')
   else:
     pysndobj.Prepend(CPPPATH=[pythonpath, 'src'])
     pysndobj.Prepend(LIBS=['python'+getVersion()])
@@ -422,8 +423,9 @@ if swigcheck and env['pythonmodule']:
 # Java module
 
 if swigcheck and env['javamodule']:
-  swigdef.append(['-lcarrays.i', '-c++', '-java','-Isrc', '-Iinclude', '-v'])
-  jsndobj.Append(SWIGFLAGS=swigdef)
+  jswigdef = swigdef
+  jswigdef.append(['-lcarrays.i', '-c++', '-java','-Isrc', '-Iinclude', '-v'])
+  jsndobj.Append(SWIGFLAGS=jswigdef)
   jsndobj.Append(LIBPATH='./lib')
   jsndobj.Prepend(LIBS=baselibs)
   if getPlatform() == 'macosx':
@@ -458,8 +460,9 @@ if swigcheck and env['javamodule']:
 #
 
 if swigcheck and env['lispmodule']:
-  swigdef.append(['-lcarrays.i', '-c++', '-cffi','-Isrc', '-Iinclude', '-v'])
-  cffisndobj.Append(SWIGFLAGS=swigdef)
+  lswigdef = swigdef
+  lswigdef.append(['-lcarrays.i', '-c++', '-cffi','-Isrc', '-Iinclude', '-v'])
+  cffisndobj.Append(SWIGFLAGS=lswigdef)
   cffisndobj.Append(CPPDEFINES=['SWIG','SWIGCFFI'])
   cffisndobj.Append(LIBPATH='./lib')
   cffisndobj.Prepend(LIBS=baselibs)

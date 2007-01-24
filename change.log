@@ -1,3 +1,9 @@
+veplaini  <Victor.Lazzarini@nuim.ie> 24/01/07
+
+* Fixed non-interleaved audio on SndCoreAudio
+* Added some python examples
+* Fixed windows-MSVC build
+
 veplaini <Victor.Lazzarini@nuim.ie> 19/01/07
 	
 * Added SndRTThread class (also to PySndObj)	
