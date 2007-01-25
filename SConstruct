@@ -148,7 +148,7 @@ if getPlatform() == 'macosx':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         rtio = True
-        pythonpath = ['/System/Library/Frameworks/Python.framework', env['pythonpath'], '/Library/Frameworks/Python.framework']
+        pythonpath = ['/Library/Frameworks/Python.framework', env['pythonpath'], '/System/Library/Frameworks/Python.framework']
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']]  
 
 
@@ -194,6 +194,7 @@ if not rtio:
 env.Prepend(CPPPATH= ['include','include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
+print "Python version is " + getVersion()
 pysndobj = env.Copy()
 jsndobj = env.Copy()
 cffisndobj = env.Copy()
