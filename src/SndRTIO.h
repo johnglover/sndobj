@@ -17,9 +17,7 @@
 
 #ifdef MACOSX    // Mac CoreAudio
 #include <CoreAudio.h>
-const int DEF_DEV = 0xFFFFFFFF;
-const int DEF_BSIZE = 512;
-const int DEF_PERIOD = 4;
+#include "SndCoreAudio.h"
 #endif
 
 #ifdef OSS             // Open Sound System (Linux, etc...)
@@ -62,10 +60,16 @@ const int DEF_BSIZE = 1024;
 const int DEF_PERIOD = 4;
 #endif
 
+
+#ifdef MACOSX
+
+class SndRTIO : public SndCoreAudio {
+
+#else	
+
 class SndRTIO : public SndIO {
-	
+
  protected:
-	
   char* m_cp;
   short* m_sp;     // pointers to the buffer
   int m_count;     // counter
@@ -74,25 +78,7 @@ class SndRTIO : public SndIO {
   int m_encoding;  // encoding
   AudioDeviceID m_dev;   // device ID
   int m_mode;
-	
-#ifdef MACOSX
-	
-  float** m_inbuffs;
-  float** m_outbuffs;
-	
-  AudioStreamBasicDescription m_format;
-  unsigned int m_bufframes;
-  unsigned int m_buffitems;
-  unsigned int m_buffnos;
-  unsigned int m_outcurbuff;
-  unsigned int m_incurbuff;
-  unsigned int m_iocurbuff;
-  unsigned int m_outcount;
-  unsigned int m_incount;
-  bool* m_inused;
-  bool* m_outused;
-  float m_norm;
-	
+
 #endif
 	
 #if defined (SGI) || defined (OSS) || defined (ALSA)
@@ -147,21 +133,22 @@ class SndRTIO : public SndIO {
 	
 	
 #ifndef MACOSX	       
+
   void Writec(); // write functions for different sample formats;        
   void Writes();
 	
   void Reads();  // read functions
   void Readc();
-#endif
 	
   void SndRTIO_init(short, int, int=DEF_BSIZE, int=DEF_PERIOD,int=SHORTSAM, 
 		    SndObj** =0,int=DEF_VECSIZE, float=DEF_SR, 
 #if defined (OSS) || defined (ALSA)           
 		    char* =DEF_DEV);
 #else 
-  AudioDeviceID=DEF_DEV);
+                    AudioDeviceID=DEF_DEV);
 #endif
 
+#endif // MACOSX
 
 public: 
 
@@ -175,66 +162,69 @@ SndRTIO(short ch, int mode, int bsize = DEF_BSIZE,
 #endif
 #ifndef MACOSX
 : SndIO(ch, encoding*8,input,vsize, sr)
-#else
-: SndIO((ch < 2 ?  2 : ch), 
-        (encoding > 0 ? encoding : sizeof(float)*8), 
-		input, vsize, sr) 
-#endif
 {
+
 	SndRTIO_init(ch,mode,bsize,period,encoding,input,vsize,sr,dev);
 }
+#else
+: SndCoreAudio((ch < 2 ?  2 : ch), bsize,
+	       period, 32768.0,input, dev, vsize, sr) { };
+#endif
+
 
 SndRTIO() 
 #ifndef MACOSX
-: SndIO(1,16,0,DEF_VECSIZE,DEF_SR)
+: SndIO(1,16,0,DEF_VECSIZE,DEF_SR){ SndRTIO_init(1, SND_OUTPUT); }
 #else
-: SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
+  : SndCoreAudio() { };
 #endif
-{ SndRTIO_init(1, SND_OUTPUT); }
 
 SndRTIO(short channels, SndObj** input=0)
 #ifndef MACOSX
 : SndIO(channels,16,input,DEF_VECSIZE,DEF_SR)
-#else
-//: SndIO((channels < 2 ?  2 : channels), 
-//        (encoding > 0 ? encoding : sizeof(float)*8), 
-//		input, vsize, sr) 
-
- : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
-#endif 
 {
 	SndRTIO_init(channels,SND_OUTPUT,DEF_BSIZE,DEF_PERIOD,SHORTSAM,input);
 }
+#else
+  : SndCoreAudio((channels < 2 ?  2 : channels),DEF_BSIZE, DEF_PERIOD,
+		 32768.0,input) { };
+#endif
 
 SndRTIO(SndObj *p) 
 #ifndef MACOSX
 : SndIO(1,16,0,DEF_VECSIZE,DEF_SR)
-#else
-: SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
-#endif
-{ SndRTIO_init(1, SND_OUTPUT);
+{ 
+        SndRTIO_init(1, SND_OUTPUT);
 	SetOutput(1, p);
-#ifdef MACOSX
-    SetOutput(2, p); 
-#endif
 }
+#else
+: SndCoreAudio(){
+    SetOutput(1, p);
+    SetOutput(2, p);
+} 
+#endif
 
-SndRTIO(SndObj *pl, SndObj *pr) : SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
+
+SndRTIO(SndObj *pl, SndObj *pr) 
+#ifndef MACOSX
+: SndIO(2,16,0,DEF_VECSIZE,DEF_SR)
 { 
 	SndRTIO_init(2, SND_OUTPUT); 
 	SetOutput(1, pl); 
 	SetOutput(2, pr); 
 }
+#else
+: SndCoreAudio(){
+    SetOutput(1, pl);
+    SetOutput(2, pr);
+} 
+#endif
 
-
+#ifndef MACOSX
 ~SndRTIO();
 short Write();
 short Read();
 char* ErrorMessage();
-
-#ifdef MACOSX
-OSStatus ADIOProc(const AudioBufferList *input, AudioBufferList *output,
-				  SndRTIO* cdata);
 #endif   
 
 };

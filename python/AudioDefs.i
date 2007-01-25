@@ -131,7 +131,6 @@
 #include "SndMidiIn.h"
 #endif
 
-#include "SndRTIO.h" // WinMME/OSS/SGI RT IO
 #ifdef WIN 
 #include "SndAsio.h" // ASIO-driver IO
 #endif
@@ -141,6 +140,7 @@
 #ifdef MACOSX
 #include "SndCoreAudio.h" // Core Audio support
 #endif
+#include "SndRTIO.h" // WinMME/OSS/SGI RT IO
 
 // Table-derived 
 #include "HarmTable.h"    // wavetables
@@ -383,7 +383,7 @@ static void PythonCallback1(void *p){
 %include  "SndMidiIn.h"
 #endif
 
-%include  "SndRTIO.h" // WinMME/OSS/SGI RT IO
+
 #ifdef WIN
 %include  "SndAsio.h" // ASIO-driver IO
 #endif
@@ -393,6 +393,7 @@ static void PythonCallback1(void *p){
 #ifdef MACOSX
 %include  "SndCoreAudio.h" // Core Audio support
 #endif
+%include  "SndRTIO.h" // WinMME/OSS/SGI RT IO
 
 // Table-derived 
 %include  "HarmTable.h"    // wavetables

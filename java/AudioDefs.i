@@ -129,7 +129,7 @@
 #include "SndMidiIn.h"
 #endif
 
-#include "SndRTIO.h" // WinMME/OSS/SGI RT IO
+
 #ifdef _MBCS
 #include "SndAsio.h" // ASIO-driver IO
 #endif
@@ -139,6 +139,7 @@
 #ifdef MACOSX
 #include "SndCoreAudio.h" // Core Audio support
 #endif
+#include "SndRTIO.h" // WinMME/OSS/SGI RT IO
 
 // Table-derived 
 #include "HarmTable.h"    // wavetables
@@ -299,7 +300,6 @@ typedef SndObj* sndobjp;
 %include  "SndMidiIn.h"
 #endif
 
-%include  "SndRTIO.h" // WinMME/OSS/SGI RT IO
 #ifdef _MBCS
 %include  "SndAsio.h" // ASIO-driver IO
 #endif
@@ -309,6 +309,7 @@ typedef SndObj* sndobjp;
 #ifdef MACOSX
 %include  "SndCoreAudio.h" // Core Audio support
 #endif
+%include "SndRTIO.h" // WinMME/OSS/SGI RT IO
 
 // Table-derived 
 %include  "HarmTable.h"    // wavetables

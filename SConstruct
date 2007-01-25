@@ -148,7 +148,7 @@ if getPlatform() == 'macosx':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         rtio = True
-        pythonpath = ['/Library/Frameworks/Python.framework', env['pythonpath'], '/System/Library/Frameworks/Python.framework']
+        pythonpath = [env['pythonpath'], '/Library/Frameworks/Python.framework', '/System/Library/Frameworks/Python.framework']
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']]  
 
 

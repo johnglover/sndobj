@@ -82,7 +82,7 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   m_called_read = false;  
   m_stopped = true;
 
-  if(dev=DEV_DEFAULT){
+  if(dev=DEF_DEV){
     psize = sizeof(AudioDeviceID);
     AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
 			     &psize, &m_dev);

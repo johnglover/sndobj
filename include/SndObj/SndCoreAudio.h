@@ -12,7 +12,9 @@
 #include <CoreAudio.h>
 #include "SndIO.h"
 
-const int DEV_DEFAULT = 0xFFFFFFFF;
+const int DEF_BSIZE =  512;
+const int DEF_PERIOD = 4;
+const UInt32 DEF_DEV = 0xFFFFFFFF;
 
 class SndCoreAudio : public SndIO {
 
@@ -42,8 +44,8 @@ class SndCoreAudio : public SndIO {
 
  public:
 
-  SndCoreAudio(int channels=2,int bufframes=512, int buffnos=4,  float norm=32767.f,
-	       SndObj** inObjs=0, UInt32 dev=DEV_DEFAULT, 
+  SndCoreAudio(int channels=2,int bufframes=DEF_BSIZE, int buffnos=DEF_PERIOD,  float norm=32767.f,
+	       SndObj** inObjs=0, UInt32 dev=DEF_DEV, 
 	       int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~SndCoreAudio();
 
