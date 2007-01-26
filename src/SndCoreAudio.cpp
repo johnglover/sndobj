@@ -17,7 +17,9 @@ SndCoreAudio::ADIOProc(AudioDeviceID indev,
   float *ibufp = cdata->m_inbuffs[buff];
   float *obufp = cdata->m_outbuffs[buff];
 
-  if(!cdata->m_interleaved) {
+  if (input->mNumberBuffers > 1) cdata->m_interleaved = false; 
+
+  if(cdata->m_interleaved) {
     int items = cdata->m_buffitems,i,maxi;
     maxi = input->mBuffers[0].mDataByteSize/sizeof(float);
     output->mNumberBuffers = 1;
@@ -137,7 +139,8 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   AudioDeviceGetProperty(m_dev,0,false,      
 			 kAudioDevicePropertyStreamFormat,
 			 &psize, &format);
-
+  
+  m_interleaved = true;
   m_format.mSampleRate = m_sr;
   m_format.mFormatID = kAudioFormatLinearPCM;
   m_format.mFormatFlags = kAudioFormatFlagIsFloat | format.mFormatFlags;
@@ -167,17 +170,7 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
     return;         
   }
 
- if (format.mFormatFlags & kAudioFormatFlagIsNonInterleaved == kAudioFormatFlagIsNonInterleaved)
-    m_interleaved = true;
- else m_interleaved = false;
-
-  if(format.mChannelsPerFrame != m_channels){
-    if(!m_interleaved) {
-    m_error = 23;
-    return;
-    }         
-  }
-
+ 
   m_outbuffs = new float*[m_buffnos];
   m_inbuffs = new float*[m_buffnos];
   m_inused = new bool[m_buffnos];
@@ -205,16 +198,14 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
     m_error = 26;
     return;
   }
-  AudioDeviceGetProperty(m_dev,0,false,      
-			 kAudioDevicePropertyStreamFormat,
-			 &psize, &format);
+  
 }
     
 
 SndCoreAudio::~SndCoreAudio(){
 
-  if(!m_stopped)  AudioDeviceStop(m_dev, SndObj_IOProcEntry);
-
+  AudioDeviceStop(m_dev, SndObj_IOProcEntry);
+  AudioDeviceRemoveIOProc(m_dev, SndObj_IOProcEntry);
   delete[] m_outbuffs;
   delete[] m_inbuffs;
   delete[] m_inused;

@@ -121,7 +121,9 @@ SndRTThread::~SndRTThread(){
    delete[] ochannel;
   delete[] sound;
   delete in;
+#ifndef MACOSX
   delete out;
+#endif
 }
 
 
