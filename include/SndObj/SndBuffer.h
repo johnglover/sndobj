@@ -13,6 +13,9 @@
 #define _SNDBUFIO_H
 
 #include "SndIO.h"
+#ifdef WIN
+#include <windows.h>
+#endif
 
 class SndBuffer : public SndIO {
 
@@ -20,6 +23,7 @@ class SndBuffer : public SndIO {
   int  m_wpointer;
   int  m_rpointer;
   int  m_elements;
+  int  wlock, rlock;
   float* m_buff;
 
  public:
@@ -31,6 +35,13 @@ class SndBuffer : public SndIO {
   short Write();
   short Read();
  
+  void wait_here(){
+#ifdef WIN
+    Sleep(1);
+#else
+    usleep(1);
+#endif
+  }
   char* ErrorMessage();
 
 };
