@@ -319,7 +319,7 @@ StringFlt::DoProcess(){
 	  } 
 					
 	  pos = m_wpointer + m_vdtime;
-	  while(pos > m_size) pos -= m_size;
+	  while(pos >= m_size) pos -= m_size;
 	  while(pos < 0) pos += m_size;
 	  w = GetSample(pos) + m_input->Output(m_vecpos);
 	  y = m_LPDelay*(1-m_s) + w*m_s;
