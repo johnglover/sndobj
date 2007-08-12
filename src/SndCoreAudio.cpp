@@ -167,7 +167,7 @@ SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, 
   if(format.mSampleRate != m_sr){
     
     m_error = 22;
-    return;         
+    // return;         
   }
 
  
