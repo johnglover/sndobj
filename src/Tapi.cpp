@@ -48,7 +48,8 @@ Tapi::DoProcess(){
       for(m_vecpos=0;m_vecpos<m_vecsize;m_vecpos++){
 	if(m_enable){	 
 	  m_delaytime = m_input->Output(m_vecpos);
-	  pos = m_DLine->GetWritePointerPos() - (m_delaytime*m_sr);
+	  pos = m_DLine->GetWritePointerPos() - (m_delaytime*m_sr)
+	        - m_vecsize + m_vecpos;
 	  while(pos > m_size) pos -= m_size;
 	  while(pos < 0) pos += m_size;
 	  m_output[m_vecpos] = GetSample(pos);

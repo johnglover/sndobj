@@ -85,7 +85,7 @@ Mixer::DeleteObj(SndObj* InObj){
     if(temp->obj == InObj){
       if(previous){
 	previous->next = temp->next;
-        m_InObj = previous;
+        /* m_InObj = previous; */
       }
       else m_InObj = temp->next;
       m_ObjNo--;

@@ -1,6 +1,9 @@
+veplaini  <Victor.Lazzarini@nuim.ie> 12/08/07
+* Fixed bugs in Tapi and Mixer
+
 veplaini <Victor.Lazzarini@nuim.ie> 05/02/07
 * Fixed + improved SndBuffer
-
+	
 veplaini  <Victor.Lazzarini@nuim.ie> 24/01/07
 
 * Fixed non-interleaved audio on SndCoreAudio
