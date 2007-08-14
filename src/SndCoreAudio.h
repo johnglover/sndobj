@@ -14,7 +14,7 @@
 
 const int DEF_BSIZE =  512;
 const int DEF_PERIOD = 4;
-const UInt32 DEF_DEV = 0xFFFFFFFF;
+const int DEF_DEV = 0xFFFFFFFF;
 
 class SndCoreAudio : public SndIO {
 
@@ -24,6 +24,8 @@ class SndCoreAudio : public SndIO {
   float** m_outbuffs;
 
   int m_sleept;
+  int m_dont_use_input;
+  int m_dont_use_output;
 
   AudioStreamBasicDescription m_format;
   unsigned int m_bufframes;
@@ -42,10 +44,12 @@ class SndCoreAudio : public SndIO {
   bool m_called_read;
   float m_norm;
 
+  int OpenDevice(bool isInput=true);
+
  public:
 
   SndCoreAudio(int channels=2,int bufframes=DEF_BSIZE, int buffnos=DEF_PERIOD,  float norm=32767.f,
-	       SndObj** inObjs=0, UInt32 dev=DEF_DEV, 
+	       SndObj** inObjs=0, int dev=DEF_DEV, 
 	       int vecsize=DEF_VECSIZE, float sr=DEF_SR);
   ~SndCoreAudio();
 
@@ -64,7 +68,8 @@ class SndCoreAudio : public SndIO {
 
 };
 
-
+int ListDevices(char **d, int devs=50);
+void PrintDevices();
 
 #endif
 

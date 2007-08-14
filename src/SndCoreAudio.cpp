@@ -16,6 +16,8 @@ SndCoreAudio::ADIOProc(AudioDeviceID indev,
   int buff = cdata->m_iocurbuff;
   float *ibufp = cdata->m_inbuffs[buff];
   float *obufp = cdata->m_outbuffs[buff];
+  int no_input = cdata->m_dont_use_input;
+  int no_output = cdata->m_dont_use_output;
 
   if (input->mNumberBuffers > 1) cdata->m_interleaved = false; 
 
@@ -28,8 +30,10 @@ SndCoreAudio::ADIOProc(AudioDeviceID indev,
     float *outp = (float *) output->mBuffers[0].mData;
     float *inp = (float *) input->mBuffers[0].mData;
     for(i = 0; i < items; i++){
-      outp[i]  = obufp[i];
-      if(i < maxi) ibufp[i] = inp[i];
+      if(!no_output) 
+        outp[i]  = obufp[i];
+	if(i < maxi && !no_input) 
+        ibufp[i] = inp[i];
       else ibufp[i] = 0.f;
       obufp[i] = 0;
     }
@@ -43,12 +47,16 @@ SndCoreAudio::ADIOProc(AudioDeviceID indev,
     chans = chans > buffs ? buffs : chans;
     float *outp, *inp;
     for (j = 0; j < chans; j++) {
+      if(!no_output) 
       outp = (float *) output[0].mBuffers[j].mData;
+      if(!no_input) 
       inp = (float *) input[0].mBuffers[j].mData;
       for (i = j, cnt = 0; i < items; i += chans, cnt++) {
-	outp[cnt] = obufp[i];
+	if(!no_output) 
+        outp[cnt] = obufp[i];
 	obufp[i] = 0.0f;
-	ibufp[i] = inp[cnt];
+	if(!no_input) 
+        ibufp[i] = inp[cnt];
       }
       output->mBuffers[j].mDataByteSize = input[0].mBuffers[j].mDataByteSize;
       output->mBuffers[j].mNumberChannels = 1;
@@ -71,105 +79,93 @@ OSStatus SndObj_IOProcEntry(AudioDeviceID indev,
 
 }
 
-SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, SndObj** inObjs, 
-			   UInt32 dev,  int vecsize, float sr):
-  SndIO((channels < 2 ?  2 : channels), sizeof(float)*8, inObjs, vecsize, sr) {
-                  
-  UInt32 psize;
-  int i;
-  UInt32 obufframes, ibufframes;
-  AudioStreamBasicDescription format;
-  m_norm = norm ? norm : 1.f;
-
-  m_called_read = false;  
-  m_stopped = true;
-
-  if(dev=DEF_DEV){
-    psize = sizeof(AudioDeviceID);
-    AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
-			     &psize, &m_dev);
-  }
-  else m_dev = dev;
-  m_sleept = 5;
-  m_bufframes = bufframes;
-  m_buffsize = bufframes*sizeof(float)*m_channels;
-  m_buffitems = bufframes*m_channels;
-  m_buffnos = buffnos;
-
-  psize = 4;
-  // set the buffer size
-  // output
-  AudioDeviceSetProperty(m_dev,NULL,0,false,
-			 kAudioDevicePropertyBufferFrameSize,
-			 psize, &m_bufframes);
-  // input            
-  AudioDeviceSetProperty(m_dev,NULL,0,true,
-			 kAudioDevicePropertyBufferFrameSize,
-			 psize, &m_bufframes);
-            
-  // check that it matches the expected size
-  AudioDeviceGetProperty(m_dev,0,true,
-			 kAudioDevicePropertyBufferFrameSize,
-			 &psize, &ibufframes);
-            
-  AudioDeviceGetProperty(m_dev,0,false,
-			 kAudioDevicePropertyBufferFrameSize,
-			 &psize, &obufframes);
-
-  psize = sizeof(double);
-  float rsr = m_sr;
-  AudioDeviceSetProperty(m_dev, NULL, 0, true,
-			 kAudioDevicePropertyNominalSampleRate, psize, &rsr);
-  AudioDeviceSetProperty(m_dev, NULL, 0, false,
-			 kAudioDevicePropertyNominalSampleRate, psize, &rsr);   
-                               
-  if(ibufframes != m_bufframes){            
-    
-    if(ibufframes == obufframes)
-      m_bufframes = obufframes;
-    else {
-      m_error = 21;
-      return;
-    }
-    
-  }
-
-  psize = sizeof(AudioStreamBasicDescription);
+int SndCoreAudio::OpenDevice(bool isInput){
   
-  AudioDeviceGetProperty(m_dev,0,false,      
+  UInt32 psize, bufframes;
+  double rsr;
+  OSStatus err;
+  AudioStreamBasicDescription format;
+  // set the buffersize
+  psize = sizeof(UInt32);
+  bufframes = m_bufframes;
+  err = AudioDeviceSetProperty(m_dev,NULL,0,isInput,
+     			 kAudioDevicePropertyBufferFrameSize,
+			 psize, &m_bufframes);
+  if(!err)
+  err = AudioDeviceGetProperty(m_dev,0,isInput,
+			 kAudioDevicePropertyBufferFrameSize,
+			 &psize, &bufframes);
+ 
+  if(bufframes != m_bufframes) m_error = 21;
+ 
+  psize = sizeof(double);
+  rsr = m_sr;
+  err = AudioDeviceSetProperty(m_dev, NULL, 0, isInput,
+			 kAudioDevicePropertyNominalSampleRate, psize, &rsr);
+  if(!err)
+  err = AudioDeviceGetProperty(m_dev, 0, isInput,
+			 kAudioDevicePropertyNominalSampleRate, &psize, &rsr); 
+ 
+  if(rsr != m_sr) m_error = 22;
+   
+  psize = sizeof(AudioStreamBasicDescription);
+  AudioDeviceGetProperty(m_dev,0,isInput,      
 			 kAudioDevicePropertyStreamFormat,
 			 &psize, &format);
   
   m_interleaved = true;
   m_format.mSampleRate = m_sr;
   m_format.mFormatID = kAudioFormatLinearPCM;
-  m_format.mFormatFlags = kAudioFormatFlagIsFloat | format.mFormatFlags;
+  m_format.mFormatFlags = format.mFormatFlags;
   m_format.mBytesPerPacket = sizeof(float)*m_channels;
   m_format.mFramesPerPacket = 1;
   m_format.mBytesPerFrame = format.mBytesPerPacket;
   m_format.mChannelsPerFrame = m_channels;
-  m_format.mBitsPerChannel = sizeof(float);
+  m_format.mBitsPerChannel = sizeof(float)*8;
 
-  psize = sizeof(AudioStreamBasicDescription);
-
-  AudioDeviceSetProperty(m_dev,NULL,0,true,      
+  err = AudioDeviceSetProperty(m_dev,NULL,0,isInput,      
 			 kAudioDevicePropertyStreamFormat,
 			 psize, &m_format);
-
-  AudioDeviceSetProperty(m_dev,NULL,0,false,      
-			 kAudioDevicePropertyStreamFormat,
-			 psize, &m_format);
-
-  AudioDeviceGetProperty(m_dev,0,false,      
+  if(!err)
+  AudioDeviceGetProperty(m_dev,0,isInput,      
 			 kAudioDevicePropertyStreamFormat,
 			 &psize, &format);
 
-  if(format.mSampleRate != m_sr){
-    
-    m_error = 22;
-    // return;         
-  }
+  //cout << format.mSampleRate << "\n";
+  //if(memcmp(m_format, format,psize)!=0) m_error = 25;
+  
+  return err;
+}
 
+
+SndCoreAudio::SndCoreAudio(int channels,int bufframes, int buffnos, float norm, SndObj** inObjs, 
+			   int dev,  int vecsize, float sr):
+  SndIO((channels < 2 ?  2 : channels), sizeof(float)*8, inObjs, vecsize, sr) {
+                  
+  UInt32 psize;
+  int i;
+  m_norm = norm ? norm : 1.f;
+
+  m_called_read = false;  
+  m_stopped = true;
+
+  if(dev==DEF_DEV){
+    psize = sizeof(AudioDeviceID);
+    AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
+			     &psize, &m_dev);
+  }
+  else m_dev = dev;
+  
+ 
+  m_sleept = 5;
+  m_bufframes = bufframes;
+  m_buffsize = bufframes*sizeof(float)*m_channels;
+  m_buffitems = bufframes*m_channels;
+  m_buffnos = buffnos;
+
+  m_dont_use_input = OpenDevice();
+  m_dont_use_output = OpenDevice(false);
+  
  
   m_outbuffs = new float*[m_buffnos];
   m_inbuffs = new float*[m_buffnos];
@@ -308,4 +304,34 @@ char* SndCoreAudio::ErrorMessage(){
   return mess;
 
 }
+
+int ListDevices(char **devs, int devnos){
+  UInt32 psize;
+  AudioHardwareGetPropertyInfo(kAudioHardwarePropertyDevices, &psize, NULL);
+  UInt32 *list = new UInt32[psize/4];
+  AudioHardwareGetProperty(kAudioHardwarePropertyDevices, &psize, list);
+  
+  for(int i=0; i < psize/4 && i < devnos; i++){
+  AudioDeviceGetPropertyInfo(list[i], 0, 0, kAudioDevicePropertyDeviceName, &psize, NULL);
+    char *name = new char[psize];
+    char *name2 = new char[psize+10];
+    sprintf(name2, "%u: ", list[i]); 
+    AudioDeviceGetProperty(list[i], 0, 0, kAudioDevicePropertyDeviceName, &psize, name);
+    strcat(name2, name);
+    devs[i] = name2;
+    delete[] name;
+  }
+  return psize/4;
+}
+
+void PrintDevices(){
+  char *devs[50];
+  int devn = ListDevices(devs);
+  for(int i=0; i < devn; i++) { 
+    cout << devs[i] << "\n";
+    delete[] devs[i];
+  }
+  
+}
+
 #endif

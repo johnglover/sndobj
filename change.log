@@ -1,3 +1,8 @@
+veplaini  <Victor.Lazzarini@nuim.ie> 14/08/07
+* Tidied up SndCoreAudio behaviour. Now it should be able
+	to open two separate devices for in/out as well as
+	full-duplex
+
 veplaini  <Victor.Lazzarini@nuim.ie> 12/08/07
 * Fixed bugs in Tapi and Mixer
 
