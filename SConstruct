@@ -225,7 +225,7 @@ SinAnal.cpp SinSyn.cpp AdSyn.cpp ReSyn.cpp IFAdd.cpp
 SndRead.cpp SpecIn.cpp SpecMult.cpp 
 SpecCart.cpp SpecCombine.cpp SpecInterp.cpp 
 SpecPolar.cpp SpecSplit.cpp SpecThresh.cpp 
-SpecVoc.cpp""")
+SpecVoc.cpp Ptrack.cpp""")
 
 sndiosources = Split("""SndIO.cpp SndRTIO.cpp SndFIO.cpp 
 SndWave.cpp SndAiff.cpp SndBuffer.cpp 
@@ -259,7 +259,7 @@ fcr_5.c fhf_2.c fn_4.c fni_6.c frc_64.c ftwi_32.c timer.c
 fcr_6.c fhf_3.c fn_5.c fni_64.c frc_7.c  ftwi_4.c twiddle.c 
 fcr_64.c  fhf_32.c fn_6.c fni_7.c frc_8.c  ftwi_5.c wisdom.c 
 fcr_7.c fhf_4.c fn_64.c fni_8.c frc_9.c  ftwi_6.c wisdomio.c 
-fcr_8.c fhf_5.c fn_7.c fni_9.c ftw_10.c ftwi_64.c """)
+fcr_8.c fhf_5.c fn_7.c fni_9.c ftw_10.c ftwi_64.c cfft.c""")
 
 asios = Split("""iasiothiscallresolver.cpp asiodrivers.cpp asio.cpp asiolist.cpp""")
 

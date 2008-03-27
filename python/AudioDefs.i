@@ -117,6 +117,8 @@
 
 #include "Convol.h"     // table-based convolution
 
+#include "Ptrack.h"
+
 // SndIO-derived
 #include "SndFIO.h"   // Raw file IO 
 #include "SndWave.h"  // RIFF-Wave
@@ -269,6 +271,7 @@ static void PythonCallback1(void *p){
 }
 #endif 
 
+
 // SndObj-derived
 %include "Oscil.h"    // Oscillators
 %include "Oscilt.h"
@@ -368,6 +371,8 @@ static void PythonCallback1(void *p){
 %include    "SpecIn.h"   // spectral file input
 
 %include  "Convol.h"     // table-based convolution
+
+%include "Ptrack.h"
 
 // SndIO-derived
 %include  "SndFIO.h"   // Raw file IO 

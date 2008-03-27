@@ -25,7 +25,6 @@ SpecSplit::SpecSplit(SndObj *input, int vecsize, float sr)
   m_channel[1].SetVectorSize(m_halfsize);
   magnitude = &m_channel[0];
   phase = &m_channel[1];
-
 }
 
 SpecSplit::~SpecSplit(){
@@ -68,10 +67,8 @@ SpecSplit::DoProcess(){
 
 	}
 	// split the mags and phases
-	m_channel[0].DoProcess();
-	m_output += m_halfsize;
-	m_channel[1].DoProcess();
-	m_output = start;	
+	m_channel[0].PushIn(m_output, m_halfsize);
+	m_channel[1].PushIn(m_output + m_halfsize, m_halfsize);	
       }
       else 
 	for(m_vecpos = 0; m_vecpos < m_halfsize; m_vecpos++)

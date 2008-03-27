@@ -113,6 +113,8 @@
 
 #include "Convol.h"     // table-based convolution
 
+#include "Ptrack.h"     // pitch tracker
+
 // SndIO-derived
 #include "SndFIO.h"   // Raw file IO 
 #include "SndWave.h"  // RIFF-Wave
