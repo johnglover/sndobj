@@ -194,7 +194,18 @@ if not rtio:
 env.Prepend(CPPPATH= ['include','include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']
 print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
-print "Python version is " + getVersion()
+
+pythonh = configure.CheckHeader("Python.h", language = "C")
+if not pythonh:
+ for i in pythonpath:
+    pythonh = configure.CheckHeader("%s/Headers/Python.h" % i, language = "C")
+    if pythonh:
+      print "Python version is " + getVersion()
+      break
+
+if not pythonh:
+    print "Python headers are missing... cannot build python module"
+
 pysndobj = env.Copy()
 jsndobj = env.Copy()
 cffisndobj = env.Copy()
@@ -225,7 +236,7 @@ SinAnal.cpp SinSyn.cpp AdSyn.cpp ReSyn.cpp IFAdd.cpp
 SndRead.cpp SpecIn.cpp SpecMult.cpp 
 SpecCart.cpp SpecCombine.cpp SpecInterp.cpp 
 SpecPolar.cpp SpecSplit.cpp SpecThresh.cpp 
-SpecVoc.cpp Ptrack.cpp""")
+SpecVoc.cpp  Ptrack.cpp""")
 
 sndiosources = Split("""SndIO.cpp SndRTIO.cpp SndFIO.cpp 
 SndWave.cpp SndAiff.cpp SndBuffer.cpp 
@@ -260,7 +271,6 @@ fcr_6.c fhf_3.c fn_5.c fni_64.c frc_7.c  ftwi_4.c twiddle.c
 fcr_64.c  fhf_32.c fn_6.c fni_7.c frc_8.c  ftwi_5.c wisdom.c 
 fcr_7.c fhf_4.c fn_64.c fni_8.c frc_9.c  ftwi_6.c wisdomio.c 
 fcr_8.c fhf_5.c fn_7.c fni_9.c ftw_10.c ftwi_64.c cfft.c""")
-
 asios = Split("""iasiothiscallresolver.cpp asiodrivers.cpp asio.cpp asiolist.cpp""")
 
 
@@ -354,7 +364,7 @@ env.Alias('install', env['prefix'])
 # 
 # Python module
 
-if swigcheck and env['pythonmodule']:
+if swigcheck and env['pythonmodule'] and pythonh:
   pswigdef = swigdef
   pswigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
   pysndobj.Append(SWIGFLAGS=pswigdef)

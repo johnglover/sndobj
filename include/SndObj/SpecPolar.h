@@ -30,7 +30,7 @@ SpecPolar::convert(float* a, float* b){
 
   float mag, pha;
   mag = sqrt((*a)*(*a) + (*b)*(*b));
-  pha = atan((*b)/(*a));
+  pha = atan2((*b),(*a));
   *a=mag;
   *b=pha;
 
