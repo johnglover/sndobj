@@ -148,7 +148,7 @@ if getPlatform() == 'macosx':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         rtio = True
-        pythonpath = [env['pythonpath'], '/Library/Frameworks/Python.framework', '/System/Library/Frameworks/Python.framework']
+        pythonpath = [env['pythonpath'], '/Library/Frameworks/Python.framework/Headers', '/System/Library/Frameworks/Python.framework/Headers']
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']]  
 
 
@@ -198,7 +198,7 @@ print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
 pythonh = configure.CheckHeader("Python.h", language = "C")
 if not pythonh:
  for i in pythonpath:
-    pythonh = configure.CheckHeader("%s/Headers/Python.h" % i, language = "C")
+    pythonh = configure.CheckHeader("%s/Python.h" % i, language = "C")
     if pythonh:
       print "Python version is " + getVersion()
       break
@@ -375,7 +375,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
   if getPlatform() == 'macosx':
     for i in pythonpath:
       if i != '':
-        pysndobj.Prepend(CPPPATH=["%s/Headers" % i])
+        pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.Program('python/_sndobj.so', pywrap)
