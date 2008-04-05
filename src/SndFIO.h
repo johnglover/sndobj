@@ -57,7 +57,7 @@ class SndFIO : public SndIO{
   short GetMode(){ return m_mode; }
   void SetPos(float pos){ 
     m_spos = pos;
-    if(!fseek(m_safe,(long)(m_spos*m_sr*m_channels*(m_bits/8))+
+    if(!fseek(m_safe,(long)(m_spos*m_sr)*m_channels*(m_bits/8)+
 	      m_datapos,
 	      SEEK_SET)) m_eof=0; 
   }

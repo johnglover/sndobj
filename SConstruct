@@ -118,7 +118,7 @@ if getPlatform() == 'win':
         env.Append(LIBS=['winmm'])
         rtio = True
         jackFound = False
-        pythonpath = ['c:\\Python%c%c' % (getVersion()[0], getVersion()[2]), env['pythonpath']]
+        pythonpath = ['c:\\Python%c%c\include' % (getVersion()[0], getVersion()[2]), env['pythonpath']]
         javapath = ["C:\\Program Files\\Java\\jdk1.5.0_05",env['javapath']]
 
 if getPlatform() == 'cygwin':
