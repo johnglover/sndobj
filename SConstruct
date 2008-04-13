@@ -47,9 +47,11 @@ opt.AddOptions(
         BoolOption('javamodule', 'build java module', False),
         BoolOption('lispmodule', 'build CFFI module', False),
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
-        ('pythonpath', 'python install path (defaults to usual places)', ''),
+        ('pythonpath', 'python include path (defaults to usual places)', ''),
+        ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
         ('javapath', 'java headers path (defaults to usual places)', '')
 	)
+
 opt.Update(env)
 opt.Save('options.cache',env)
 Help(opt.GenerateHelpText(env))
@@ -58,7 +60,7 @@ print "Building the Sound Object Library"
 configure = env.Configure()
 
 cffipath = ''
-
+pythonlibpath = []
 print "Checking for Realtime IO support..." 
 if getPlatform() == 'linux':
         msvctools = False
@@ -85,7 +87,7 @@ if getPlatform() == 'linux':
           env.Append(LIBS=['jack'])
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)"
-        pythonpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
+        pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
    
 if getPlatform() == 'win':
@@ -118,7 +120,9 @@ if getPlatform() == 'win':
         env.Append(LIBS=['winmm'])
         rtio = True
         jackFound = False
-        pythonpath = ['c:\\Python%c%c\include' % (getVersion()[0], getVersion()[2]), env['pythonpath']]
+        pythonincpath = ['c:\\Python%c%c\include' % (getVersion()[0], getVersion()[2]), env['pythonpath']]
+        pythonlibpath.append('c:\\Python%c%c\libs' % (getVersion()[0], getVersion()[2]))
+        pythonlibpath.append(env['pythonlibpath'])
         javapath = ["C:\\Program Files\\Java\\jdk1.5.0_05",env['javapath']]
 
 if getPlatform() == 'cygwin':
@@ -130,7 +134,7 @@ if getPlatform() == 'cygwin':
         env.Append(LIBPATH=['lib'])
         rtio = True
         jackFound = False
-        pythonpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
+        pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
 
 if getPlatform() == 'macosx':
@@ -148,7 +152,7 @@ if getPlatform() == 'macosx':
           swigdef.append('-DJACK')
           print "The library will include support for Jack (Class SndJackIO)" 
         rtio = True
-        pythonpath = [env['pythonpath'], '/Library/Frameworks/Python.framework/Headers', '/System/Library/Frameworks/Python.framework/Headers']
+        pythonincpath = [env['pythonpath'], '/Library/Frameworks/Python.framework/Headers', '/System/Library/Frameworks/Python.framework/Headers']
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']]  
 
 
@@ -161,7 +165,7 @@ if getPlatform() == 'sgi':
         env.Append(LIBS=['audio', 'midi', 'pthread'])
         rtio = True
         jackFound = False
-        pythonpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
+        pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
        
 
@@ -173,7 +177,7 @@ if getPlatform() == 'unsupported':
        env.Append(LIBS=['pthread'])
        msvctools = False
        jackFound = False
-       pythonpath = ['/usr/include/python%c%c' % (getVersion()[0], getVersion()[2]), env['pythonpath']]
+       pythonincpath = ['/usr/include/python%c%c' % (getVersion()[0], getVersion()[2]), env['pythonpath']]      
        javapath = ['/usr/java/include', env['javapath']]
 
 if not msvctools:
@@ -197,7 +201,7 @@ print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
 
 pythonh = configure.CheckHeader("Python.h", language = "C")
 if not pythonh:
- for i in pythonpath:
+ for i in pythonincpath:
     pythonh = configure.CheckHeader("%s/Python.h" % i, language = "C")
     if pythonh:
       print "Python version is " + getVersion()
@@ -373,7 +377,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
   pysndobj.Prepend(LIBS=baselibs)
   pysndobj.Prepend(CPPPATH=['src'])
   if getPlatform() == 'macosx':
-    for i in pythonpath:
+    for i in pythonincpath:
       if i != '':
         pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
@@ -384,15 +388,17 @@ if swigcheck and env['pythonmodule'] and pythonh:
     else:
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf %s libsndobj.dylib' % env['install_name'])
   elif getPlatform() == 'win' or getPlatform() == 'cygwin':
-    for i in pythonpath:
+    for i in pythonincpath:
       if i != '':
-       pysndobj.Prepend(CPPPATH=[i+'\\include'])
-       pysndobj.Prepend(LIBPATH=[i+'\\libs'])
+       pysndobj.Prepend(CPPPATH=[i])
+    for i in pythonlibpath:
+      if i != '':
+       pysndobj.Prepend(LIBPATH=[i])
     pysndobj.Append(LIBS=[pythonlib, 'ole32'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_', SHLIBSUFFIX='.pyd')
   else:
-    for i in pythonpath:
+    for i in pythonincpath:
       if i != '':
        pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LIBS=['python'+getVersion()])
