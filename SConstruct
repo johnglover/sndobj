@@ -7,6 +7,7 @@
 
 import sys
 import os
+import distutils.sysconfig
 
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 env.SConsignFile()
@@ -315,55 +316,6 @@ else:
 Depends(sndobjlib, hdrs)
 
 
-######################################################################
-#
-# install
-
-if not msvctools:
- 
-
-  if getPlatform() == 'macosx':
-    libdest = env['prefix']+'/lib/libsndobj.dylib'
-    inst = env.Command('libsndobj.dylib', sndobjlib, "cp ./lib/libsndobj.dylib .;install_name_tool -id %s %s" % (libdest, 'libsndobj.dylib'))
-    env.InstallAs(libdest, inst)
-
-  elif getPlatform() == 'win' or getPlatform() == 'cygwin':
-   if not msvctools:
-    libdest = env['prefix']+'/lib/libsndobj.a'
-    env.InstallAs(libdest, sndobjlib)
-    if separateLibs:
-         rfftwlibdest = env['prefix']+'/lib/librfftw.a'
-         env.InstallAs(rfftwlibdest, rfftwlib)
-  # Linux or other OSs (unix-like)
-  else: 
-    libdest = env['prefix']+'/lib/libsndobj.so'
-    env.InstallAs(libdest, sndobjlib)
-
-  if not env['nostaticlib']:
-	env.Install(libdest, sndobjliba)
-  incdest = env['prefix'] + '/include/SndObj/'
-  headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
-  for header in headers:
-    #  env.Execute(Chmod(header, 0555)
-    if(header != './include/SndObj/CVS'):
-  	env.Install(incdest, header)
-  rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
-  rfftw_incdest = env['prefix'] + '/include/rfftw/'
-  for header in rfftw_headers:
-    #	env.Execute(Chmod(header, 0555)
-    if(header != './include/rfftw/CVS'):
-  	env.Install(rfftw_incdest, header)
-  other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
-  other_incdest = env['prefix'] + '/include/'
-  for header in other_headers:
-    #  env.Execute(Chmod(header, 0555)
-    if(header != './include/rfftw'):
-       if(header != './include/CVS'):
-         if(header != './include/SndObj'):
-  	   env.Install(other_incdest, header)
-
-env.Alias('install', env['prefix'])
-
 ####################################################################
 # 
 # Python module
@@ -558,3 +510,63 @@ if configure.CheckHeader("ladspa.h", language="C") and getPlatform() == 'linux':
    ladspa_srcs = ['src/examples/Ladspaplug.cpp', 'src/examples/ladspa_example.cpp']
    ladspa = examples.SharedLibrary('bin/ladspaex', ladspa_srcs, CCFLAGS=flags)   
    Depends(ladspa, deplibs)
+
+
+######################################################################
+#
+# install
+
+pydest = distutils.sysconfig.get_python_lib ()
+if not msvctools:
+
+  if getPlatform() == 'macosx':
+    libdest = env['prefix']+'/lib/libsndobj.dylib'
+    inst = env.Command('libsndobj.dylib', sndobjlib, "cp ./lib/libsndobj.dylib .;install_name_tool -id %s %s" % (libdest, 'libsndobj.dylib'))
+    env.InstallAs(libdest, inst)
+    if env['pythonmodule']:
+     pytems = [ 'sndobj.py', '_sndobj.so']
+     for i in pytems: 
+       env.Install(pydest,os.path.join('python/',i))
+
+  elif getPlatform() == 'win' or getPlatform() == 'cygwin':
+   if not msvctools:
+    libdest = env['prefix']+'/lib/libsndobj.a'
+    env.InstallAs(libdest, sndobjlib)
+    if separateLibs:
+         rfftwlibdest = env['prefix']+'/lib/librfftw.a'
+         env.InstallAs(rfftwlibdest, rfftwlib)
+  # Linux or other OSs (unix-like)
+  else: 
+    libdest = env['prefix']+'/lib/libsndobj.so'
+    env.InstallAs(libdest, sndobjlib)
+    if env['pythonmodule']:
+     dest = distutils.sysconfig.get_python_lib ()
+     print "installing python module in %s" % dest
+     pytems = [ 'sndobj.py', '_sndobj.so']
+     for i in pytems:
+        env.InstallAs(os.path.join(dest, i),os.path.join('python', i))
+
+  if not env['nostaticlib']:
+	env.Install(libdest, sndobjliba)
+  incdest = env['prefix'] + '/include/SndObj/'
+  headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
+  for header in headers:
+    #  env.Execute(Chmod(header, 0555)
+    if(header != './include/SndObj/CVS'):
+  	env.Install(incdest, header)
+  rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
+  rfftw_incdest = env['prefix'] + '/include/rfftw/'
+  for header in rfftw_headers:
+    #	env.Execute(Chmod(header, 0555)
+    if(header != './include/rfftw/CVS'):
+  	env.Install(rfftw_incdest, header)
+  other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
+  other_incdest = env['prefix'] + '/include/'
+  for header in other_headers:
+    #  env.Execute(Chmod(header, 0555)
+    if(header != './include/rfftw'):
+       if(header != './include/CVS'):
+         if(header != './include/SndObj'):
+  	   env.Install(other_incdest, header)
+
+env.Alias('install', [env['prefix'],pydest]) 
