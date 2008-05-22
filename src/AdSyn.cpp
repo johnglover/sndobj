@@ -44,8 +44,11 @@ AdSyn::DoProcess() {
       ID = ((SinAnal *)m_input)->GetTrackID(i3);
 
       j = i3+notcontin;
-			
+    
+   			
       if(i3 < oldtracks-notcontin){
+
+        
 	if(m_trackID[j]==ID){	
 	  // if this is a continuing track  	
 	  track = j;
@@ -64,8 +67,7 @@ AdSyn::DoProcess() {
 	  amp = m_amps[track]; 
 	  ampnext = 0.f;
 	}
-      }
-			
+      }			
       else{ 
 	// new tracks
 	contin = true;

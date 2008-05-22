@@ -47,9 +47,10 @@ main(int argc, char** argv){
 	// IFD analysis
 	IFGram ifgram(&window,&insound,1.f,fftsize,decimation);
 	// Sinusoidal analysis
-	SinAnal sinus(&ifgram,thresh,intracks, 1, 3);
+	SinAnal sinus(&ifgram,thresh,intracks, 2, 3);
 	// Sinusoidal resynthesis
-	AdSyn synth(&sinus,outracks,&table,pitch,scale,interpolation);
+	//AdSyn synth(&sinus,outracks,&table,pitch,scale,interpolation);
+        SinSyn synth(&sinus,outracks,&table,scale,interpolation);
 	// output sound
         // SndRTIO output(1,SND_OUTPUT,16384,10,SHORTSAM,0,interpolation);
         SndWave output(outfile, OVERWRITE,1,16,0,0.f,interpolation);

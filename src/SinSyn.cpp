@@ -18,7 +18,7 @@ SinSyn::SinSyn(){
   m_trackID = 0;
   m_scale =  0.f;
   m_ratio = 0.f;
-
+  m_tracks = 0;
   AddMsg("max tracks", 21);
   AddMsg("scale", 23);
   AddMsg("table", 24);
@@ -35,13 +35,15 @@ SinSyn::SinSyn(SinAnal* input, int maxtracks, Table* table,
   m_factor = m_vecsize/m_sr;
   m_facsqr = m_factor*m_factor;
   m_maxtracks = maxtracks;
-
+  m_tracks = 0;
   m_scale = scale;
   m_input = input;
   m_freqs = new float[m_maxtracks];
   m_amps = new float[m_maxtracks];
   m_phases = new float[m_maxtracks];
   m_trackID = new int[m_maxtracks];
+
+  memset(m_phases, 0, sizeof(float)*m_maxtracks);
 
   m_incr = 0.f;
   m_ratio = m_size/m_sr;
@@ -144,11 +146,10 @@ SinSyn::DoProcess() {
        m_maxtracks) m_tracks = m_maxtracks;
 		
     memset(m_output, 0, sizeof(float)*m_vecsize);
-		
+   		
     // for each track
     i = j = 0;
-    while(i < m_tracks*3){
-			
+    while(i < m_tracks*3){			
       i3 = i/3;
       ampnext =  m_input->Output(i)*m_scale;
       freqnext = m_input->Output(i+1)*TWOPI; 
@@ -156,8 +157,9 @@ SinSyn::DoProcess() {
       ID = ((SinAnal *)m_input)->GetTrackID(i3);
 
       j = i3+notcontin;
-			
+	
       if(i3 < oldtracks-notcontin){
+          
 	if(m_trackID[j]==ID){	
 	  // if this is a continuing track  	
 	  track = j;
@@ -188,12 +190,10 @@ SinSyn::DoProcess() {
 	amp = 0.f;
       }
 			
-      // phasediff 
-      phasediff = phasenext - phase;
-		
+      // phasediff
+      phasediff = phasenext - phase;		
       while(phasediff >= PI) phasediff -= TWOPI;
       while(phasediff < -PI) phasediff += TWOPI;
-
       // update phasediff to match the freq
       cph = ((freq+freqnext)*m_factor/2. - phasediff)/TWOPI;
       phasediff += TWOPI * Ftoi(cph + 0.5);
@@ -214,7 +214,7 @@ SinSyn::DoProcess() {
 	if(m_enable) {    
 	  // table lookup oscillator
 	  ph *= m_LoTWOPI;
-	  while(ph < 0) ph += m_size;
+	  while(ph < 0) ph += m_size;  
 	  while(ph >= m_size) ph -= m_size;
 	  ndx = Ftoi(ph);
 	  frac = ph - ndx;
@@ -226,7 +226,7 @@ SinSyn::DoProcess() {
 	}
 	else m_output[m_vecpos] = 0.f;		
       }
-
+     
       // keep amp, freq, and phase values for next time
       if(contin){
 	m_amps[i3] = ampnext;
@@ -237,7 +237,8 @@ SinSyn::DoProcess() {
 	m_trackID[i3] = ID;    
 	i += 3;
       } else notcontin++;
-    } 
+      } 
+   
     return 1;
   }
   else {
