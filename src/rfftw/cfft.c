@@ -1,88 +1,21 @@
-/*****************************************************************************/
-/*                                                                           */
-/* Fast Fourier Transform                                                    */
-/* Network Abstraction, Definitions                                          */
-/* Kevin Peterson, MIT Media Lab, EMS                                        */
-/* UROP - Fall '86                                                           */
-/* REV: 6/12/87(KHP) - To incorporate link list of different sized networks  */
-/*                                                                           */
-/*****************************************************************************/
-
-/*****************************************************************************/
-/* added debug option 5/91 brown@nadia                                       */
-/* change sign at AAA                                                        */
-/*                                                                           */
-/* Fast Fourier Transform                                                    */
-/* FFT Network Interaction and Support Modules                               */
-/* Kevin Peterson, MIT Media Lab, EMS                                        */
-/* UROP - Fall '86                                                           */
-/* REV: 6/12/87(KHP) - Generalized to one procedure call with typed I/O      */
-/*                                                                           */
-/*****************************************************************************/
-
-/* Overview:
-        
-   My realization of the FFT involves a representation of a network of
-   "butterfly" elements that takes a set of 'N' sound samples as input and
-   computes the discrete Fourier transform.  This network consists of a 
-   series of stages (log2 N), each stage consisting of N/2 parallel butterfly
-   elements. Consecutive stages are connected by specific, predetermined flow 
-   paths, (see Oppenheim, Schafer for details) and each butterfly element has
-   an associated multiplicative coefficient.
-
-   FFT NETWORK:
-   -----------  
-      ____    _    ____    _    ____    _    ____    _    ____
-  o--|    |o-| |-o|    |o-| |-o|    |o-| |-o|    |o-| |-o|    |--o
-     |reg1|  | |  |W^r1|  | |  |reg1|  | |  |W^r1|  | |  |reg1|
-     |    |  | |  |    |  | |  |    |  | |  |    |  | |  |    | .....
-     |    |  | |  |    |  | |  |    |  | |  |    |  | |  |    |  
-  o--|____|o-| |-o|____|o-| |-o|____|o-| |-o|____|o-| |-o|____|--o
-             | |          | |          | |          | |
-             | |          | |          | |          | |
-      ____   | |   ____   | |   ____   | |   ____   | |   ____ 
-  o--|    |o-| |-o|    |o-| |-o|    |o-| |-o|    |o-| |-o|    |--o
-     |reg2|  | |  |W^r2|  | |  |reg2|  | |  |W^r2|  | |  |reg2|
-     |    |  | |  |    |  | |  |    |  | |  |    |  | |  |    | .....
-     |    |  | |  |    |  | |  |    |  | |  |    |  | |  |    |
-  o--|____|o-| |-o|____|o-| |-o|____|o-| |-o|____|o-| |-o|____|--o
-             | |          | |          | |          | |
-             | |          | |          | |          | |
-       :      :     :      :     :      :     :      :     :
-       :      :     :      :     :      :     :      :     :
-       :      :     :      :     :      :     :      :     :
-       :      :     :      :     :      :     :      :     :
-       :      :     :      :     :      :     :      :     :
-
-      ____   | |   ____   | |   ____   | |   ____   | |   ____ 
-  o--|    |o-| |-o|    |o-| |-o|    |o-| |-o|    |o-| |-o|    |--o
-     |reg |  | |  |W^r |  | |  |reg |  | |  |W^r |  | |  |reg |
-     | N/2|  | |  | N/2|  | |  | N/2|  | |  | N/2|  | |  | N/2| .....
-     |    |  | |  |    |  | |  |    |  | |  |    |  | |  |    |
-  o--|____|o-|_|-o|____|o-|_|-o|____|o-|_|-o|____|o-|_|-o|____|--o
-
-              ^            ^            ^            ^
-    Initial   |  Bttrfly   |   Rd/Wrt   |   Bttrfly  |   Rd/Wrt
-    Buffer    |            |  Register  |            |  Register
-              |____________|____________|____________|
-                                 |
-                                 |
-                            Interconnect
-                               Paths
-
-   The use of "in-place" computation permits one to use only one set of 
-   registers realized by an array of complex number structures.  To describe
-   the coefficients for each butterfly I am using a two dimensional array
-   (stage, butterfly) of complex numbers.  The predetermined stage connections
-   will be described in a two dimensional array of indicies.  These indicies 
-   will be used to determine the order of reading at each stage of the    
-   computation.  
-*/
-
-
-/*****************************************************************************/
-/* INCLUDE FILES                                                             */
-/*****************************************************************************/
+/*
+ * Copyright (c) 1997-1999 Massachusetts Institute of Technology
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ */
 
 #include <stdio.h>
 #include <math.h>

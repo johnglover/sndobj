@@ -1,9 +1,27 @@
-######################################################################
+####################################################################
+# This file is part of the SndObj library
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+#
 #
 # scons build system for SndObj
 # 
 # Copyright (C) 2005 by Tim Blechmann and Victor Lazzarini
 #
+#  See License.txt for for a disclaimer of all warranties
+#  and licensing information
 
 import sys
 import os
@@ -50,12 +68,34 @@ opt.AddOptions(
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python include path (defaults to usual places)', ''),
         ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
-        ('javapath', 'java headers path (defaults to usual places)', '')
+        ('javapath', 'java headers path (defaults to usual places)', ''),
+        ('customCPPPATH', '',''),
+        ('customCCFLAGS', '',''),
+        ('customCXXFLAGS','',''),
+        ('customLIBS','',''),
+        ('customLIBPATH','',''),
+        ('customSHLINKFLAGS','',''),
+        ('customSWIGFLAGS','','')
 	)
 
 opt.Update(env)
 opt.Save('options.cache',env)
 Help(opt.GenerateHelpText(env))
+
+customCPPPATH = env['customCPPPATH']
+env.Prepend(CPPPATH = customCPPPATH)
+customCCFLAGS = env['customCCFLAGS']
+env.Prepend(CCFLAGS = customCCFLAGS)
+customCXXFLAGS = env['customCXXFLAGS']
+env.Prepend(CXXFLAGS = customCXXFLAGS)
+customLIBS = env['customLIBS']
+env.Prepend(LIBS = customLIBS)
+customLIBPATH = env['customLIBPATH']
+env.Prepend(LIBPATH = customLIBPATH)
+customSHLINKFLAGS = env['customSHLINKFLAGS']
+env.Prepend(SHLINKFLAGS = customSHLINKFLAGS)
+customSWIGFLAGS = env['customSWIGFLAGS']
+env.Prepend(SWIGFLAGS = customSWIGFLAGS)
 
 print "Building the Sound Object Library"
 configure = env.Configure()
