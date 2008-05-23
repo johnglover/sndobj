@@ -61,7 +61,8 @@ opt.AddOptions(
 	BoolOption('oss',  'on unix or linux, build with OSS support', False),
         BoolOption('jack', 'on linux or OSX, build with Jack support', True),
 	('flags', 'additional compile flags', ""),
-	('prefix', 'install prefix of headers, static lib and shared lib', '/usr/local'), 
+	('prefix', 'install prefix of headers, static lib and shared lib', '/usr/local'),
+        ('instdir', 'base directory', ''), 
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
@@ -70,7 +71,7 @@ opt.AddOptions(
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python include path (defaults to usual places)', ''),
         ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
-        ('pythondir', 'python install dir (defaults to usual places, linux/OSX', ''),
+        ('pythondir', 'python install base dir (defaults to usual places, linux/OSX)', ''),
         ('javapath', 'java headers path (defaults to usual places)', ''),
         ('customCPPPATH', '',''),
         ('customCCFLAGS', '',''),
@@ -84,6 +85,12 @@ opt.AddOptions(
 opt.Update(env)
 # opt.Save('options.cache',env) #
 Help(opt.GenerateHelpText(env))
+
+if(env['instdir'] != ''):
+  prefix = env['instdir'] + env['prefix']
+else:
+  prefix = env['prefix']
+ 
 
 customCPPPATH = env['customCPPPATH']
 env.Prepend(CPPPATH = customCPPPATH)
@@ -339,9 +346,10 @@ if getPlatform() != 'win':
   sources = sndsources + rfftsources 
   if getPlatform() == 'macosx':
    env.Append(LINKFLAGS=['-install_name', env['install_name']])
-   sndobjlib = env.SharedLibrary(env['install_name'], sources, CCFLAGS=flags)
+   env.Prepend(CCFLAGS = flags)
+   sndobjlib = env.SharedLibrary(env['install_name'], sources)
   else:
-   sndobjlib = env.SharedLibrary('lib/libsndobj.so' + '.' + version, sources, CCFLAGS=flags, SHLIBPREFIX = '', SHLIBSUFFIX = '',)
+   sndobjlib = env.SharedLibrary('lib/libsndobj.so' + '.' + version, sources, SHLIBPREFIX = '', SHLIBSUFFIX = '',)
    os.spawnvp(os.P_WAIT, 'rm', ['rm', '-f', 'lib/libsndobj.so'])
    os.symlink('libsndobj.so' + '.' + version, 'lib/libsndobj.so')
    sndobjlink = 'lib/libsndobj.so'
@@ -572,7 +580,7 @@ else:
 if not msvctools:
 
   if getPlatform() == 'macosx':
-    libdest = env['prefix']+'/lib/libsndobj.dylib'
+    libdest = prefix+'/lib/libsndobj.dylib'
     inst = env.Command('libsndobj.dylib', sndobjlib, "cp ./lib/libsndobj.dylib .;install_name_tool -id %s %s" % (libdest, 'libsndobj.dylib'))
     env.InstallAs(libdest, inst)
     if env['pythonmodule']:
@@ -582,50 +590,51 @@ if not msvctools:
 
   elif getPlatform() == 'win' or getPlatform() == 'cygwin':
    if not msvctools:
-    libdest = env['prefix']+'/lib/libsndobj.a'
+    libdest = prefix+'/lib/libsndobj.a'
     env.InstallAs(libdest, sndobjlib)
     if separateLibs:
-         rfftwlibdest = env['prefix']+'/lib/librfftw.a'
+         rfftwlibdest = prefix+'/lib/librfftw.a'
          env.InstallAs(rfftwlibdest, rfftwlib)
 
   # Linux or other OSs (unix-like)
   else: 
-    libdest = env['prefix']+'/lib/libsndobj.so'
+    libdest = prefix+'/lib/libsndobj.so'
     env.InstallAs(libdest + '.' + version, sndobjlib)
     env.InstallAs(libdest, sndobjlink)
     if env['pythonmodule']:
      if env['pythondir'] == '':
       dest = distutils.sysconfig.get_python_lib ()
      else:
-      dest = env['pythondir'] + '/lib/python%s/site-packages' % getVersion()
+      dest = env['pythondir'] + '/usr/lib/python%s/site-packages' % getVersion()
      print "installing python module in %s" % dest
      pytems = [ 'sndobj.py', '_sndobj.so']
      for i in pytems:
         env.InstallAs(os.path.join(dest, i),os.path.join('python', i))
-     licensedest = env['prefix'] + '/share/SndObj/License.txt'
+     licensedest = prefix + '/share/SndObj/License.txt'
      env.InstallAs(licensedest, 'License.txt')
 
   if not env['nostaticlib']:
 	env.Install(libdest, sndobjliba)
-  incdest = env['prefix'] + '/include/SndObj/'
+  incdest = prefix + '/include/SndObj/'
   headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
   for header in headers:
     #  env.Execute(Chmod(header, 0555)
     if(header != './include/SndObj/CVS'):
   	env.Install(incdest, header)
   rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
-  rfftw_incdest = env['prefix'] + '/include/rfftw/'
+  rfftw_incdest = prefix + '/include/rfftw/'
   for header in rfftw_headers:
     #	env.Execute(Chmod(header, 0555)
     if(header != './include/rfftw/CVS'):
   	env.Install(rfftw_incdest, header)
-  other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
-  other_incdest = env['prefix'] + '/include/'
-  for header in other_headers:
-    #  env.Execute(Chmod(header, 0555)
-    if(header != './include/rfftw'):
+  if getPlatform() == 'win':
+   other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
+   other_incdest = prefix + '/include/'
+   for header in other_headers:
+     #  env.Execute(Chmod(header, 0555)
+     if(header != './include/rfftw'):
        if(header != './include/CVS'):
          if(header != './include/SndObj'):
   	   env.Install(other_incdest, header)
 
-env.Alias('install', [env['prefix'],pydest]) 
+env.Alias('install', [prefix,pydest]) 
