@@ -55,7 +55,7 @@ def getPlatform():
     else:
         return 'unsupported'
 
-opt = Options()
+opt = Options(['options.cache'])
 opt.AddOptions(
 	BoolOption('alsa', 'on linux, build with alsa support', True),
 	BoolOption('oss',  'on unix or linux, build with OSS support', False),
@@ -83,7 +83,7 @@ opt.AddOptions(
 	)
 
 opt.Update(env)
-# opt.Save('options.cache',env) #
+opt.Save('options.cache',env)
 Help(opt.GenerateHelpText(env))
 
 if(env['instdir'] != ''):
