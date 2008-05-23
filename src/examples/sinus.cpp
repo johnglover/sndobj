@@ -33,9 +33,6 @@ main(int argc, char** argv){
          time(&ts);
 
 	// SndObj objects set-up  
-	 
-	SndThread thread;    //  processing thread
-	
 	HarmTable table(10000, 1, 1, 0.25);    // cosine wave
 	 
 	HammingTable window(fftsize, 0.5); // hanning window
@@ -49,29 +46,22 @@ main(int argc, char** argv){
 	// Sinusoidal analysis
 	SinAnal sinus(&ifgram,thresh,intracks, 2, 3);
 	// Sinusoidal resynthesis
-	//AdSyn synth(&sinus,outracks,&table,pitch,scale,interpolation);
-        SinSyn synth(&sinus,outracks,&table,scale,interpolation);
+	AdSyn synth(&sinus,outracks,&table,pitch,scale,interpolation);
+        // SinSyn synth(&sinus,outracks,&table,scale,interpolation);
 	// output sound
         // SndRTIO output(1,SND_OUTPUT,16384,10,SHORTSAM,0,interpolation);
         SndWave output(outfile, OVERWRITE,1,16,0,0.f,interpolation);
 	output.SetOutput(1, &synth);
 	
-	// sound thread set-up
-	
-	thread.AddObj(&insound);
-	thread.AddObj(&ifgram);
-	thread.AddObj(&sinus);
-        thread.AddObj(&synth);
-	thread.AddObj(&input, SNDIO_IN);
-	thread.AddObj(&output, SNDIO_OUT); 
- 
-	
-	thread.ProcOn();
-	
-	while(!input.Eof());
-
-	thread.ProcOff();
-   
+	// processing loop
+	while(!input.Eof()){
+          input.Read();
+          insound.DoProcess();
+          sinus.DoProcess();
+	  synth.DoProcess();
+          output.Write();
+	}
+  
 	time(&te);	cout << " process time (secs): " << (te -ts) << "\n";
 	return 0;
 }

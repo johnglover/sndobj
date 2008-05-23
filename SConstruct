@@ -35,6 +35,8 @@ env.SConsignFile()
 #
 # general configuration
 
+version = "2.6.5"
+
 def getVersion():
     return sys.version[:3]    
 
@@ -53,7 +55,7 @@ def getPlatform():
     else:
         return 'unsupported'
 
-opt = Options(['options.cache'])
+opt = Options()
 opt.AddOptions(
 	BoolOption('alsa', 'on linux, build with alsa support', True),
 	BoolOption('oss',  'on unix or linux, build with OSS support', False),
@@ -68,6 +70,7 @@ opt.AddOptions(
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python include path (defaults to usual places)', ''),
         ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
+        ('pythondir', 'python install dir (defaults to usual places, linux/OSX', ''),
         ('javapath', 'java headers path (defaults to usual places)', ''),
         ('customCPPPATH', '',''),
         ('customCCFLAGS', '',''),
@@ -79,7 +82,7 @@ opt.AddOptions(
 	)
 
 opt.Update(env)
-opt.Save('options.cache',env)
+# opt.Save('options.cache',env) #
 Help(opt.GenerateHelpText(env))
 
 customCPPPATH = env['customCPPPATH']
@@ -130,6 +133,7 @@ if getPlatform() == 'linux':
           print "The library will include support for Jack (Class SndJackIO)"
         pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
+       
    
 if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
@@ -256,6 +260,8 @@ jsndobj = env.Copy()
 cffisndobj = env.Copy()
 examples = env.Copy()
 
+if getPlatform() == 'linux':
+      env.Append(SHLINKFLAGS=['-Wl,-soname=libsndobj.so.%s'% version])
 ######################################################################
 #
 # sources
@@ -335,7 +341,10 @@ if getPlatform() != 'win':
    env.Append(LINKFLAGS=['-install_name', env['install_name']])
    sndobjlib = env.SharedLibrary(env['install_name'], sources, CCFLAGS=flags)
   else:
-   sndobjlib = env.SharedLibrary('lib/sndobj', sources, CCFLAGS=flags)
+   sndobjlib = env.SharedLibrary('lib/libsndobj.so' + '.' + version, sources, CCFLAGS=flags, SHLIBPREFIX = '', SHLIBSUFFIX = '',)
+   os.spawnvp(os.P_WAIT, 'rm', ['rm', '-f', 'lib/libsndobj.so'])
+   os.symlink('libsndobj.so' + '.' + version, 'lib/libsndobj.so')
+   sndobjlink = 'lib/libsndobj.so'
   deplibs = [sndobjlib]
   baselibs = ['sndobj']
   if not env['nostaticlib']:
@@ -555,8 +564,11 @@ if configure.CheckHeader("ladspa.h", language="C") and getPlatform() == 'linux':
 ######################################################################
 #
 # install
+if env['pythondir'] == '':
+  pydest = distutils.sysconfig.get_python_lib ()
+else:
+  pydest = env['pythondir'] + '/lib/python%s/site-packages' % getVersion()
 
-pydest = distutils.sysconfig.get_python_lib ()
 if not msvctools:
 
   if getPlatform() == 'macosx':
@@ -575,16 +587,23 @@ if not msvctools:
     if separateLibs:
          rfftwlibdest = env['prefix']+'/lib/librfftw.a'
          env.InstallAs(rfftwlibdest, rfftwlib)
+
   # Linux or other OSs (unix-like)
   else: 
     libdest = env['prefix']+'/lib/libsndobj.so'
-    env.InstallAs(libdest, sndobjlib)
+    env.InstallAs(libdest + '.' + version, sndobjlib)
+    env.InstallAs(libdest, sndobjlink)
     if env['pythonmodule']:
-     dest = distutils.sysconfig.get_python_lib ()
+     if env['pythondir'] == '':
+      dest = distutils.sysconfig.get_python_lib ()
+     else:
+      dest = env['pythondir'] + '/lib/python%s/site-packages' % getVersion()
      print "installing python module in %s" % dest
      pytems = [ 'sndobj.py', '_sndobj.so']
      for i in pytems:
         env.InstallAs(os.path.join(dest, i),os.path.join('python', i))
+     licensedest = env['prefix'] + '/share/SndObj/License.txt'
+     env.InstallAs(licensedest, 'License.txt')
 
   if not env['nostaticlib']:
 	env.Install(libdest, sndobjliba)
