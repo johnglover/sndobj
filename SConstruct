@@ -35,7 +35,7 @@ env.SConsignFile()
 #
 # general configuration
 
-version = "2.6.5"
+
 
 def getVersion():
     return sys.version[:3]    
@@ -79,13 +79,15 @@ opt.AddOptions(
         ('customLIBS','',''),
         ('customLIBPATH','',''),
         ('customSHLINKFLAGS','',''),
-        ('customSWIGFLAGS','','')
+        ('customSWIGFLAGS','',''),
+        ('version', 'library version','2.6.5')
 	)
 
 opt.Update(env)
 opt.Save('options.cache',env)
 Help(opt.GenerateHelpText(env))
-
+version = env['version']
+print "SndObj Library version is " + version
  
 customCPPPATH = env['customCPPPATH']
 env.Prepend(CPPPATH = customCPPPATH)
