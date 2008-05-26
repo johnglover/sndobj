@@ -391,7 +391,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
     pywrap = pysndobj.SharedObject('python/AudioDefs.i')
     pymod = pysndobj.Program('python/_sndobj.so', pywrap)
-    os.spawnvp(os.P_WAIT, 'cp', ['cp', 'sndobj.py', 'python/sndobj.py'])
+    pysndobj.Command('python/sndobj.py', 'sndobj.py', 'cp sndobj.py python/sndobj.py')
     if env['install_name'] == 'lib/libsndobj.dylib':
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
     else:
@@ -412,7 +412,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
        pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LIBS=['python'+getVersion()])
     pymod = pysndobj.SharedLibrary('python/sndobj', 'python/AudioDefs.i', SHLIBPREFIX='_')
-    os.spawnvp(os.P_WAIT, 'cp', ['cp', 'sndobj.py', 'python/sndobj.py'])
+    pysndobj.Command('python/sndobj.py', 'sndobj.py', 'cp sndobj.py python/sndobj.py')
   Depends(pymod,sndobjlib)
 
 
