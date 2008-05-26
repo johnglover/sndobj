@@ -68,10 +68,10 @@ opt.AddOptions(
         BoolOption('pythonmodule', 'build python module', False),
         BoolOption('javamodule', 'build java module', False),
         BoolOption('lispmodule', 'build CFFI module', False),
+        BoolOption('examples', 'build C++ examples', False),
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python include path (defaults to usual places)', ''),
         ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
-        ('pythondir', 'python install base dir (defaults to usual places, linux/OSX)', ''),
         ('javapath', 'java headers path (defaults to usual places)', ''),
         ('customCPPPATH', '',''),
         ('customCCFLAGS', '',''),
@@ -86,12 +86,7 @@ opt.Update(env)
 opt.Save('options.cache',env)
 Help(opt.GenerateHelpText(env))
 
-if(env['instdir'] != ''):
-  prefix = env['instdir'] + env['prefix']
-else:
-  prefix = env['prefix']
  
-
 customCPPPATH = env['customCPPPATH']
 env.Prepend(CPPPATH = customCPPPATH)
 customCCFLAGS = env['customCCFLAGS']
@@ -233,7 +228,7 @@ if getPlatform() == 'unsupported':
        javapath = ['/usr/java/include', env['javapath']]
 
 if not msvctools:
-   flags = "-O3 " + env['flags']
+   flags = "-O2" + env['flags']
 else:
    flags = "-GX -GB -O2" + env['flags']
    
@@ -344,19 +339,19 @@ asiosources = map(lambda x: './src/asio/' + x, asios)
 
 if getPlatform() != 'win':
   sources = sndsources + rfftsources 
+  env.Prepend(CCFLAGS = flags)
   if getPlatform() == 'macosx':
    env.Append(LINKFLAGS=['-install_name', env['install_name']])
-   env.Prepend(CCFLAGS = flags)
    sndobjlib = env.SharedLibrary(env['install_name'], sources)
   else:
-   sndobjlib = env.SharedLibrary('lib/libsndobj.so' + '.' + version, sources, SHLIBPREFIX = '', SHLIBSUFFIX = '',)
+   sndobjlib = env.SharedLibrary('lib/libsndobj.so' + '.' + version, sources, SHLIBPREFIX = '', SHLIBSUFFIX = '')
    os.spawnvp(os.P_WAIT, 'rm', ['rm', '-f', 'lib/libsndobj.so'])
    os.symlink('libsndobj.so' + '.' + version, 'lib/libsndobj.so')
    sndobjlink = 'lib/libsndobj.so'
   deplibs = [sndobjlib]
   baselibs = ['sndobj']
   if not env['nostaticlib']:
-    sndobjliba =  env.Library('lib/sndobj',sources, CCFLAGS=flags)
+    sndobjliba =  env.Library('lib/sndobj',sources)
     deplibs.append([sndobjliba])
     Depends(sndobjliba, hdrs)
 else:
@@ -379,18 +374,20 @@ Depends(sndobjlib, hdrs)
 
 if swigcheck and env['pythonmodule'] and pythonh:
   pswigdef = swigdef
-  pswigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-Iinclude', '-v'])
+  pswigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-v'])
   pysndobj.Append(SWIGFLAGS=pswigdef)
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(CPPDEFINES=['SWIG','PYTHON_WRAP'])
   pysndobj.Prepend(LIBS=baselibs)
   pysndobj.Prepend(CPPPATH=['src'])
+  pysndobj.Prepend(CCFLAGS=flags)
+  pysndobj.Append(SWIGFLAGS=['-outdir', '.' ])
   if getPlatform() == 'macosx':
     for i in pythonincpath:
       if i != '':
         pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LINKFLAGS=['-bundle', '-framework', 'python'])
-    pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
     pymod = pysndobj.Program('python/_sndobj.so', pywrap)
     if env['install_name'] == 'lib/libsndobj.dylib':
        pysndobj.Command('link', 'lib/libsndobj.dylib', 'cd python/lib; ln -sf ../../lib/libsndobj.dylib libsndobj.dylib')
@@ -404,15 +401,14 @@ if swigcheck and env['pythonmodule'] and pythonh:
       if i != '':
        pysndobj.Prepend(LIBPATH=[i])
     pysndobj.Append(LIBS=[pythonlib, 'ole32'])
-    pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
+    pywrap = pysndobj.SharedObject('python/AudioDefs.i')
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_', SHLIBSUFFIX='.pyd')
   else:
     for i in pythonincpath:
       if i != '':
        pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LIBS=['python'+getVersion()])
-    pywrap = pysndobj.SharedObject('python/AudioDefs.i', CCFLAGS=flags)
-    pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_')
+    pymod = pysndobj.SharedLibrary('python/sndobj', 'python/AudioDefs.i', SHLIBPREFIX='_')
   Depends(pymod,sndobjlib)
 
 
@@ -503,10 +499,13 @@ examples.Append(LIBPATH='./lib')
 examples.Prepend(LIBS=baselibs)
 
 def BuildExample(prog, example, source):
-    obj = examples.Object(example, source, CCFLAGS=flags)
-    prg = examples.Program(prog, example)
-    Depends(prg, obj)
-    return obj
+    if env['examples']:
+     obj = examples.Object(example, source, CCFLAGS=flags)
+     prg = examples.Program(prog, example)
+     Depends(prg, obj)
+     return obj
+    else:
+     return None
 
 # jack examples
 if jackFound:
@@ -544,7 +543,7 @@ sinus = BuildExample('./bin/sinus','./obj/sinus.o', 'src/examples/sinus.cpp')
 Depends(sinus, deplibs)
 
 # morph PD class
-if configure.CheckHeader("m_pd.h", language="C"):
+if configure.CheckHeader("m_pd.h", language="C") and env['examples']:
     if getPlatform() == 'linux':
        morph = examples.SharedLibrary('./bin/morph~','src/examples/morph_tilde.cpp',  
             SHLIBPREFIX = '', SHLIBSUFFIX= '.pd_linux', CCFLAGS=flags)
@@ -563,7 +562,7 @@ if configure.CheckHeader("m_pd.h", language="C"):
     Depends(morph, deplibs)
 
 # LADSPA plugin example
-if configure.CheckHeader("ladspa.h", language="C") and getPlatform() == 'linux':
+if configure.CheckHeader("ladspa.h", language="C") and getPlatform() == 'linux' and env['examples']:
    ladspa_srcs = ['src/examples/Ladspaplug.cpp', 'src/examples/ladspa_example.cpp']
    ladspa = examples.SharedLibrary('bin/ladspaex', ladspa_srcs, CCFLAGS=flags)   
    Depends(ladspa, deplibs)
@@ -572,10 +571,10 @@ if configure.CheckHeader("ladspa.h", language="C") and getPlatform() == 'linux':
 ######################################################################
 #
 # install
-if env['pythondir'] == '':
-  pydest = distutils.sysconfig.get_python_lib ()
-else:
-  pydest = env['pythondir'] + '/lib/python%s/site-packages' % getVersion()
+
+pydest = env['instdir'] + distutils.sysconfig.get_python_lib()
+prefix = env['instdir'] + env['prefix']
+print env['instdir']
 
 if not msvctools:
 
@@ -598,20 +597,16 @@ if not msvctools:
 
   # Linux or other OSs (unix-like)
   else: 
-    libdest = prefix+'/lib/libsndobj.so'
+    libdest = prefix + '/lib/libsndobj.so'
     env.InstallAs(libdest + '.' + version, sndobjlib)
     env.InstallAs(libdest, sndobjlink)
     if env['pythonmodule']:
-     if env['pythondir'] == '':
-      dest = distutils.sysconfig.get_python_lib ()
-     else:
-      dest = env['pythondir'] + '/usr/lib/python%s/site-packages' % getVersion()
-     print "installing python module in %s" % dest
+     print "installing python module in %s" % pydest
      pytems = [ 'sndobj.py', '_sndobj.so']
      for i in pytems:
-        env.InstallAs(os.path.join(dest, i),os.path.join('python', i))
-     licensedest = prefix + '/share/SndObj/License.txt'
-     env.InstallAs(licensedest, 'License.txt')
+        env.InstallAs(os.path.join(pydest, i),os.path.join('python', i))
+     #licensedest = prefix + '/share/SndObj/License.txt'
+     #env.InstallAs(licensedest, 'License.txt')
 
   if not env['nostaticlib']:
 	env.Install(libdest, sndobjliba)
