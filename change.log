@@ -1,39 +1,36 @@
-veplaini  <Victor.Lazzarini@nuim.ie> 14/08/07
-* Tidied up SndCoreAudio behaviour. Now it should be able
+26/05/2008 veplaini <Victor.Lazzarini@nuim.ie>:
+	* SinSyn.cpp: fixed initialisation bug
+	* SConstruct: added options to SConstruct
+	 and fixed installation for fedora packaging
+
+14/08/07 veplaini  <Victor.Lazzarini@nuim.ie>: 
+	* SndCoreAudio.cpp: tidied up behaviour. Now it should be able
 	to open two separate devices for in/out as well as
 	full-duplex
 
-veplaini  <Victor.Lazzarini@nuim.ie> 12/08/07
-* Fixed bugs in Tapi and Mixer
+12/08/07 veplaini  <Victor.Lazzarini@nuim.ie>: 
+        * Tapi.cpp: Fixed bugs in Tapi 
+	* Mixer.cpp: Fixed bug
 
-veplaini <Victor.Lazzarini@nuim.ie> 05/02/07
-* Fixed + improved SndBuffer
+05/02/07 veplaini <Victor.Lazzarini@nuim.ie>:
+	* SndBuffer.cpp: Fixed + improved SndBuffer
 	
-veplaini  <Victor.Lazzarini@nuim.ie> 24/01/07
+24/01/07 veplaini  <Victor.Lazzarini@nuim.ie>: 
+	* SndCoreAudio.cpp: Fixed non-interleaved audio on SndCoreAudio
+	* python/*.py: Added some python examples
+	* SConstruct: fixed windows-MSVC build
 
-* Fixed non-interleaved audio on SndCoreAudio
-* Added some python examples
-* Fixed windows-MSVC build
-
-veplaini <Victor.Lazzarini@nuim.ie> 19/01/07
+19/01/07 veplaini <Victor.Lazzarini@nuim.ie>:
+	* SndThread.cpp: added SndRTThread class (also to PySndObj)	
+	* SndCoreAudio.cpp: fixed SndCoreAudio to allow for calling Write() only(without Read())
+	* SConstruct: Added CFFI module target to SConstruct (however the CFFI interface is not building at the moment)
 	
-* Added SndRTThread class (also to PySndObj)	
-* fixed SndCoreAudio to allow for calling Write() only (without Read())
-* Added CFFI module target to SConstruct (however the CFFI interface
-	is not building at the moment)
-	
-veplaini <Victor.Lazzarini@nuim.ie> 18/01/07
-	
-* implemented Python callbacks for SndThread.
-* implemented dynamic vector size change in SndObj and SndIO
-* added vectorsize and sr setting methods to SndThread.
+18/01/07 veplaini <Victor.Lazzarini@nuim.ie>: 
+	* SndThread.cpp: implemented Python callbacks for SndThread.
+	* SndObj.h/SndIO.h:  implemented dynamic vector size change in SndObj and SndIO
+	* SndThread.cpp: added vectorsize and sr setting methods to SndThread.
   
-
-veplaini <Victor.Lazzarini@nuim.ie> 15/01/07
+15/01/07 veplaini <Victor.Lazzarini@nuim.ie>: 
 	
-* fixed some issues in SndThread.h regarding list
-  position
-	
-veplaini <Victor.Lazzarini@nuim.ie> 
-	
- * Change.log started 15/01/07 (please add changes at the top)
+	* SndThread.h: fixed some issues in SndThread regarding list position
+	* Change.log started 15/01/07 (please add changes at the top)
