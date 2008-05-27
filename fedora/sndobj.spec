@@ -1,5 +1,5 @@
 Name:  SndObj         
-Version: 2.6.5       
+Version: 2.6.6       
 Release: 0%{?dist}
 Summary: The Sound Object Library - audio processing library       
 
