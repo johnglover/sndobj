@@ -598,12 +598,18 @@ if not msvctools:
     if separateLibs:
          rfftwlibdest = prefix+'/lib/librfftw.a'
          env.InstallAs(rfftwlibdest, rfftwlib)
+    if env['pythonmodule']:
+      print "installing python module in %s" % pydest
+      pytems = [ 'python/sndobj.py', 'python/_sndobj.pyd']
+      for i in pytems:
+        env.InstallAs(os.path.join(pydest, i),i)
 
   # Linux or other OSs (unix-like)
   else: 
     libdest = prefix + '/lib/libsndobj.so'
     env.InstallAs(libdest + '.' + version, sndobjlib)
     env.InstallAs(libdest, sndobjlink)
+    print "installing python module in %s" % pydest
     if env['pythonmodule']:
      print "installing python module in %s" % pydest
      pytems = [ 'sndobj.py', '_sndobj.so']
