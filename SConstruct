@@ -107,6 +107,7 @@ env.Prepend(SWIGFLAGS = customSWIGFLAGS)
 print "Building the Sound Object Library"
 configure = env.Configure()
 
+print "scons tools in this system: ", env['TOOLS']
 cffipath = ''
 pythonlibpath = []
 print "Checking for Realtime IO support..." 
@@ -259,10 +260,10 @@ if not pythonh:
 if not pythonh:
     print "Python headers are missing... cannot build python module"
 
-pysndobj = env.Copy()
-jsndobj = env.Copy()
-cffisndobj = env.Copy()
-examples = env.Copy()
+pysndobj = env.Clone()
+jsndobj = env.Clone()
+cffisndobj = env.Clone()
+examples = env.Clone()
 
 if getPlatform() == 'linux':
       env.Append(SHLINKFLAGS=['-Wl,-soname=libsndobj.so.%s'% version])
@@ -383,7 +384,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
   pysndobj.Prepend(LIBS=baselibs)
   pysndobj.Prepend(CPPPATH=['src'])
   pysndobj.Prepend(CCFLAGS=flags)
-  pysndobj.Append(SWIGFLAGS=['-outdir', '.' ])
+
   if getPlatform() == 'macosx':
     for i in pythonincpath:
       if i != '':
@@ -411,8 +412,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
       if i != '':
        pysndobj.Prepend(CPPPATH=[i])
     pysndobj.Prepend(LIBS=['python'+getVersion()])
-    pymod = pysndobj.SharedLibrary('python/sndobj', 'python/AudioDefs.i', SHLIBPREFIX='_')
-    pysndobj.Command('python/sndobj.py', 'sndobj.py', 'cp sndobj.py python/sndobj.py')
+    pymod = pysndobj.SharedLibrary('sndobj', 'python/AudioDefs.i', SHLIBPREFIX='_')
   Depends(pymod,sndobjlib)
 
 
@@ -608,7 +608,7 @@ if not msvctools:
      print "installing python module in %s" % pydest
      pytems = [ 'sndobj.py', '_sndobj.so']
      for i in pytems:
-        env.InstallAs(os.path.join(pydest, i),os.path.join('python', i))
+        env.InstallAs(os.path.join(pydest, i),i)
      #licensedest = prefix + '/share/SndObj/License.txt'
      #env.InstallAs(licensedest, 'License.txt')
 
