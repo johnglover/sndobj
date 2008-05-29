@@ -49,10 +49,6 @@ scons install prefix=%{_prefix} instdir=%{buildroot}
  
 %postun -p /sbin/ldconfig
 
-%post devel -p /sbin/ldconfig
-
-%postun devel -p /sbin/ldconfig
-
 %clean
 rm -rf %{buildroot}
 

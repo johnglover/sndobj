@@ -610,8 +610,8 @@ if not msvctools:
   # Linux or other OSs (unix-like)
   else: 
     libdest = prefix + '/lib/libsndobj.so'
-    env.InstallAs(libdest + '.' + version, sndobjlib)
-    env.InstallAs(libdest, sndobjlink)
+    instl = env.InstallAs(libdest + '.' + version, sndobjlib)
+    linkl = env.Command(libdest,libdest + '.' + version, 'cd %s;ln -sf libsndobj.so.%s libsndobj.so' % (prefix+'/lib', version))
     print "installing python module in %s" % pydest
     if env['pythonmodule']:
      print "installing python module in %s" % pydest
