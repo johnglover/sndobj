@@ -624,20 +624,20 @@ if not msvctools:
   incdest = prefix + '/include/SndObj/'
   headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
   for header in headers:
-    #  env.Execute(Chmod(header, 0555)
-    if(header != './include/SndObj/CVS'):
+    if(header != './include/SndObj/CVS' and header[0] != '.'):
+        env.Execute(Chmod(header, 0555))
   	env.Install(incdest, header)
   rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
   rfftw_incdest = prefix + '/include/rfftw/'
   for header in rfftw_headers:
-    #	env.Execute(Chmod(header, 0555)
     if(header != './include/rfftw/CVS'):
+        #env.Execute(Chmod(header, 0555))
   	env.Install(rfftw_incdest, header)
   if getPlatform() == 'win':
    other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
    other_incdest = prefix + '/include/'
    for header in other_headers:
-     #  env.Execute(Chmod(header, 0555)
+     #env.Execute(Chmod(header, 0555)
      if(header != './include/rfftw'):
        if(header != './include/CVS'):
          if(header != './include/SndObj'):

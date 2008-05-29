@@ -15,6 +15,7 @@ rm -r sndobj/include/rfftw/CVS
 rm  sndobj/include/*.h
 rm -r sndobj/lib/*
 rm -r sndobj/fedora
+chmod a-x include/SndObj/*.h
 mv sndobj SndObj-$1
 tar cf ~/rpm-build/SOURCES/SndObj-$1-linux.tar SndObj-$1
 gzip ~/rpm-build/SOURCES/SndObj-$1-linux.tar
