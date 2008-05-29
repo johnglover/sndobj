@@ -49,6 +49,10 @@ scons install prefix=%{_prefix} instdir=%{buildroot}
  
 %postun -p /sbin/ldconfig
 
+%post devel -p /sbin/ldconfig
+
+%postun devel -p /sbin/ldconfig
+
 %clean
 rm -rf %{buildroot}
 
@@ -64,10 +68,12 @@ rm -rf %{buildroot}
 %{_includedir}/%{name}/*
 %{_includedir}/rfftw/*
 %{_libdir}/libsndobj.so
+%doc License.txt
 
 %files python
 %defattr(-,root,root,-)
 %{python_site_dir}/*
+%doc License.txt
 
 
 %changelog
