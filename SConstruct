@@ -408,7 +408,7 @@ if swigcheck and env['pythonmodule'] and pythonh:
     pywrap = pysndobj.SharedObject('python/AudioDefs.i')
     pymod = pysndobj.SharedLibrary('python/sndobj', pywrap, SHLIBPREFIX='_', SHLIBSUFFIX='.pyd')
   else:
-    pysndobj.Prepend(SWIGFLAGS=['-outdir', '.'])
+    #pysndobj.Prepend(SWIGFLAGS=['-outdir', '.'])
     for i in pythonincpath:
       if i != '':
        pysndobj.Prepend(CPPPATH=[i])
