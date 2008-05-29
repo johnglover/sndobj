@@ -13,7 +13,8 @@ BuildRequires:  python scons swig alsa-lib-devel python-devel jack-audio-connect
 %define python_site_dir %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 
 %description
-The SndObj library is a class library for general-purpose audio processing, with support
+The SndObj library is a class library for general-purpose 
+audio processing, with support
 for time and frequency domain processing.
 
 %package devel
@@ -41,7 +42,7 @@ applications with SndObj
 %{_bindir}/scons pythonmodule=1 jack=1 alsa=1 version=%{version} customCCFLAGS="%{optflags}" 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 scons install prefix=%{_prefix} instdir=%{buildroot}
 
 %post -p /sbin/ldconfig
@@ -49,7 +50,7 @@ scons install prefix=%{_prefix} instdir=%{buildroot}
 %postun -p /sbin/ldconfig
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
@@ -70,5 +71,5 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri May 23 2008 Victor Lazzarini <Victor.Lazzarini@nuim.ie>
+* Fri May 23 2008 Victor Lazzarini <Victor.Lazzarini@nuim.ie> - 2.6.6-0
   - initial version of this spec 
