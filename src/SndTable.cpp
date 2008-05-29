@@ -75,7 +75,7 @@ SndTable :: MakeTable(){
   else {
     int n, i;
     float max = 0.f;
-    short chan = m_input->GetChannels();
+    // short chan = m_input->GetChannels();
     long size = m_input->GetVectorSize();
     for(n = 0; n < m_L; n+=size){
       m_input->Read();

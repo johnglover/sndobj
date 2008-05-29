@@ -79,7 +79,7 @@ short
 IADSR::DoProcess()
 {
   if(!m_error){  
-    float a;
+    float a = 0.f;
     for(m_vecpos=0; m_vecpos < m_vecsize; m_vecpos++){
       if(m_enable){   
 	if(m_count == m_dur)m_count=0;

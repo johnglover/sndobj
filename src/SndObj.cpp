@@ -229,3 +229,26 @@ char* SndObj::ErrorMessage(){
   return message;
 
 }
+
+const char* SndObj::CErrorMessage(){
+	   
+  switch(m_error){
+
+  case 0:
+    return "No error\n";
+    break; 
+
+  case 1:
+    return "Failed to allocate vector memory\n";
+    break;
+
+  case 3:
+    return "DoProcess() failed: no input object \n";
+    break;
+
+  default:
+    return "Undefined error\n";
+  
+  }
+
+}

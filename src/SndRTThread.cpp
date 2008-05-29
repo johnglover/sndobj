@@ -16,6 +16,8 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 //
+#ifndef NO_RTIO
+
 #include "SndRTThread.h"
 #include "SndRTIO.h"
 #include "SndCoreAudio.h"
@@ -148,7 +150,7 @@ SndRTThread::~SndRTThread(){
 void
 rtthreadfunc(void* data){
     
-  int i, channels, objno, inputno, outputno;
+  int i, channels; //, objno, inputno, outputno;
   SndRTThread *sndthread = (SndRTThread *) data;
   SndLink<SndObj>* temp; 
   SndLink<SndIO>* itemp;
@@ -205,3 +207,4 @@ rtthreadfunc(void* data){
   _endthread();
 #endif
 }
+#endif

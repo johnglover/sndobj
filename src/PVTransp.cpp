@@ -120,11 +120,11 @@ PVTransp::DoProcess(){
 
 	for(m_vecpos=2,chan=1;m_vecpos < m_vecsize; m_vecpos+=2,chan++){
 
-	  newchan = Ftoi(chan*m_pitch)*2; 
+	  newchan = Ftoi(chan*pitch)*2; 
 	  if(newchan < m_vecsize-1 && newchan > 0){
 	    if(m_keepform) m_output[newchan] = m_input->Output(newchan);
 	    else m_output[newchan] = m_input->Output(m_vecpos);
-	    m_output[newchan+1] = m_input->Output(m_vecpos+1)*m_pitch;	  
+	    m_output[newchan+1] = m_input->Output(m_vecpos+1)*pitch;	  
 	  }
 	}
       }

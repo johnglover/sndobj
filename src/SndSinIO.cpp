@@ -151,7 +151,7 @@ short
 SndSinIO::Write(){
   if(!m_error && (m_mode != READ)){
 		
-    int i, tracks, items;
+    int i, tracks, items = 0;
 		
     switch(m_bits){
 			

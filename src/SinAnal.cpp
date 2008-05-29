@@ -370,7 +370,7 @@ SinAnal::sinanalysis(){
 			// old
 			if(!foundcont){ 
 				if((exp(m_mags[int(m_bndx[m_prev][j]+0.5)]) < 0.2*m_pkmags[m_prev][j])
-					|| ((m_timecount - m_lastpk[m_prev][j]) > m_maxgap))
+					|| ((m_timecount - m_lastpk[m_prev][j]) > (unsigned int) m_maxgap))
 				{
 					m_contflag[j] = false;
 

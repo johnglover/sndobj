@@ -56,7 +56,7 @@ SpecSplit::DoProcess(){
   if(!m_error){
     if(m_input){ 
       if(m_enable) {  
-	float a, b; float* start = m_output;
+	float a, b; // float* start = m_output;
 	int p;
 	// mag[0] -> pos 0
 	m_output[0] = m_input->Output(0);

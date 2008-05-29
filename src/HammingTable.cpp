@@ -88,8 +88,6 @@ HammingTable::ErrorMessage(){
     message = "No error.";
     break; 
 
-  case 1:
-    break;
 
   default:
     message = "Undefined error";

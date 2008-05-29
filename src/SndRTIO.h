@@ -161,7 +161,7 @@ class SndRTIO : public SndIO {
   void SndRTIO_init(short, int, int=DEF_BSIZE, int=DEF_PERIOD,int=SHORTSAM, 
 		    SndObj** =0,int=DEF_VECSIZE, float=DEF_SR, 
 #if defined (OSS) || defined (ALSA)           
-		    char* =DEF_DEV);
+		    char* = (char *)DEF_DEV);
 #else 
                     AudioDeviceID=DEF_DEV);
 #endif
@@ -174,7 +174,7 @@ SndRTIO(short ch, int mode, int bsize = DEF_BSIZE,
         int period = DEF_PERIOD, int encoding = SHORTSAM, 
         SndObj** input=0, int vsize= DEF_VECSIZE, float sr=DEF_SR, 
 #if defined(OSS) || defined(ALSA)
-        char* dev = DEF_DEV) 
+        char* dev = (char *)DEF_DEV) 
 #else
      int dev = DEF_DEV)
 #endif

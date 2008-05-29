@@ -26,7 +26,7 @@
 #include <stdio.h>
 
 extern AsioDrivers* asioDrivers;
-static unsigned long icount = 0;
+// static unsigned long icount = 0;
 static float** outsndbuff;
 static float** insndbuff;
 static int buffs;

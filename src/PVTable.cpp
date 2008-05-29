@@ -93,7 +93,7 @@ PVTable::MakeTable() {
   if(m_file) {
 		
     float freq, amp;
-    for(i=0; i < m_end && !m_file->Eof(); i++){
+    for(i=0; i < (int) m_end && !m_file->Eof(); i++){
       // analysis
       m_file->Read();
       m_in->DoProcess();

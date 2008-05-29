@@ -28,6 +28,7 @@
 // Victor Lazzarini, 2001
 // Win32 thread code by Rory Walsh, 2006
 
+#ifndef NO_RTIO
 #ifndef _SNDRTTHREAD_H
 #define _SNDRTTHREAD_H
 
@@ -71,6 +72,6 @@ class SndRTThread : public SndThread {
 void rtthreadfunc(void *);
 
 #endif         
-
+#endif
 
 

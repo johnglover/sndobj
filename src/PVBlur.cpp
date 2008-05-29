@@ -103,7 +103,7 @@ short
 PVBlur::DoProcess(){
   if(!m_error){
     if(m_input){
-      double sum, in;
+      double sum = 0.0, in;
 			
       for(m_vecpos=0; m_vecpos < m_vecsize; m_vecpos++){
 				

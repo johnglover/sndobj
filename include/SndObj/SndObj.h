@@ -30,6 +30,7 @@
 #ifndef _SNDOBJ_H 
 #define _SNDOBJ_H
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include <iostream>
 #include <string>
@@ -265,6 +266,7 @@ class SndObj {
 
   virtual ~SndObj();
   virtual char* ErrorMessage();
+  virtual const char* CErrorMessage(); 
   virtual short DoProcess();
  
 };

@@ -172,7 +172,7 @@ SndRead::DoProcess(){
   if(!m_error && m_ioinput){
     if(!m_ioinput->Eof()) {
 			
-      float out, outsum;
+      float out, outsum= 0.f;
       for(m_vecpos = 0; m_vecpos < m_vecsize; m_vecpos++){
 				
 	if(m_pos >= m_count/m_channels){  
