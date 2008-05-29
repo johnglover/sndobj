@@ -624,7 +624,7 @@ if not msvctools:
   incdest = prefix + '/include/SndObj/'
   headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
   for header in headers:
-    if(header != './include/SndObj/CVS' and header[0] != '.'):
+    if(header != './include/SndObj/CVS' and header[17] != '.'):
         env.Execute(Chmod(header, 0555))
   	env.Install(incdest, header)
   rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
