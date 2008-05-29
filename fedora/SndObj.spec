@@ -1,6 +1,6 @@
 Name:  SndObj         
 Version: 2.6.6       
-Release: 0%{?dist}
+Release: 1%{?dist}
 Summary: The Sound Object Library - audio processing library       
 
 Group:   Development/Libraries          
@@ -77,5 +77,7 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed May 28 2008 Victor Lazzarini <Victor.Lazzarini@nuim.ie> - 2.6.6-1
+  - fixed scons build for scons 0.98
 * Fri May 23 2008 Victor Lazzarini <Victor.Lazzarini@nuim.ie> - 2.6.6-0
   - initial version of this spec 
