@@ -29,9 +29,9 @@
 
 #ifndef _SNDOBJ_H 
 #define _SNDOBJ_H
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
 #include <iostream>
 #include <string>
 #ifndef WIN

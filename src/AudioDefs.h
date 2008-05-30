@@ -22,8 +22,6 @@
 
 // AudioDefs.h  SndObj Library Defines & Headers
 // Base Classes
-
-
 #ifndef NOPTHREAD
 #include "SndThread.h" // needs thread support
 #include "SndRTThread.h"
@@ -144,6 +142,7 @@
 #include "SndMidi.h"  // midi IO
 #include "SndMidiIn.h"
 #include "SndRTIO.h" // WinMME/OSS/SGI RT IO
+
 #ifdef _MBCS
 #include "SndAsio.h" // ASIO-driver IO
 #endif
