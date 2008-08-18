@@ -54,7 +54,7 @@ class SndFIO : public SndIO{
   char* m_buffer;
   char* m_cp;
   short* m_sp;
-  long* m_lp;
+  int* m_lp;
   _24Bit* m_s24p;
   short m_selfdesc; // self-describing header present
   long m_dataframes;
@@ -65,7 +65,7 @@ class SndFIO : public SndIO{
   /* Byte Swapping Functions */
 	
   short SwapShort(short inv);
-  long SwapLong(long inv);
+  int SwapInt(int inv);
   float SwapFloat32( float inv );
   double SwapDouble( double inv );
 	
@@ -119,14 +119,14 @@ inline short SndFIO::SwapShort (short inv)
   return( outv.us);
 }
 
-inline long SndFIO::SwapLong (long inv)
+inline int SndFIO::SwapInt (int inv)
 {
-  union longconv {
-    long	ul;
+  union intconv {
+    int	ul;
     unsigned char uc[4];
   } *inp, outv;
 	
-  inp = (union longconv *)&inv;
+  inp = (union intconv *)&inv;
 	
   outv.uc[0] = inp->uc[3];
   outv.uc[1] = inp->uc[2];
@@ -188,7 +188,7 @@ inline double SndFIO::SwapDouble( double inv )
 #ifdef WORDS_BIGENDIAN
 
 #define SHORT_LE(x) SwapShort(x)
-#define LONG_LE(x) SwapLong(x)
+#define LONG_LE(x) SwapInt(x)
 #define FLOAT32_LE(x) SwapFloat32(x)
 #define DOUBLE_LE(x) SwapDouble(x)
 #define SHORT_BE(x) x
@@ -204,7 +204,7 @@ inline double SndFIO::SwapDouble( double inv )
 #define FLOAT32_LE(x) x
 #define DOUBLE_LE(x) x
 #define SHORT_BE(x) SwapShort(x)
-#define LONG_BE(x) SwapLong(x)
+#define LONG_BE(x) SwapInt(x)
 #define FLOAT32_BE(x) SwapFloat32(x)
 #define DOUBLE_BE(x) SwapDouble(x)
 

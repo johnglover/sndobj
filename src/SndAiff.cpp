@@ -63,7 +63,7 @@ SndAiff::SndAiff(char* name, short mode, short channels, short bits,
       return;
     }
 		
-    long IDchk;
+    int IDchk;
     fread(&IDchk, 4, 1, m_file);
     if(!is_aiff_form(IDchk)){
       m_filestat = SFERROR;
@@ -77,7 +77,7 @@ SndAiff::SndAiff(char* name, short mode, short channels, short bits,
 		
     fseek(m_file, 4, SEEK_CUR);
     fread(&IDchk, 4, 1, m_file);
-    if(IDchk != *(long *) FORM_TYPE){
+    if(IDchk != *(int *) FORM_TYPE){
       m_filestat = SFERROR;
       m_sr = 0.f;
       m_bits = 0;
@@ -126,7 +126,7 @@ SndAiff::SndAiff(char* name, short mode, short channels, short bits,
     // these are the pointers used to read the buffer
     m_cp = (char *) m_buffer;
     m_sp = (short *) m_buffer;
-    m_lp = (long *) m_buffer;
+    m_lp = (int *) m_buffer;
     m_s24p = (_24Bit *) m_buffer;
 		
   }  // INPUT
@@ -165,7 +165,7 @@ SndAiff::~SndAiff(){
 	m_form.ckHdr.ckSize = LONG_BE(datasize + sizeof(aiff_head) - sizeof(CkHdr));
       m_header.numSampleFrames =
 	m_comm2.numSampleFrames = LONG_BE(datasize / m_framesize);
-      m_ssnd.ckHdr.ckSize = LONG_BE(datasize + (2*sizeof(long)));
+      m_ssnd.ckHdr.ckSize = LONG_BE(datasize + (2*sizeof(int)));
 			
       if(m_mode == APPEND){
 	fclose(m_file);
@@ -187,15 +187,15 @@ aiff_head
 SndAiff::PutHeader()
 {
   aiff_head form;
-  form.ckID1 = m_form.ckHdr.ckID = *(long *) FORM_ID;
+  form.ckID1 = m_form.ckHdr.ckID = *(int *) FORM_ID;
   form.ckSize1 = 
     m_form.ckHdr.ckSize = 0;  		// leave for destructor 
   form.formType = 
-    m_form.formType = *(long *) FORM_TYPE;
+    m_form.formType = *(int *) FORM_TYPE;
   form.ckID2 = 
-    m_comm1.ckHdr.ckID = *(long *) COMM_ID;
+    m_comm1.ckHdr.ckID = *(int *) COMM_ID;
   form.ckSize2 = 
-    m_comm1.ckHdr.ckSize = LONG_BE((long)sizeof(short) + sizCommChunk2);
+    m_comm1.ckHdr.ckSize = LONG_BE((int)sizeof(short) + sizCommChunk2);
   form.nchns = 
     m_comm1.numChannels = SHORT_BE((short)m_channels);
   form.numSampleFrames =
@@ -204,8 +204,8 @@ SndAiff::PutHeader()
     m_comm2.sampleSize = SHORT_BE((short)(m_bits));
   // insert 80-bit srate 
   double_to_ieee_80((double)m_sr,(unsigned char*)m_comm2.sampleRate);  
-  form.rate = LONG_BE((long)m_sr);
-  m_ssnd.ckHdr.ckID = *(long *) SSND_ID;
+  form.rate = LONG_BE((int)m_sr);
+  m_ssnd.ckHdr.ckID = *(int *) SSND_ID;
   m_ssnd.ckHdr.ckSize = 0;  		// leave for destructor
   m_ssnd.offset = 0;
   m_ssnd.blockSize = 0;
@@ -235,7 +235,7 @@ SndAiff::ReadHeader(){
   while (find<4);
 	
   m_header.ckID2 =
-    m_comm1.ckHdr.ckID = LONG_BE(*(long *) temp);
+    m_comm1.ckHdr.ckID = LONG_BE(*(int *) temp);
   fread(&m_comm1.ckHdr.ckSize, 4, 1, m_file);
   fread(&m_comm1.numChannels, 2, 1, m_file);
   fread(&m_comm2, sizeof(CommChunk2), 1, m_file);
@@ -259,7 +259,7 @@ SndAiff::ReadHeader(){
     }
 	
   while (find<4);
-  m_ssnd.ckHdr.ckID = *(long *)temp;
+  m_ssnd.ckHdr.ckID = *(int *)temp;
   fread(&m_ssnd.ckHdr.ckSize, 4, 1, m_file);
   fread(&m_ssnd.offset, 4, 1, m_file);
   fread(&m_ssnd.blockSize, 4, 1, m_file);
@@ -317,7 +317,7 @@ SndAiff::Read(){
 	    tmp[1] = m_s24p[m_vecpos+i].s[1];
 	    tmp[2] = m_s24p[m_vecpos+i].s[2];
 	    tmp[3] = 0;
-	    m_output[m_vecpos+i] = (float) LONG_BE(*(long *) tmp);
+	    m_output[m_vecpos+i] = (float) LONG_BE(*(int *) tmp);
 	  }else m_output[m_vecpos+i] = 0.f;
 	}
     }
@@ -353,13 +353,13 @@ SndAiff::Write(){
       for(m_vecpos=n=0; m_vecpos < m_samples; m_vecpos+=m_channels, n++)
 	for(i = 0; i < m_channels; i++)
 	  if(m_IOobjs[i])
-	    m_lp[m_vecpos+i] = LONG_BE((long) m_IOobjs[i]->Output(n));
+	    m_lp[m_vecpos+i] = LONG_BE((int) m_IOobjs[i]->Output(n));
       return (short) fwrite(m_lp, m_buffsize, 1, m_file);
     case 24:
       for(m_vecpos=n=0; m_vecpos < m_samples; m_vecpos+=m_channels, n++)
 	for(i = 0; i < m_channels; i++)
 	  if(m_IOobjs[i]){ 
-	    *(long *)m_s24p[m_vecpos+i].s =  LONG_BE((long)m_IOobjs[i]->Output(n));
+	    *(int *)m_s24p[m_vecpos+i].s =  LONG_BE((int)m_IOobjs[i]->Output(n));
 	  }
       return (short) fwrite(m_s24p, m_buffsize, 1, m_file);
     }
@@ -369,7 +369,7 @@ SndAiff::Write(){
 
 // IEEE conversions taken from Csound sources (thanks to its developers)
 
-static double myUlongToDouble(unsigned long ul)
+static double myUlongToDouble(unsigned int ul)
 {
   double val;
   if(ul & ULPOW2TO31)
@@ -380,9 +380,9 @@ static double myUlongToDouble(unsigned long ul)
 	
 }
 
-static unsigned long myDoubleToUlong(double val)
+static unsigned int myDoubleToUlong(double val)
 {
-  unsigned long ul;	
+  unsigned int ul;	
   // cannot cast negative numbers into unsigned longs 
   if(val < 0)	
     { 
@@ -394,9 +394,9 @@ static unsigned long myDoubleToUlong(double val)
   // last one by hand, if val is truly that big 
   // should maybe test for val > (double)(unsigned long)0xFFFFFFFF ? 
   if(val < DPOW2TO31)
-    ul = (unsigned long)val;
+    ul = (unsigned int)val;
   else
-    ul = ULPOW2TO31 | (unsigned long)(val-DPOW2TO31);
+    ul = ULPOW2TO31 | (unsigned int)(val-DPOW2TO31);
   return ul;
 }
 
@@ -407,8 +407,8 @@ SndAiff::ieee_80_to_double(unsigned char *p)
 {
   char sign;
   short exp = 0;
-  unsigned long mant1 = 0;
-  unsigned long mant0 = 0;
+  unsigned int mant1 = 0;
+  unsigned int mant0 = 0;
 	
   double val;
   exp = *p++;
@@ -452,8 +452,8 @@ SndAiff::double_to_ieee_80(double val, unsigned char *p)
 	
   char sign = 0;
   short exp = 0;
-  unsigned long mant1 = 0;
-  unsigned long mant0 = 0;
+  unsigned int mant1 = 0;
+  unsigned int mant0 = 0;
 	
   if(val < 0.0)	{  sign = 1;  val = -val; }
   if(val != 0.0)	// val identically zero -> all elements zero 

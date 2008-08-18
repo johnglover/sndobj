@@ -67,9 +67,9 @@ SndWave::SndWave(char* name, short mode, short channels, short bits,
 			
     }
 		
-    long IDchk;
+    int IDchk;
     fread(&IDchk, 4, 1, m_file);
-    if(IDchk != *(long *)RIFF_ID){
+    if(IDchk != *(int *)RIFF_ID){
 			
       m_error = 25;
       m_dataframes = 0;
@@ -89,7 +89,7 @@ SndWave::SndWave(char* name, short mode, short channels, short bits,
     fseek(m_file, 4, SEEK_CUR);
     fread(&IDchk, 4, 1, m_file);
 		
-    if(IDchk != *(long *)WAVE_ID){
+    if(IDchk != *(int *)WAVE_ID){
       m_error = 26;
       m_dataframes = 0;
       m_sr = 0.f;
@@ -155,7 +155,7 @@ SndWave::SndWave(char* name, short mode, short channels, short bits,
     // these are the pointers used to read the buffer
     m_cp = (char *) m_buffer;
     m_sp = (short *) m_buffer;
-    m_lp = (long *) m_buffer;
+    m_lp = (int *) m_buffer;
     m_s24p = (_24Bit *) m_buffer;
 		
     m_dataframes = (m_wdata.datasize*8)/(m_channels*m_bits);
@@ -174,9 +174,9 @@ SndWave::~SndWave(){
 		
     if(m_filestat==SFOPEN){
 			
-      unsigned long databytes;
+      unsigned int databytes;
 #ifndef WIN
-      unsigned long endpos, startpos;
+      unsigned int endpos, startpos;
       fseek(m_file, 0, SEEK_END);
       endpos = ftell(m_file);
       fseek(m_file, m_wchkpos, SEEK_SET);
@@ -192,7 +192,7 @@ SndWave::~SndWave(){
       fseek(m_file, sizeof(wave_data), SEEK_CUR);
       fgetpos(m_file, &startpos);
 #endif
-      databytes = (unsigned long) (endpos - startpos);
+      databytes = (unsigned int) (endpos - startpos);
       m_wdata.datasize = LONG_LE(databytes);
       m_header = PutHeader(databytes, m_hdrsize, m_len, m_format);
 			
@@ -210,20 +210,20 @@ SndWave::~SndWave(){
 
 
 wave_head 
-SndWave::PutHeader(long databytes, int hdrsize, int len, int format)
+SndWave::PutHeader(int databytes, int hdrsize, int len, int format)
 {
   wave_head form;
-  form.magic = *((long *)RIFF_ID);
-  form.len0 = LONG_LE(((long)(hdrsize + databytes))); 
-  form.magic1 = *((long *)WAVE_ID);
-  form.magic2 = *((long *)FMT_ID);
-  form.len = LONG_LE((long)len);  // length of format chunk 
+  form.magic = *((int *)RIFF_ID);
+  form.len0 = LONG_LE(((int)(hdrsize + databytes))); 
+  form.magic1 = *((int *)WAVE_ID);
+  form.magic2 = *((int *)FMT_ID);
+  form.len = LONG_LE((int)len);  // length of format chunk 
   form.format = SHORT_LE((short)format); // PCM == 1
   form.nchns = SHORT_LE((short)m_channels);
-  form.rate = LONG_LE((long)m_sr); // sampling rate
+  form.rate = LONG_LE((int)m_sr); // sampling rate
 	
   // bytes per sec
-  form.aver = LONG_LE((long)(m_sr*(m_bits/8)*m_channels));
+  form.aver = LONG_LE((int)(m_sr*(m_bits/8)*m_channels));
   // bytes per frame  
   form.nBlockAlign = SHORT_LE((short)((m_bits/8)*m_channels)); 
   form.size = SHORT_LE((short)m_bits);	// bits per sample 
@@ -246,16 +246,16 @@ SndWave::ReadHeader(){
 		
   fseek(m_file,m_header.len+20,SEEK_SET);
   char chunk_id[4]; 
-  long chunksize;
+  int chunksize;
   fread(&chunk_id,sizeof(char), 4, m_file);
-  fread(&chunksize,sizeof(long), 1, m_file);
+  fread(&chunksize,sizeof(int), 1, m_file);
   chunksize = LONG_LE(chunksize);
 		
-  while (*(long*)chunk_id != *(long*)DATA_ID) {
+  while (*(int*)chunk_id != *(int*)DATA_ID) {
 			
     fseek(m_file,chunksize,SEEK_CUR);
     fread(&chunk_id,sizeof(char), 4, m_file);
-    fread(&chunksize,sizeof(long), 1, m_file);
+    fread(&chunksize,sizeof(int), 1, m_file);
     chunksize = LONG_LE(chunksize);
   }
   m_wdata.datasize = chunksize;          
@@ -309,7 +309,7 @@ SndWave::Read(){
 	    tmp[2] = m_s24p[m_vecpos+i].s[1];
 	    tmp[3] = m_s24p[m_vecpos+i].s[2];
 	    tmp[0] = 0;
-	    m_output[m_vecpos+i] = (float) LONG_LE(*(long *) tmp);
+	    m_output[m_vecpos+i] = (float) LONG_LE(*(int *) tmp);
 	  }else m_output[m_vecpos+i] = 0.f;
 	}
       break;
@@ -320,6 +320,7 @@ SndWave::Read(){
   for(m_vecpos=0; m_vecpos < m_samples; m_vecpos++)
     m_output[m_vecpos] = 0.f;
 	
+
   return 0;
 }
 
@@ -345,14 +346,14 @@ SndWave::Write(){
       for(m_vecpos=n=0; m_vecpos < m_samples; m_vecpos+=m_channels, n++)
 	for(i = 0; i < m_channels; i++)
 	  if(m_IOobjs[i])
-	    m_lp[m_vecpos+i] = LONG_LE((long) m_IOobjs[i]->Output(n));
+	    m_lp[m_vecpos+i] = LONG_LE((int) m_IOobjs[i]->Output(n));
       return (short) fwrite(m_lp, m_buffsize, 1, m_file);
     case 24:
-      union { char c[4]; long l;} tmp;
+      union { char c[4]; int l;} tmp;
       for(m_vecpos=n=0; m_vecpos < m_samples; m_vecpos+=m_channels, n++)
 	for(i = 0; i < m_channels; i++)
 	  if(m_IOobjs[i]){ 
-	    tmp.l =  LONG_LE((long)m_IOobjs[i]->Output(n));
+	    tmp.l =  LONG_LE((int)m_IOobjs[i]->Output(n));
 	    m_s24p[m_vecpos+i].s[0] = tmp.c[1];
 	    m_s24p[m_vecpos+i].s[1] = tmp.c[2];
 	    m_s24p[m_vecpos+i].s[2] = tmp.c[3];

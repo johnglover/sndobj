@@ -191,7 +191,7 @@ SndRead::DoProcess(){
 				
 	if(m_pos >= m_count/m_channels){  
 	  m_pos -= (m_count/m_channels);
-	  m_count = m_ioinput->Read();	
+	  m_count = m_ioinput->Read();
 	}
 				
 	if(m_count && m_enable){

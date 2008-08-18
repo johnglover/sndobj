@@ -100,7 +100,7 @@ SndFIO::SndFIO(char* name, short mode, short channels, short bits,
     // these are the pointers used to read/write to the buffer
     m_cp = (char *) m_buffer;
     m_sp = (short *) m_buffer;
-    m_lp = (long *) m_buffer;
+    m_lp = (int *) m_buffer;
     m_s24p = (_24Bit*) m_buffer; 
   }
   else {
@@ -122,6 +122,7 @@ SndFIO::SndFIO(char* name, short mode, short channels, short bits,
 }
 
 SndFIO::~SndFIO(){
+
   if(m_filestat==SFOPEN) {
   delete[] m_buffer;
    fclose(m_file);

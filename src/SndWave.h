@@ -38,22 +38,22 @@ const char     FMT_ID[4]  = {'f','m','t',' '};
 const char     DATA_ID[4] = {'d','a','t','a'};
 
 struct wave_head{
-  long	magic;			// 'RIFF' 
-  long	len0;			// Chunk size = len + 8 + 16 + 12 
-  long	magic1;			// 'WAVE' 
-  long	magic2;			// 'fmt ' 
-  long	len;			// length of header (16)
+  int	magic;			// 'RIFF' 
+  int	len0;			// Chunk size = len + 8 + 16 + 12 
+  int	magic1;			// 'WAVE' 
+  int	magic2;			// 'fmt ' 
+  int	len;			// length of header (16)
   short format;// 1 is PCM (the only format supported) 
   short	nchns;			// Number of channels 
-  long	rate;			// sampling frequency 
-  long	aver;			// Average bytes/sec !! 
+  int	rate;			// sampling frequency 
+  int	aver;			// Average bytes/sec !! 
   short	nBlockAlign;		// (rate*nch +7)/8 
   short	size;			// size of each sample (8,16,32) 
 };
 
 struct wave_data {
-  long	magic3;			// 'data' 
-  long	datasize;		// data chunk size 
+  int	magic3;			// 'data' 
+  int	datasize;		// data chunk size 
 };
 
 
@@ -70,7 +70,7 @@ class SndWave : public SndFIO {
   wave_head m_header;
   wave_data m_wdata;
   short ReadHeader();
-  wave_head PutHeader(long databytes=0, int hdrsize=36, int len=16,
+  wave_head PutHeader(int databytes=0, int hdrsize=36, int len=16,
 		      int format=1); 
 
  public:	
