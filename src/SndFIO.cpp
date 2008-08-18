@@ -122,8 +122,10 @@ SndFIO::SndFIO(char* name, short mode, short channels, short bits,
 }
 
 SndFIO::~SndFIO(){
+  if(m_filestat==SFOPEN) {
   delete[] m_buffer;
-  if(m_filestat==SFOPEN) fclose(m_file);
+   fclose(m_file);
+  }
 }
 
 

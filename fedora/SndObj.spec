@@ -1,12 +1,12 @@
 Name:  SndObj         
 Version: 2.6.6       
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: The Sound Object Library - audio processing library       
 
 Group:   Development/Libraries          
 License:  GPLv2+      
 URL: http://sndobj.sf.net           
-Source0: http://downloads.sourceforge.net/sndobj/%{name}-%{version}-linux.tar.gz          
+Source0: http://downloads.sourceforge.net/sndobj/%{name}-%{version}.1-linux.tar.gz          
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  python scons swig alsa-lib-devel python-devel jack-audio-connection-kit-devel

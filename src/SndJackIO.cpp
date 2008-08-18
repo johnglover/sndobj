@@ -28,6 +28,7 @@
 #include <unistd.h>
 #include "SndJackIO.h"
 
+
 int
 jprocess_callback(jack_nframes_t n_frames, void *arg){
   return ((SndJackIO *)arg)->JProcess(n_frames);
@@ -58,7 +59,7 @@ SndJackIO::SndJackIO(char* name, int channels, int mode, int buffno,
 
 
   m_mode = mode;
-  if((m_client = jack_client_new (name)) == 0){
+  if((m_client = jack_client_open (name, JackNullOption, NULL)) == 0){
     m_error = 11;
     return;
   }

@@ -39,6 +39,7 @@ class SndRead : public SndObj {
   float m_scale;
   int m_channels;
   int m_count;
+  bool m_fileopen;
 
  public:
 

@@ -81,14 +81,16 @@ SndRead::SndRead(char* name, float pitch,
   if(m_ioinput->Error() != 0){
     m_error = 23;
     delete m_ioinput;
-  }
-  m_fileopen = true;
+  } else {
+
+   m_fileopen = true;
   if(m_sr != m_ioinput->GetSr()) m_error = 22;
   m_channels = m_ioinput->GetChannels();
   m_outobj = new SndObj*[m_channels];
   for(i=0;i< m_channels; i++)
     m_outobj[i] = new SndObj(0,vecsize,sr);
-	
+
+  }	
   AddMsg("pitch", 21);
   AddMsg("scale", 22);
 	
@@ -96,9 +98,10 @@ SndRead::SndRead(char* name, float pitch,
 
 SndRead::~SndRead(){
        
-  if(m_fileopen == true) delete m_ioinput;
+  if(m_fileopen == true){
+   delete m_ioinput;
   delete[] m_outobj;
-	
+  }
 }
 
 
@@ -165,7 +168,7 @@ SndRead::SetInput(char* name){
   if(m_ioinput->Error() != 0){
     m_error = 23;
     delete m_ioinput;
-  }
+  } else {
   m_fileopen = true;
 
   if(m_sr != m_ioinput->GetSr()) m_error = 22;
@@ -174,7 +177,7 @@ SndRead::SetInput(char* name){
   m_outobj = new SndObj*[m_channels];
   for(i=0;i< m_channels; i++)
     m_outobj[i] = new SndObj(0,m_vecsize, m_sr);
-	
+  }	
 }
 
 short
