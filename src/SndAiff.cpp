@@ -137,9 +137,9 @@ SndAiff::~SndAiff(){
 	
   if(m_mode != READ){  // OUPUT
     if(m_filestat==SFOPEN){
-      unsigned long datasize;
+      unsigned int datasize;
 #ifndef WIN
-      unsigned long endpos, startpos;
+      unsigned int endpos, startpos;
       fseek(m_file, 0, SEEK_END);
       endpos = ftell(m_file);
       fseek(m_file, sizFormHdr, SEEK_SET);
@@ -158,7 +158,7 @@ SndAiff::~SndAiff(){
       fseek(m_file,sizSoundDataHdr, SEEK_CUR);
       fgetpos(m_file, &startpos);
 #endif
-      datasize = (unsigned long) (endpos - startpos);
+      datasize = (unsigned int) (endpos - startpos);
 			
       double_to_ieee_80((double)m_sr,(unsigned char*)m_comm2.sampleRate);  
       m_header.ckSize1 =
