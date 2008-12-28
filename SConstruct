@@ -617,7 +617,7 @@ if not msvctools:
      print "installing python module in %s" % pydest
      pytems = [ 'python/sndobj.py', '_sndobj.so']
      for i in pytems:
-        env.InstallAs(os.path.join(pydest, i),i)
+        env.InstallAs(os.path.join(pydest, os.path.basename(i)), i)
      #licensedest = prefix + '/share/SndObj/License.txt'
      #env.InstallAs(licensedest, 'License.txt')
 
