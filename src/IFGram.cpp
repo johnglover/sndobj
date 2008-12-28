@@ -152,10 +152,10 @@ IFGram::IFAnalysis(float* signal){
   for(i=2; i<m_fftsize; i+=2){
 
     i2 = i/2;
-    a = m_ffttmp[i2]/m_norm;
-    b = m_ffttmp[m_fftsize-(i2)]/m_norm;
-    da = m_fftdiff[i2]/m_norm;
-    db = m_fftdiff[m_fftsize-(i2)]/m_norm;
+    a = m_ffttmp[i2]*2/m_norm;
+    b = m_ffttmp[m_fftsize-(i2)]*2/m_norm;
+    da = m_fftdiff[i2]*2/m_norm;
+    db = m_fftdiff[m_fftsize-(i2)]*2/m_norm;
     powerspec = a*a+b*b;
 	
     if((m_output[i] = (float)sqrt(powerspec)) != 0.f){
