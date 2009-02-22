@@ -117,12 +117,13 @@ if getPlatform() == 'linux':
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
         perms = env.Command('perms', 'src/AudioDefs.h', "chmod a-x include/SndObj/*.h")
         Depends(perms,hdrs)
+        swigdef = []
 	alsaFound = configure.CheckHeader("alsa/asoundlib.h", language = "C")
 	ossFound = configure.CheckHeader("soundcard.h", language="C")
 	jackFound = configure.CheckHeader("jack/jack.h", language = "C")
 	if alsaFound and env['alsa']:
 	  env.Append(CPPDEFINES="ALSA")
-          swigdef = ['-DALSA']
+          swigdef.append('-DALSA')
           env.Append(LIBS=['asound'])
           print "The library realtime IO (class SndRTIO) will be configured for ALSA"
 	  rtio = True 
