@@ -41,7 +41,6 @@ def getVersion():
     return sys.version[:3]    
 
 def getPlatform():
-    if env['no_rtio']: return 'unsupported'
     if sys.platform[:5] == 'linux':
         return 'linux'
     elif sys.platform[:3] == 'win':
@@ -113,7 +112,8 @@ print "scons tools in this system: ", env['TOOLS']
 cffipath = ''
 pythonlibpath = []
 print "Checking for Realtime IO support..." 
-if getPlatform() == 'linux':
+if not env['no_rtio']:
+ if getPlatform() == 'linux':
         msvctools = False
         print "OS is Linux..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
@@ -145,7 +145,7 @@ if getPlatform() == 'linux':
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
        
    
-if getPlatform() == 'win':
+ if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
 	env.Append(CPPDEFINES="WIN")
         swigdef = ['-DWIN', '-DSWIGFIX', '-D_MSBC']
@@ -180,7 +180,7 @@ if getPlatform() == 'win':
         pythonlibpath.append(env['pythonlibpath'])
         javapath = ["C:\\Program Files\\Java\\jdk1.5.0_05",env['javapath']]
 
-if getPlatform() == 'cygwin':
+ if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
         msvctools = False
 	env.Append(CPPDEFINES=['WIN', 'GCC'])
@@ -192,7 +192,7 @@ if getPlatform() == 'cygwin':
         pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
 
-if getPlatform() == 'macosx':
+ if getPlatform() == 'macosx':
         print "OS is MacOSX"
         msvctools = False
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
@@ -211,7 +211,7 @@ if getPlatform() == 'macosx':
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']]  
 
 
-if getPlatform() == 'sgi':
+ if getPlatform() == 'sgi':
         print "OS is SGI/Irix..."
         msvctools = False
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
@@ -224,8 +224,11 @@ if getPlatform() == 'sgi':
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
        
 
-if getPlatform() == 'unsupported':
+ if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
+       env['no_rtio'] = True
+
+if env['no_rtio']:
        hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
        rtio = False
        swigdef = ['-DNO_RTIO']
@@ -234,6 +237,9 @@ if getPlatform() == 'unsupported':
        jackFound = False
        pythonincpath = ['/usr/include/python%c%c' % (getVersion()[0], getVersion()[2]), env['pythonpath']]      
        javapath = ['/usr/java/include', env['javapath']]
+       if getPlatform() == 'macosx':
+        pythonincpath = [env['pythonpath'], '/Library/Frameworks/Python.framework/Headers', '/System/Library/Frameworks/Python.framework/Headers']
+        javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']] 
 
 if not msvctools:
    flags = "-O2" + env['flags']
