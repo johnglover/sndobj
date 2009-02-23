@@ -28,7 +28,7 @@
 // Victor Lazzarini, 2001
 // Win32 thread code by Rory Walsh, 2006
 
-#ifndef NO_RTIO
+
 #ifndef _SNDRTTHREAD_H
 #define _SNDRTTHREAD_H
 #ifndef NO_RTIO
@@ -74,6 +74,6 @@ void rtthreadfunc(void *);
 #endif   
 
 #endif         
-#endif
+
 
 

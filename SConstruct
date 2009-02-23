@@ -41,6 +41,7 @@ def getVersion():
     return sys.version[:3]    
 
 def getPlatform():
+    if env['no_rtio']: return 'unsupported'
     if sys.platform[:5] == 'linux':
         return 'linux'
     elif sys.platform[:3] == 'win':
@@ -69,6 +70,7 @@ opt.AddOptions(
         BoolOption('javamodule', 'build java module', False),
         BoolOption('lispmodule', 'build CFFI module', False),
         BoolOption('examples', 'build C++ examples', False),
+        BoolOption('no_rtio', 'No RT IO', False),
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python include path (defaults to usual places)', ''),
         ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
@@ -247,6 +249,7 @@ else:
 
 if not rtio:
    env.Prepend(CPPDEFINES=['NO_RTIO'])
+   swigdef = ['-DNO_RTIO']
 
 env.Prepend(CPPPATH= ['include','include/rfftw'])
 swigcheck = 'swig' in env['TOOLS']
