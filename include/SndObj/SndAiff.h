@@ -40,7 +40,7 @@ const char     SSND_ID[4] = {'S','S','N','D'};
 const char     FORM_TYPE[4] = {'A','I','F','F'};
 
 
-typedef unsigned long ID;            // chunk ID
+typedef unsigned int ID;            // chunk ID
 typedef short MrkrID;       // Marker ID
 
 struct CkHdr{
@@ -59,7 +59,7 @@ struct CommChunk1{
 };
 
 struct CommChunk2{
-  long	numSampleFrames;         // ... to accomodate this long  
+  int	numSampleFrames;         // ... to accomodate this long  
   short	sampleSize;
   char    sampleRate[10];          // 80-bit extended value     
 };
@@ -88,21 +88,21 @@ struct InstrChunk{
 
 struct SoundDataHdr{
   CkHdr	ckHdr;
-  long	offset;
-  long	blockSize;
+  int	offset;
+  int	blockSize;
 };
 
 
 struct aiff_head{
   ID	ckID1;              // 'FORM'	
-  long ckSize1;          
+  int   ckSize1;          
   ID	formType;           // 'AIFF'
   ID	ckID2;              // 'COMM'
-  long ckSize2;
+  int  ckSize2;
   short nchns;
-  long numSampleFrames;           
+  int  numSampleFrames;           
   short size;
-  long  rate;         
+  int  rate;         
 };
 
 

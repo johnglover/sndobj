@@ -7,6 +7,9 @@ from Tkinter import *
 import sndobj
 import math
 
+# set the IO buffersize here
+BUFFERSIZE = 2048
+
 # this is our computer instrument
 # basically an oscillator and a filter
 class Instrument:
@@ -38,7 +41,8 @@ class Instrument:
         self.env = sndobj.Interp(0, 0, 0.02)
         self.osc = sndobj.Oscili(self.tab, 440, 0, None, self.env)
         self.fil = sndobj.Lp(100,0.5,self.osc)
-        self.outp = sndobj.SndRTIO(self.fil)
+        self.outp = sndobj.SndRTIO(1, sndobj.SND_OUTPUT, BUFFERSIZE)
+        self.outp.SetOutput(1, self.fil)
         self.thread = sndobj.SndThread(0, None, self.outp)
         self.thread.AddObj(self.env)
         self.thread.AddObj(self.osc)

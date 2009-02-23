@@ -27,7 +27,7 @@ def callb(data):
 harm = HarmTable(10000,1,1)
 mod = Oscili(harm, 10, 10000)
 osc = Oscili(harm, 400, 0)
-outp = SndRTIO(1, SND_OUTPUT, 2048)
+outp = SndRTIO(1, SND_OUTPUT, 4096)
 outp.SetOutput(1, osc)
 thread = SndThread()
 

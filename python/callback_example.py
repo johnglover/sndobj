@@ -33,7 +33,7 @@ osc.SetFreq(440, mod)
 tes = test(100)
 dat = (osc, tes, mod)
 if sys.platform[:6] == "darwin":
-  outp = SndCoreAudio(2)
+  outp = SndCoreAudio(2, 2048)
   outp.SetOutput(1, osc)
   outp.SetOutput(2, osc)
 else:
@@ -56,8 +56,7 @@ t.SetProcessCallback(callc,dat)
 tes.set(1000)
 t.RestoreVectorSize()
 time.sleep(2)
-
 t.ProcOff()
-
+time.sleep(2)
 
 

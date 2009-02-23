@@ -232,7 +232,7 @@ static void PythonCallback(void *p){
     else Py_DECREF(res);    
    PyEval_ReleaseThread(t->_tstate);
 }
-
+#ifndef NO_RTIO
 static void PythonCallback1(void *p){
 
     PyObject *res;
@@ -247,7 +247,7 @@ static void PythonCallback1(void *p){
     else Py_DECREF(res);     
     PyEval_ReleaseThread(t->_tstate1);
 }
-
+#endif   
 %}
 
 %ignore SndThread::SetProcessCallback(void (*Callback)(void *), void *cbdata);
@@ -270,7 +270,7 @@ static void PythonCallback1(void *p){
   }
 }
 
-
+#ifndef NO_RTIO
 %extend SndRTThread {
    // Set the Python callback
    void SetProcessCallback(PyObject *pyfunc, PyObject *p){
@@ -286,6 +286,7 @@ static void PythonCallback1(void *p){
 
   }
 }
+#endif   
 #endif 
 
 

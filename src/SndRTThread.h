@@ -31,7 +31,7 @@
 #ifndef NO_RTIO
 #ifndef _SNDRTTHREAD_H
 #define _SNDRTTHREAD_H
-
+#ifndef NO_RTIO
 #include "SndThread.h"
 #include "Mix.h"
 #include "SndIn.h"
@@ -70,6 +70,8 @@ class SndRTThread : public SndThread {
 };
 
 void rtthreadfunc(void *);
+
+#endif   
 
 #endif         
 #endif
