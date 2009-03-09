@@ -208,18 +208,18 @@ class SndObj {
 
 #endif 
 
-  int PushIn(float *vector, int size){
+  int PushIn(float *in_vector, int size){
     for(int i = 0; i<size; i++){
       if(m_vecpos >= m_vecsize) m_vecpos = 0;
-      m_output[m_vecpos++] = vector[i];
+      m_output[m_vecpos++] = in_vector[i];
     }
     return m_vecpos;
   }
 
-  int PopOut(float *vector, int size){
+  int PopOut(float *out_vector, int size){
     for(int i = 0; i<size; i++){
       if(m_altvecpos >= m_vecsize) m_altvecpos = 0;
-      vector[i] = m_output[m_altvecpos++]; 
+      out_vector[i] = m_output[m_altvecpos++]; 
     }
     return m_altvecpos;
   }

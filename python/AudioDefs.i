@@ -177,15 +177,32 @@
 #include "PVTable.h"         // PV  frame
 #include "ImpulseTable.h"    // linear FIR coeffs 
 
+#define SWIG_FILE_WITH_INIT
 %}
 
+#ifdef NUMPY
+%include "numpy.i"
+%init %{
+    import_array();
+%}
+#endif
 
 %ignore SndObj::SndObj(SndObj &);
 %ignore SndObj::operator=(SndObj);
 %ignore Pitch::Pitch(float, SndObj*, int =0, int =DEF_VECSIZE, float =DEF_SR);
 
+#ifdef NUMPY
+%apply(float* IN_ARRAY1, int DIM1) {(float* in_vector, int size)};
+%apply(float* INPLACE_ARRAY1, int DIM1) {(float* out_vector, int size)};
+#endif
 
 %include"SndObj.h"
+
+#ifdef NUMPY
+%clear(float* in_vector, int size);
+%clear(float* out_vector, int size);
+#endif
+
 %include"SndIO.h" 
 %include"Table.h"
 

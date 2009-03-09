@@ -66,6 +66,7 @@ opt.AddOptions(
         ('pddir', 'PD directory on windows', 'C:\\PureData'),
         BoolOption('nostaticlib', 'do not build static library', True),
         BoolOption('pythonmodule', 'build python module', False),
+        BoolOption('numpy', 'include support for numpy arrays', False),
         BoolOption('javamodule', 'build java module', False),
         BoolOption('lispmodule', 'build CFFI module', False),
         BoolOption('examples', 'build C++ examples', False),
@@ -390,6 +391,8 @@ Depends(sndobjlib, hdrs)
 if swigcheck and env['pythonmodule'] and pythonh:
   pswigdef = swigdef
   pswigdef.append(['-lcarrays.i', '-c++', '-python','-Isrc', '-v'])
+  if env['numpy']:
+    pswigdef.append('-DNUMPY')
   pysndobj.Append(SWIGFLAGS=pswigdef)
   pysndobj.Append(LIBPATH='./lib')
   pysndobj.Append(CPPDEFINES=['SWIG','PYTHON_WRAP'])
