@@ -10,6 +10,6 @@ Package: python-sndobj
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, python, python-numpy, libasound2, libjack0
 Description: An object-oriented audio processing library.
- The Sound Object Library is an object-oriented audio processing library. It
- provides objects for synthesis and processing of sound that can be used to
- build applications for computer-generated music.
+ The Sound Object Library is an object-oriented audio processing library.
+ It provides objects for synthesis and processing of sound that can be
+ used to build applications for computer-generated music.

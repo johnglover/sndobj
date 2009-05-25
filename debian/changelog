@@ -1,5 +1,5 @@
-python-sndobj (2.6.99-1) unstable; urgency=low
+python-sndobj (2.6.99-7) unstable; urgency=high
 
-  * Initial release
+  * Fixing install error in automated build rules
 
  -- Daniel Skinner <dasacc22@gmail.com>  Mon, 25 May 2009 10:33:42 -0400
