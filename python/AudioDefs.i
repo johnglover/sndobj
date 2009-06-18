@@ -38,6 +38,7 @@
 #include "Oscilt.h"
 #include "Oscili.h"
 #include "FastOsc.h"
+#include "PhOscili.h"
 #include "Osc.h"
 #include "Osci.h"
 
@@ -312,6 +313,7 @@ static void PythonCallback1(void *p){
 %include "Oscilt.h"
 %include "Oscili.h"
 %include "FastOsc.h"
+%include "PhOscili.h"
 %include "Osc.h"
 %include "Osci.h"
 
