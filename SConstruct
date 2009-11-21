@@ -155,9 +155,10 @@ if not env['no_rtio']:
           hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy  src\\*.h include\\SndObj")
           separateLibs = False
           print 'using MSVC...'
-          includes = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\include"
-          libs = "C:\\Program Files\\Microsoft Visual Studio\\VC98\\lib"
-          env.Append(CPPPATH=['msvc6.0'])
+          includes = ["C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Include", "C:\\pthreads\\pthreads.2", \
+                      "C:\\Python%c%c\\Lib\\site-packages\\numpy\\core\\include\\" % (getVersion()[0], getVersion()[2])]
+          libs = ["C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Lib"]
+          env.Append(CPPPATH=['msvc9.0'])
           pythonlib=''
           env.Append(LIBS=['pthreadVC', 'advapi32', 'user32'])
         else: # mingw ? Set any outstanding mingwin paths here
@@ -170,8 +171,8 @@ if not env['no_rtio']:
           includes = ''
           libs     = ''
           pythonlib = 'python%c%c'% (getVersion()[0], getVersion()[2])
-        env.Append(CPPPATH=[includes])
- 	env.Append(LIBPATH=[libs])
+        env.Append(CPPPATH=includes)
+ 	env.Append(LIBPATH=libs)
  	env.Append(LIBPATH=['lib'])
         env.Append(LIBS=['winmm'])
         rtio = True
@@ -245,7 +246,7 @@ if env['no_rtio']:
 if not msvctools:
    flags = "-O2" + env['flags']
 else:
-   flags = "-GX -GB -O2" + env['flags']
+   flags = "-EHsc -O2" + env['flags']
    
 #check endianness
 if sys.byteorder == "big":
@@ -596,8 +597,19 @@ pydest = env['instdir'] + distutils.sysconfig.get_python_lib()
 prefix = env['instdir'] + env['prefix']
 print env['instdir']
 
-if not msvctools:
-
+if msvctools:
+  prefix = ''
+  if env['pythonmodule']:
+    print "installing python module in %s" % pydest
+    f = open('python/__init__.py', 'wt')
+    f.write('from sndobj import *')
+    f.close()
+    pytems = ['python/sndobj.py', 'python/_sndobj.pyd', 'python/sndobj.exp', \
+              'python/sndobj.lib', 'python/__init__.py', 'lib/pthreadVC.dll', \
+              'lib/pthreadVC.lib']
+    for i in pytems:
+      env.InstallAs(os.path.join(pydest, 'sndobj', os.path.basename(i)), i)
+else:
   if getPlatform() == 'macosx':
     libdest = prefix+'/lib/libsndobj.dylib'
     inst = env.Command('libsndobj.dylib', sndobjlib, "cp ./lib/libsndobj.dylib .;install_name_tool -id %s %s" % (libdest, 'libsndobj.dylib'))
