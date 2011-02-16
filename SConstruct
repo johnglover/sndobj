@@ -71,6 +71,7 @@ opt.AddOptions(
         BoolOption('lispmodule', 'build CFFI module', False),
         BoolOption('examples', 'build C++ examples', False),
         BoolOption('no_rtio', 'No RT IO', False),
+        BoolOption('useASIO', 'Use ASIO, requires ASIO SDK files to be place in ./src/asio', False),
         ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
         ('pythonpath', 'python include path (defaults to usual places)', ''),
         ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
@@ -108,7 +109,7 @@ env.Prepend(SWIGFLAGS = customSWIGFLAGS)
 
 print "Building the Sound Object Library"
 configure = env.Configure()
-
+buildasio = 0
 print "scons tools in this system: ", env['TOOLS']
 cffipath = ''
 pythonlibpath = []
@@ -175,6 +176,7 @@ if not env['no_rtio']:
  	env.Append(LIBPATH=libs)
  	env.Append(LIBPATH=['lib'])
         env.Append(LIBS=['winmm'])
+        if env['buildASIO']: buildasio = 1
         rtio = True
         jackFound = False
         pythonincpath = ['c:\\Python%c%c\include' % (getVersion()[0], getVersion()[2]), env['pythonpath']]
@@ -311,7 +313,9 @@ SpecVoc.cpp  Ptrack.cpp""")
 sndiosources = Split("""SndIO.cpp SndRTIO.cpp SndFIO.cpp 
 SndWave.cpp SndAiff.cpp SndBuffer.cpp 
 SndMidi.cpp SndMidiIn.cpp SndWaveX.cpp 
-SndPVOCEX.cpp SndSinIO.cpp  SndCoreAudio.cpp SndJackIO.cpp SndASIO.cpp """)
+SndPVOCEX.cpp SndSinIO.cpp  SndCoreAudio.cpp SndJackIO.cpp """)
+
+if buildasio == 1: sndiosources.append(" SndASIO.cpp ");
 
 tablesources = Split("""HarmTable.cpp UsrHarmTable.cpp 
 TrisegTable.cpp SndTable.cpp PlnTable.cpp 
@@ -374,7 +378,10 @@ if getPlatform() != 'win':
 else:
   if separateLibs:
    rfftwlib = env.Library('lib/rfftw', rfftsources, CCFLAGS=flags)
-   sndobjlib = env.Library('lib/sndobj', sndsources+asiosources, CCFLAGS=flags)
+   if buildasio == 1:
+     sndobjlib = env.Library('lib/sndobj', sndsources+asiosources, CCFLAGS=flags)
+   else:
+     sndobjlib = env.Library('lib/sndobj', sndsources, CCFLAGS=flags)
    deplibs = [sndobjlib, rfftwlib]
    baselibs = ['sndobj', 'rfftw']
    libdest = 'libsndobj.a'

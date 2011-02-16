@@ -124,7 +124,7 @@ SndAiff::SndAiff(char* name, short mode, short channels, short bits,
     }
 		
     // these are the pointers used to read the buffer
-    m_cp = (char *) m_buffer;
+    m_cp = (unsigned char *) m_buffer;
     m_sp = (short *) m_buffer;
     m_lp = (int *) m_buffer;
     m_s24p = (_24Bit *) m_buffer;
