@@ -1,6 +1,18 @@
 The Sound Object Library 
+========================
+
+The build system has been tested on Linux, OSX and
+Windows (under MSVC and mingw; but is untested under cygwin)
+
+Thanks to Tim Blechmann for the original 
+SConstruct code.
+
+
+VL, 2006
+
 
 Build instructions
+------------------
 
 1. Requirements
    a. ANSI C/C++ compilers (such as gcc/g++)
@@ -21,10 +33,10 @@ Build instructions
    prefix, etc, try 'scons -H' (basic options)
    and 'scons -h' (SndObj-specific options)
 
-The build system has been tested on Linux, OSX and
-Windows (under MSVC and mingw; but is untested under cygwin)
 
-Thanks to Tim Blechmann for the original 
-SConstruct code.
+Note for OS X 10.6 Users:
+-------------------------
 
-VL, 2006
+To build the Python module for both 32-bit and 64-bit architectures, you may need to call scons with the following argument:
+
+    customCCFLAGS='-arch x86_64 -arch i386 -isysroot /Developer/SDKs/MacOSX10.6.sdk' 
