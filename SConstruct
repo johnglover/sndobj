@@ -29,13 +29,10 @@ import distutils.sysconfig
 
 env = Environment(ENV = {'PATH' : os.environ['PATH']})
 env.SConsignFile()
-# env.CacheDir('./obj')
 
 ######################################################################
 #
 # general configuration
-
-
 
 def getVersion():
     return sys.version[:3]    
@@ -45,9 +42,9 @@ def getPlatform():
         return 'linux'
     elif sys.platform[:3] == 'win':
         if env['PLATFORM'] == 'win32':
-        	return 'win'
-	else:
-		return 'cygwin'
+            return 'win'
+        else:
+            return 'cygwin'
     elif sys.platform[:6] == 'darwin':
         return 'macosx'
     elif sys.platform[:4] == 'irix' :
@@ -57,34 +54,34 @@ def getPlatform():
 
 opt = Options(['options.cache'])
 opt.AddOptions(
-	BoolOption('alsa', 'on linux, build with alsa support', True),
-	BoolOption('oss',  'on unix or linux, build with OSS support', False),
-        BoolOption('jack', 'on linux or OSX, build with Jack support', True),
-	('flags', 'additional compile flags', ""),
-	('prefix', 'install prefix of headers, static lib and shared lib', '/usr/local'),
-        ('instdir', 'base directory', ''), 
-        ('pddir', 'PD directory on windows', 'C:\\PureData'),
-        BoolOption('nostaticlib', 'do not build static library', True),
-        BoolOption('pythonmodule', 'build python module', False),
-        BoolOption('numpy', 'include support for numpy arrays', False),
-        BoolOption('javamodule', 'build java module', False),
-        BoolOption('lispmodule', 'build CFFI module', False),
-        BoolOption('examples', 'build C++ examples', False),
-        BoolOption('no_rtio', 'No RT IO', False),
-        BoolOption('useASIO', 'Use ASIO, requires ASIO SDK files to be place in ./src/asio', False),
-        ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
-        ('pythonpath', 'python include path (defaults to usual places)', ''),
-        ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
-        ('javapath', 'java headers path (defaults to usual places)', ''),
-        ('customCPPPATH', '',''),
-        ('customCCFLAGS', '',''),
-        ('customCXXFLAGS','',''),
-        ('customLIBS','',''),
-        ('customLIBPATH','',''),
-        ('customSHLINKFLAGS','',''),
-        ('customSWIGFLAGS','',''),
-        ('version', 'library version','2.6.5')
-	)
+    BoolOption('alsa', 'on linux, build with alsa support', True),
+    BoolOption('oss',  'on unix or linux, build with OSS support', False),
+    BoolOption('jack', 'on linux or OSX, build with Jack support', True),
+    ('flags', 'additional compile flags', ""),
+    ('prefix', 'install prefix of headers, static lib and shared lib', '/usr/local'),
+    ('instdir', 'base directory', ''), 
+    ('pddir', 'PD directory on windows', 'C:\\PureData'),
+    BoolOption('nostaticlib', 'do not build static library', True),
+    BoolOption('pythonmodule', 'build python module', False),
+    BoolOption('numpy', 'include support for numpy arrays', False),
+    BoolOption('javamodule', 'build java module', False),
+    BoolOption('lispmodule', 'build CFFI module', False),
+    BoolOption('examples', 'build C++ examples', False),
+    BoolOption('no_rtio', 'No RT IO', False),
+    BoolOption('useASIO', 'Use ASIO, requires ASIO SDK files to be place in ./src/asio', False),
+    ('install_name', 'on OSX, the dynamic library full install pathname (before installation)', 'lib/libsndobj.dylib'),
+    ('pythonpath', 'python include path (defaults to usual places)', ''),
+    ('pythonlibpath', 'python lib path (WIN only,defaults to usual places)', ''),
+    ('javapath', 'java headers path (defaults to usual places)', ''),
+    ('customCPPPATH', '',''),
+    ('customCCFLAGS', '',''),
+    ('customCXXFLAGS','',''),
+    ('customLIBS','',''),
+    ('customLIBPATH','',''),
+    ('customSHLINKFLAGS','',''),
+    ('customSWIGFLAGS','',''),
+    ('version', 'library version','2.6.5')
+)
 
 opt.Update(env)
 opt.Save('options.cache',env)
@@ -113,68 +110,69 @@ buildasio = 0
 print "scons tools in this system: ", env['TOOLS']
 cffipath = ''
 pythonlibpath = []
+
 print "Checking for Realtime IO support..." 
 if not env['no_rtio']:
- if getPlatform() == 'linux':
+
+    if getPlatform() == 'linux':
         msvctools = False
         print "OS is Linux..."
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
         perms = env.Command('perms', 'src/AudioDefs.h', "chmod a-x include/SndObj/*.h")
         Depends(perms,hdrs)
         swigdef = []
-	alsaFound = configure.CheckHeader("alsa/asoundlib.h", language = "C")
-	ossFound = configure.CheckHeader("soundcard.h", language="C")
-	jackFound = configure.CheckHeader("jack/jack.h", language = "C")
-	if alsaFound and env['alsa']:
-	  env.Append(CPPDEFINES="ALSA")
-          swigdef.append('-DALSA')
-          env.Append(LIBS=['asound'])
-          print "The library realtime IO (class SndRTIO) will be configured for ALSA"
-	  rtio = True 
-	elif ossFound and env['oss']:
-	  env.Append(CPPDEFINES="OSS")
-          print "The library realtime IO (class SndRTIO) will be configured for OSS"
-          rtio = True
+        alsaFound = configure.CheckHeader("alsa/asoundlib.h", language = "C")
+        ossFound = configure.CheckHeader("soundcard.h", language="C")
+        jackFound = configure.CheckHeader("jack/jack.h", language = "C")
+        if alsaFound and env['alsa']:
+            env.Append(CPPDEFINES="ALSA")
+            swigdef.append('-DALSA')
+            env.Append(LIBS=['asound'])
+            print "The library realtime IO (class SndRTIO) will be configured for ALSA"
+            rtio = True 
+        elif ossFound and env['oss']:
+            env.Append(CPPDEFINES="OSS")
+            print "The library realtime IO (class SndRTIO) will be configured for OSS"
+            rtio = True
         else:
-          print "No alsa or OSS RT support"
-          rtio = False  
-	if jackFound:
-          env.Append(CPPDEFINES=Split('JACK'))
-          env.Append(LIBS=['jack'])
-          swigdef.append('-DJACK')
-          print "The library will include support for Jack (Class SndJackIO)"
+            print "No alsa or OSS RT support"
+            rtio = False  
+        if jackFound:
+            env.Append(CPPDEFINES=Split('JACK'))
+            env.Append(LIBS=['jack'])
+            swigdef.append('-DJACK')
+            print "The library will include support for Jack (Class SndJackIO)"
         pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
-       
    
- if getPlatform() == 'win':
+    if getPlatform() == 'win':
         print "OS is Windows, environment is win32..."
-	env.Append(CPPDEFINES="WIN")
+        env.Append(CPPDEFINES="WIN")
         swigdef = ['-DWIN', '-DSWIGFIX', '-D_MSBC']
         if 'msvc'in env['TOOLS']: # MSVC
-          msvctools = True
-          hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy  src\\*.h include\\SndObj")
-          separateLibs = False
-          print 'using MSVC...'
-          includes = ["C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Include", "C:\\pthreads\\pthreads.2", \
-                      "C:\\Python%c%c\\Lib\\site-packages\\numpy\\core\\include\\" % (getVersion()[0], getVersion()[2])]
-          libs = ["C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Lib"]
-          env.Append(CPPPATH=['msvc9.0'])
-          pythonlib=''
-          env.Append(LIBS=['pthreadVC', 'advapi32', 'user32'])
+            msvctools = True
+            hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "copy  src\\*.h include\\SndObj")
+            separateLibs = False
+            print 'using MSVC...'
+            includes = ["C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Include", "C:\\pthreads\\pthreads.2", \
+                        "C:\\Python%c%c\\Lib\\site-packages\\numpy\\core\\include\\" % (getVersion()[0], getVersion()[2])]
+            libs = ["C:\\Program Files\\Microsoft SDKs\\Windows\\v6.0A\\Lib"]
+            env.Append(CPPPATH=['msvc9.0'])
+            pythonlib=''
+            env.Append(LIBS=['pthreadVC', 'advapi32', 'user32'])
         else: # mingw ? Set any outstanding mingwin paths here
-          msvctools = False
-          hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
-          separateLibs = True
-          print 'using MINGW...'
-          env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
-          swigdef.append(['-DUSE_WIN32THREADS'])
-          includes = ''
-          libs     = ''
-          pythonlib = 'python%c%c'% (getVersion()[0], getVersion()[2])
+            msvctools = False
+            hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
+            separateLibs = True
+            print 'using MINGW...'
+            env.Append(CPPDEFINES=['GCC', 'USE_WIN32THREADS'])
+            swigdef.append(['-DUSE_WIN32THREADS'])
+            includes = ''
+            libs     = ''
+            pythonlib = 'python%c%c'% (getVersion()[0], getVersion()[2])
         env.Append(CPPPATH=includes)
- 	env.Append(LIBPATH=libs)
- 	env.Append(LIBPATH=['lib'])
+        env.Append(LIBPATH=libs)
+        env.Append(LIBPATH=['lib'])
         env.Append(LIBS=['winmm'])
         if env['buildASIO']: buildasio = 1
         rtio = True
@@ -184,10 +182,10 @@ if not env['no_rtio']:
         pythonlibpath.append(env['pythonlibpath'])
         javapath = ["C:\\Program Files\\Java\\jdk1.5.0_05",env['javapath']]
 
- if getPlatform() == 'cygwin':
+    if getPlatform() == 'cygwin':
         print "OS is Windows, environment is Cygwin..."
         msvctools = False
-	env.Append(CPPDEFINES=['WIN', 'GCC'])
+        env.Append(CPPDEFINES=['WIN', 'GCC'])
         swigdef = ['-DWIN', '-DSWIGFIX', '-D_MBCS']
         env.Append(LIBS=['winmm', 'pthread'])
         env.Append(LIBPATH=['lib'])
@@ -196,26 +194,25 @@ if not env['no_rtio']:
         pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
 
- if getPlatform() == 'macosx':
+    if getPlatform() == 'macosx':
         print "OS is MacOSX"
         msvctools = False
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
-	env.Append(CPPDEFINES="MACOSX")
+        env.Append(CPPDEFINES="MACOSX")
         swigdef = ['-DMACOSX']
-	env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
+        env.Append(CPPPATH=["/system/library/Frameworks/CoreAudio.framework/Headers"])
         env.Append(LINKFLAGS= ['-framework', 'coreaudio'])
         jackFound = configure.CheckHeader("jack/jack.h", language = "C")
         if jackFound:
-	  env.Append(CPPDEFINES=Split('JACK'))
-          env.Append(LIBS=Split('jack'))
-          swigdef.append('-DJACK')
-          print "The library will include support for Jack (Class SndJackIO)" 
+            env.Append(CPPDEFINES=Split('JACK'))
+            env.Append(LIBS=Split('jack'))
+            swigdef.append('-DJACK')
+            print "The library will include support for Jack (Class SndJackIO)" 
         rtio = True
-        pythonincpath = [env['pythonpath'], '/Library/Frameworks/Python.framework/Headers', '/System/Library/Frameworks/Python.framework/Headers']
+        pythonincpath = [env['pythonpath'], distutils.sysconfig.get_python_inc()] 
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']]  
 
-
- if getPlatform() == 'sgi':
+    if getPlatform() == 'sgi':
         print "OS is SGI/Irix..."
         msvctools = False
         hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
@@ -227,23 +224,25 @@ if not env['no_rtio']:
         pythonincpath = ['/usr/include/python' + getVersion(), env['pythonpath']]
         javapath =   ['/usr/lib/java/jvm/include', env['javapath']]
        
-
- if getPlatform() == 'unsupported':
+    if getPlatform() == 'unsupported':
        print "Realtime IO not supported on this platform: %s" % sys.platform
        env['no_rtio'] = True
 
+
 if env['no_rtio']:
-       hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
-       rtio = False
-       swigdef = ['-DNO_RTIO']
-       env.Append(LIBS=['pthread'])
-       msvctools = False
-       jackFound = False
-       pythonincpath = ['/usr/include/python%c%c' % (getVersion()[0], getVersion()[2]), env['pythonpath']]      
-       javapath = ['/usr/java/include', env['javapath']]
-       if getPlatform() == 'macosx':
-        pythonincpath = [env['pythonpath'], '/Library/Frameworks/Python.framework/Headers', '/System/Library/Frameworks/Python.framework/Headers']
+    hdrs = env.Command('include/SndObj/AudioDefs.h', 'src/AudioDefs.h', "cp -f src/*.h include/SndObj")
+    rtio = False
+    swigdef = ['-DNO_RTIO']
+    env.Append(LIBS=['pthread'])
+    msvctools = False
+    jackFound = False
+    pythonincpath = ['/usr/include/python%c%c' % (getVersion()[0], getVersion()[2]), env['pythonpath']]      
+    javapath = ['/usr/java/include', env['javapath']]
+
+    if getPlatform() == 'macosx':
+        pythonincpath = [env['pythonpath'], distutils.sysconfig.get_python_inc()] 
         javapath = ['/System/Library/Frameworks/JavaVM.framework', env['javapath']] 
+
 
 if not msvctools:
    flags = "-O2" + env['flags']
@@ -267,11 +266,21 @@ print 'swig %s' % (["doesn't exist", "exists..."][int(swigcheck)])
 
 pythonh = configure.CheckHeader("Python.h", language = "C")
 if not pythonh:
- for i in pythonincpath:
-    pythonh = configure.CheckHeader("%s/Python.h" % i, language = "C")
-    if pythonh:
-      print "Python version is " + getVersion()
-      break
+    for i in pythonincpath:
+        pythonh = configure.CheckHeader("%s/Python.h" % i, language = "C")
+        if pythonh:
+            print "Python version is " + getVersion()
+            # add the numpy include path
+            try:
+                import numpy
+                try:
+                    numpy_include = numpy.get_include()
+                except AttributeError:
+                    numpy_include = numpy.get_numpy_include()
+            except:
+                pass
+            pythonincpath.append(numpy_include)
+            break
 
 if not pythonh:
     print "Python headers are missing... cannot build python module"
@@ -283,6 +292,7 @@ examples = env.Clone()
 
 if getPlatform() == 'linux':
       env.Append(SHLINKFLAGS=['-Wl,-soname=libsndobj.so.%s'% version])
+
 ######################################################################
 #
 # sources
@@ -322,7 +332,7 @@ TrisegTable.cpp SndTable.cpp PlnTable.cpp
 HammingTable.cpp NoteTable.cpp UsrDefTable.cpp 
 LoPassTable.cpp ImpulseTable.cpp 
 SpecEnvTable.cpp  EnvTable.cpp PVEnvTable.cpp PVTable.cpp""")
-					 
+
 sndthrsources = Split("""SndThread.cpp SndRTThread.cpp""")
 
 fftwsources = Split("""config.c  fcr_9.c fhf_6.c fn_8.c  frc_1.c  ftw_16.c ftwi_7.c \
@@ -349,7 +359,7 @@ asios = Split("""iasiothiscallresolver.cpp asiodrivers.cpp asio.cpp asiolist.cpp
 
 
 sndsources = map(lambda x: './src/' + x, sndobjsources + sndiosources \
-			  + tablesources + sndthrsources) 
+    + tablesources + sndthrsources) 
 rfftsources = map(lambda x: './src/rfftw/' + x, fftwsources)
 
 asiosources = map(lambda x: './src/asio/' + x, asios)
@@ -544,16 +554,16 @@ if jackFound:
        Depends(streson_jack, deplibs)
 # realtime IO examples
 if rtio:
-	rtschroeder = BuildExample('./bin/rtschroeder','./obj/rtschroeder.o', 'src/examples/rtschroeder.cpp')
-        Depends(rtschroeder, deplibs)
-	streson = BuildExample('./bin/streson','./obj/streson.o', 'src/examples/streson.cpp')
-        Depends(streson, deplibs)       
-	blurring = BuildExample('./bin/blurring','./obj/blurring.o', 'src/examples/blurring.cpp')
-        Depends(blurring, deplibs)
-	harmonise = BuildExample('./bin/harmonise','./obj/harmonise.o', 'src/examples/harmonise.cpp')
-        Depends(harmonise, deplibs)
-	transpose = BuildExample('./bin/transpose','./obj/transpose.o', 'src/examples/transpose.cpp')
-        Depends(transpose, deplibs)
+    rtschroeder = BuildExample('./bin/rtschroeder','./obj/rtschroeder.o', 'src/examples/rtschroeder.cpp')
+    Depends(rtschroeder, deplibs)
+    streson = BuildExample('./bin/streson','./obj/streson.o', 'src/examples/streson.cpp')
+    Depends(streson, deplibs)       
+    blurring = BuildExample('./bin/blurring','./obj/blurring.o', 'src/examples/blurring.cpp')
+    Depends(blurring, deplibs)
+    harmonise = BuildExample('./bin/harmonise','./obj/harmonise.o', 'src/examples/harmonise.cpp')
+    Depends(harmonise, deplibs)
+    transpose = BuildExample('./bin/transpose','./obj/transpose.o', 'src/examples/transpose.cpp')
+    Depends(transpose, deplibs)
 # schroeder
 schroeder = BuildExample('./bin/schroeder','./obj/schroeder.o', 'src/examples/schroeder.cpp')
 Depends(schroeder, deplibs)
@@ -654,19 +664,19 @@ else:
      #env.InstallAs(licensedest, 'License.txt')
 
   if not env['nostaticlib']:
-	env.Install(libdest, sndobjliba)
+    env.Install(libdest, sndobjliba)
   incdest = prefix + '/include/SndObj/'
   headers = map(lambda x: './include/SndObj/' + x, os.listdir('./include/SndObj'))
   for header in headers:
     if(header != './include/SndObj/CVS' and header[17] != '.'):
         #env.Execute(Chmod(header, 0555))
-  	env.Install(incdest, header)
+      env.Install(incdest, header)
   rfftw_headers = map(lambda x: './include/rfftw/' + x, os.listdir('./include/rfftw'))
   rfftw_incdest = prefix + '/include/rfftw/'
   for header in rfftw_headers:
     if(header != './include/rfftw/CVS'):
         #env.Execute(Chmod(header, 0555))
-  	env.Install(rfftw_incdest, header)
+      env.Install(rfftw_incdest, header)
   if getPlatform() == 'win':
    other_headers = map(lambda x: './include/' + x, os.listdir('./include/'))
    other_incdest = prefix + '/include/'
@@ -675,6 +685,6 @@ else:
      if(header != './include/rfftw'):
        if(header != './include/CVS'):
          if(header != './include/SndObj'):
-  	   env.Install(other_incdest, header)
+           env.Install(other_incdest, header)
 
 env.Alias('install', [prefix,pydest]) 
