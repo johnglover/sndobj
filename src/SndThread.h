@@ -43,7 +43,9 @@
 #include <pthread.h>
 #endif
 
-
+#ifdef PYTHON_WRAP
+#include "Python.h"
+#endif
 
 template<class s>  
 struct SndLink{      // SndObj / SndIO lists links       
