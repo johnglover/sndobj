@@ -34,9 +34,13 @@ Build instructions
    and 'scons -h' (SndObj-specific options)
 
 
-Note for OS X 10.6 Users:
--------------------------
+Note for Python users on OSX 10.6:
+----------------------------------
 
 To build the Python module for both 32-bit and 64-bit architectures, you may need to call scons with the following argument:
 
     customCCFLAGS='-arch x86_64 -arch i386 -isysroot /Developer/SDKs/MacOSX10.6.sdk' 
+
+Or, you can use the setup.py file in the python folder, which will also work with virtualenv:
+
+    python setup.py install
