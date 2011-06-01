@@ -10,7 +10,7 @@ if platform != 'Darwin':
     print "         You can also install the Python module using the main scons script."
 
 # options
-build_asio = False
+use_asio = False
 use_numpy = True
 
 # get numpy include directory
@@ -94,13 +94,16 @@ sndobj_sources = map(lambda x: '../src/' + x, obj_sources + sndio_sources \
     + table_sources + sndthr_sources) 
 sndobj_sources.extend(map(lambda x: '../src/rfftw/' + x, fftw_sources))
 sndobj_sources.append("AudioDefs.i")
-if build_asio:
+if use_asio:
     sndobj_sources.append("../src/SndASIO.cpp")
     asios =  """iasiothiscallresolver.cpp asiodrivers.cpp asio.cpp asiolist.cpp""".split()
     sndobj_sources.extend(map(lambda x: '../src/asio/' + x, asios))
 
 link_args = [] 
 macros = [('PYTHON_WRAP', None)]
+swig_opts = ['-c++', '-I../src']
+if use_numpy:
+    swig_opts.append('-DNUMPY')
 include_dirs = [numpy_include, '/usr/local/include', 
     '../include', '../include/rfftw', '../src/'] 
 
@@ -115,7 +118,7 @@ pysndobj = Extension("_sndobj",
                      include_dirs=include_dirs,
                      define_macros=macros,
                      extra_link_args=link_args,
-                     swig_opts=['-c++', '-I../src']) 
+                     swig_opts=swig_opts)
 
 setup(name='SndObj',
       version='2.6.99',
