@@ -41,12 +41,15 @@ SndThread::SndThread(){
   status = OFF;
 #ifndef USE_WIN32THREADS
   pthread_attr_init(&attrib);
+  pthread_attr_setdetachstate(&attrib, PTHREAD_CREATE_JOINABLE);
 #endif
   ProcessCallback = NULL;
   SndProcessThread = threadfunc;
   m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
   processing = false;
-  
+  pthread_mutex_init(&objMutex, NULL);
+  pthread_mutex_init(&inputMutex, NULL);
+  pthread_mutex_init(&outputMutex, NULL);
 }
 
 SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
@@ -63,12 +66,15 @@ SndThread::SndThread(int n, SndObj** objs, SndIO *out, SndIO *in){
   status = OFF;
 #ifndef USE_WIN32THREADS
   pthread_attr_init(&attrib);
+  pthread_attr_setdetachstate(&attrib, PTHREAD_CREATE_JOINABLE);
 #endif
   ProcessCallback = NULL;
   SndProcessThread = threadfunc;
   m_changed = m_parid[0] = m_parid[1] = m_parid[2] = m_parid[3] = false;
   processing = false;
-  
+  pthread_mutex_init(&objMutex, NULL);
+  pthread_mutex_init(&inputMutex, NULL);
+  pthread_mutex_init(&outputMutex, NULL);
 }
 
 SndThread::~SndThread(){
@@ -90,15 +96,20 @@ SndThread::~SndThread(){
     iotemp = output->next;
     DeleteObj(iotemp->obj, SNDIO_OUT);
   }
+  pthread_mutex_destroy(&objMutex);
+  pthread_mutex_destroy(&inputMutex);
+  pthread_mutex_destroy(&outputMutex);
 }
 
 int
 SndThread::AddObj(SndObj* obj){
+  SndLink<SndObj> *NewLink, *temp;
+  if(!( NewLink = new SndLink<SndObj>)){
+    // failed to allocate memory
+    return 0; 
+  }
   
- SndLink<SndObj> *NewLink, *temp;
-  if(!( NewLink = new SndLink<SndObj>))
-    return 0; // failed to allocate memory
-  
+  pthread_mutex_lock(&objMutex);
   temp = last; 
   last = NewLink; // NewLink is always last
   last->obj = obj; 
@@ -108,9 +119,9 @@ SndThread::AddObj(SndObj* obj){
   } 
   else
     last->next = last; // points to itself (1st)
-  SndObjNo++; // increment the number of SndObjs 
+  SndObjNo++; // increment the number of SndObjs
+  pthread_mutex_unlock(&objMutex); 
   return 1;   // Added Link will always be at the end
-  
 }
 
 int
@@ -122,34 +133,37 @@ SndThread::AddObj(SndIO* obj, int iolist){
 
   switch(iolist){
     // adding to input list
-  case SNDIO_IN:      
+  case SNDIO_IN:
+    pthread_mutex_lock(&inputMutex);      
     if(InputNo>0) NewLink->next = input->next;
     else input = NewLink;
     input->next = NewLink;
     InputNo++;
+    pthread_mutex_unlock(&inputMutex);
     return 1;
    
     // adding to output list
   case SNDIO_OUT:
+    pthread_mutex_lock(&outputMutex);
     if(OutputNo>0) NewLink->next = output->next;
     else output = NewLink;
     output->next = NewLink;
     OutputNo++;
+    pthread_mutex_unlock(&outputMutex);
     return 1;  
   
   default:
     delete NewLink;
     return 0;
   }
-
 }
 
 int
 SndThread::DeleteObj(SndObj* obj){
-
   SndLink<SndObj>* temp1; 
   SndLink<SndObj>* temp2;
 
+  pthread_mutex_lock(&objMutex);
   // search start from last
   // temp1 is the link to be deleted
   temp1 = last->next; 
@@ -162,7 +176,10 @@ SndThread::DeleteObj(SndObj* obj){
     temp2 = temp1; 
     temp1 = temp1->next;
     // if the search is back at the last, return  
-    if(temp1 == last->next) return 0;
+    if(temp1 == last->next){
+      pthread_mutex_unlock(&objMutex);
+      return 0;
+    }
   }
   // link the previous to the next
   if(temp1 == last) last = temp2;
@@ -170,45 +187,55 @@ SndThread::DeleteObj(SndObj* obj){
   SndObjNo--; 
   // delete the link
   delete temp1;
+  pthread_mutex_unlock(&objMutex);
   return 1;
 }
 
 int
 SndThread::DeleteObj(SndIO* obj, int iolist){
-
   SndLink<SndIO>* temp1; 
   SndLink<SndIO>* temp2;
 
   switch(iolist){
 
   case SNDIO_IN: 
+    pthread_mutex_lock(&inputMutex);  
     temp1 = input->next; 
     temp2 = input;
 
     while(temp1->obj != obj){
       temp2 = temp1; 
       temp1 = temp1->next;
-      if(temp1 == input->next) return 0;
+      if(temp1 == input->next){
+        pthread_mutex_unlock(&inputMutex);  
+        return 0;
+      }
     }
     if(temp1 == input) input = temp2;
     temp2->next = temp1->next;
     delete temp1;
-    InputNo--;  
+    InputNo--;
+    pthread_mutex_unlock(&inputMutex);    
     return 1;
  
   case SNDIO_OUT:
+    pthread_mutex_lock(&outputMutex);
     temp1 = output->next; 
     temp2 = output;
 
     while(temp1->obj != obj){
       temp2 = temp1; 
       temp1 = temp1->next;
-      if(temp1 == output->next) return 0;
+      if(temp1 == output->next){ 
+        pthread_mutex_unlock(&outputMutex);
+        return 0;
+      }
     }
     if(temp1 == output) output = temp2;
     temp2->next = temp1->next;
     delete temp1; 
     OutputNo--; 
+    pthread_mutex_unlock(&outputMutex);
     return 1;
 
   default:  
@@ -218,7 +245,6 @@ SndThread::DeleteObj(SndIO* obj, int iolist){
 
 int 
 SndThread::Insert(SndObj* obj, SndObj* prev){
-
   SndLink<SndObj>* temp;
   SndLink<SndObj>* InsertLink;
   int pos = 0;
@@ -227,6 +253,7 @@ SndThread::Insert(SndObj* obj, SndObj* prev){
     return 0; // failed to allocate memory
   InsertLink->obj = obj;
 
+  pthread_mutex_lock(&objMutex);
   // search start from last
   // temp is the link in front of
   // which the inserted link will be
@@ -236,14 +263,17 @@ SndThread::Insert(SndObj* obj, SndObj* prev){
     temp = temp->next;
     pos++; // position counter (0 is last, 1 is top)
     // if the search is back at the top, return  
-    if(temp == last) return 0;
+    if(temp == last){
+      pthread_mutex_unlock(&objMutex); 
+      return 0;
+    }
   }
   InsertLink->next = temp->next;
   temp->next = InsertLink;
   SndObjNo++;
+  pthread_mutex_unlock(&objMutex); 
   return pos+1; // returns inserted link position
 }
-     
 
 int
 SndThread::ProcOn(){
@@ -258,132 +288,130 @@ SndThread::ProcOn(){
      ) return status;        
 #endif   
   return 0;
-
 }
 
 int
 SndThread::ProcOff(){
   status = OFF;
+#ifndef USE_WIN32THREADS
+  // wait for thread to finish
+  pthread_join(thread, NULL);
+#endif
   return status;
 }
 
 void SndThread::UpdateSr(){
-
   int i;
   SndLink<SndObj>* temp = last;
 
-    for(i = 0; i < SndObjNo; i++){
-      temp->obj->SetSr(m_sr);
-      temp = temp->next;
-    } 
-
+  for(i = 0; i < SndObjNo; i++){
+    temp->obj->SetSr(m_sr);
+    temp = temp->next;
+  } 
 }
 
 void SndThread::UpdateVecsize(){
-
   int i;
   SndLink<SndObj>* temp = last;
   SndLink<SndIO>* itemp = input;
   SndLink<SndIO>* otemp = output;
 
-   for(i = 0; i < InputNo; i++){
-     itemp->obj->SetVectorSize(m_vecsize_max);
-      itemp = itemp->next;
-    }
-    for(i = 0; i < SndObjNo; i++){
-      temp->obj->SetVectorSize(m_vecsize_max);
-      temp = temp->next;
-    } 
-    for(i = 0; i < OutputNo; i++){ 
-      otemp->obj->SetVectorSize(m_vecsize_max);
-      otemp = otemp->next;
-    }
+  for(i = 0; i < InputNo; i++){
+    itemp->obj->SetVectorSize(m_vecsize_max);
+    itemp = itemp->next;
+  }
+  for(i = 0; i < SndObjNo; i++){
+    temp->obj->SetVectorSize(m_vecsize_max);
+    temp = temp->next;
+  } 
+  for(i = 0; i < OutputNo; i++){ 
+    otemp->obj->SetVectorSize(m_vecsize_max);
+    otemp = otemp->next;
+  }
 }
 
 void SndThread::UpdateLimit(){
-
   int i;
   SndLink<SndObj>* temp = last;
   SndLink<SndIO>* itemp = input;
   SndLink<SndIO>* otemp = output;
   
-   for(i = 0; i < InputNo; i++){
-     itemp->obj->LimitVectorSize(m_vecsize);
-      itemp = itemp->next;
-    }
-    for(i = 0; i < SndObjNo; i++){
-      temp->obj->LimitVectorSize(m_vecsize);
-      temp = temp->next;
-    } 
-    for(i = 0; i < OutputNo; i++){ 
-      otemp->obj->LimitVectorSize(m_vecsize);
-      otemp = otemp->next;
-    }
-  
+  for(i = 0; i < InputNo; i++){
+    itemp->obj->LimitVectorSize(m_vecsize);
+    itemp = itemp->next;
+  }
+  for(i = 0; i < SndObjNo; i++){
+    temp->obj->LimitVectorSize(m_vecsize);
+    temp = temp->next;
+  } 
+  for(i = 0; i < OutputNo; i++){ 
+    otemp->obj->LimitVectorSize(m_vecsize);
+    otemp = otemp->next;
+  }
 }
+
 void SndThread::UpdateRestore(){
-
   int i;
   SndLink<SndObj>* temp = last;
   SndLink<SndIO>* itemp = input;
   SndLink<SndIO>* otemp = output;
 
-   for(i = 0; i < InputNo; i++){
-      itemp->obj->RestoreVectorSize();
-      itemp = itemp->next;
-    }
-    for(i = 0; i < SndObjNo; i++){
-      temp->obj->RestoreVectorSize();
-      temp = temp->next;
-    } 
-    for(i = 0; i < OutputNo; i++){ 
-      otemp->obj->RestoreVectorSize();
-      otemp = otemp->next;
-    }
+  for(i = 0; i < InputNo; i++){
+    itemp->obj->RestoreVectorSize();
+    itemp = itemp->next;
+  }
+  for(i = 0; i < SndObjNo; i++){
+    temp->obj->RestoreVectorSize();
+    temp = temp->next;
+  } 
+  for(i = 0; i < OutputNo; i++){ 
+    otemp->obj->RestoreVectorSize();
+    otemp = otemp->next;
+  }
 }
+
 void
 threadfunc(void* data){
-    
   int i;
   SndThread *sndthread = (SndThread *) data;
   SndLink<SndObj>* temp;
   SndLink<SndIO>* itemp;
   SndLink<SndIO>* otemp;
 
- 
   while(sndthread->status){
-
-   temp = sndthread->last;
-   itemp = sndthread->input;
-   otemp = sndthread->output;
-
     //... processing loop...
-
+    pthread_mutex_lock(&sndthread->inputMutex);
+    itemp = sndthread->input;
     sndthread->Update();
-    
     for(i = 0; i < sndthread->InputNo; i++){
       itemp->obj->Read();
       itemp = itemp->next;
     }
+    pthread_mutex_unlock(&sndthread->inputMutex);
+    
     // callback
     if(sndthread->ProcessCallback != NULL)
-    sndthread->ProcessCallback(sndthread->callbackdata);          
+      sndthread->ProcessCallback(sndthread->callbackdata);          
 
     // sound processing 
-
     sndthread->processing = true;
+    pthread_mutex_lock(&sndthread->objMutex);
+    temp = sndthread->last;
     for(i = 0; i < sndthread->SndObjNo; i++){
       temp = temp->next;
       temp->obj->DoProcess();
     } 
+    pthread_mutex_unlock(&sndthread->objMutex);
     sndthread->processing = false;
 
-    // output processing   
+    // output processing
+    pthread_mutex_lock(&sndthread->outputMutex);
+    otemp = sndthread->output;   
     for(i = 0; i < sndthread->OutputNo; i++){ 
       otemp->obj->Write();
       otemp = otemp->next;
-		
     }
+    pthread_mutex_unlock(&sndthread->outputMutex);
   }
 #ifndef USE_WIN32THREADS 
   return;
@@ -392,8 +420,4 @@ threadfunc(void* data){
 #endif
 }
 
-
 #endif
-
-
-

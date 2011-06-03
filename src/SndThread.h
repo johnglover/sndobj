@@ -43,9 +43,7 @@
 #include <pthread.h>
 #endif
 
-#ifdef PYTHON_WRAP
-#include "Python.h"
-#endif
+
 
 template<class s>  
 struct SndLink{      // SndObj / SndIO lists links       
@@ -85,6 +83,10 @@ class SndThread {
   void *callbackdata;
 
   bool processing;
+  pthread_mutex_t objMutex;
+  pthread_mutex_t inputMutex;
+  pthread_mutex_t outputMutex;
+  
   // pthread-related  member variables
 #ifndef USE_WIN32THREADS
   pthread_attr_t  attrib;
