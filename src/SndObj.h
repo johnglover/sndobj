@@ -237,7 +237,7 @@ class SndObj {
   void   GetMsgList(string* list);
   void   Enable(){ m_enable = 1;  }
   void   Disable(){ m_enable = 0; }
-  float  Output(int pos){ return m_output[pos%m_vecsize];}
+  virtual float Output(int pos){ return m_output[pos%m_vecsize]; }
 
   int GetVectorSize() { return m_vecsize; } 
   void SetVectorSize(int vecsize);
