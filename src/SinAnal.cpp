@@ -31,7 +31,8 @@ SinAnal::SinAnal(){
 	m_numbins = m_accum = 0;
 	
 	m_bndx = m_pkmags = m_adthresh = 0;
-	m_phases = m_freqs = m_mags = m_bins = 0; 
+	m_phases = m_freqs = m_mags = m_bins = 0;
+	m_tstart = m_lastpk = m_trkid = 0;
 	m_trndx = 0;
 	m_binmax = m_magmax = m_diffs = 0;
 	m_maxix = 0;
@@ -78,18 +79,28 @@ SinAnal::SinAnal(SndObj* input, float threshold, int maxtracks,
 	}
 	
 	m_bins = new float[m_maxtracks];
-	m_trndx = new int[m_maxtracks];	
+	memset(m_bins, 0, sizeof(float) * m_maxtracks);
+	m_trndx = new int[m_maxtracks];
+	memset(m_trndx, 0, sizeof(int) * m_maxtracks);	
 	m_contflag = new bool[m_maxtracks];
+	memset(m_contflag, 0, sizeof(bool) * m_maxtracks);	
 
 	m_phases = new float[m_numbins];
+	memset(m_phases, 0, sizeof(float) * m_numbins);
 	m_freqs = new float[m_numbins];
+	memset(m_freqs, 0, sizeof(float) * m_numbins);
 	m_mags = new float[m_numbins];
+	memset(m_mags, 0, sizeof(float) * m_numbins);
 
 	m_binmax = new float[m_numbins];
+	memset(m_binmax, 0, sizeof(float) * m_numbins);
 	m_magmax = new float[m_numbins];
+	memset(m_magmax, 0, sizeof(float) * m_numbins);
 	m_diffs = new float[m_numbins];
+	memset(m_diffs, 0, sizeof(float) * m_numbins);
 	
 	m_maxix = new int[m_numbins];
+	memset(m_maxix, 0, sizeof(float) * m_numbins);
 	m_timecount = 0;
 	
 	m_phases[0] = 0.f;
@@ -299,7 +310,7 @@ SinAnal::sinanalysis(){
 			m_binmax[i] = (float) (rmax - 1. + b/2.);
 			m_magmax[i] = (float) exp(ftmp - a*b*b/4.);
 		}
-		
+    
 		// end QuadInterp;
 		
 		// track-secting
@@ -319,7 +330,7 @@ SinAnal::sinanalysis(){
 			if(n > 0){ // check for peaks; n will be > 0
 				
 				float F = m_bndx[m_prev][j];
-				
+
 				for(i=0; i < m_numbins; i++){
 					m_diffs[i] = m_binmax[i] - F; //differences
 					m_diffs[i] = (m_diffs[i] < 0 ? -m_diffs[i] : m_diffs[i]);
@@ -329,7 +340,7 @@ SinAnal::sinanalysis(){
 				bestix = 0;  // best index
 				for(i=0; i < m_numbins; i++) 
 					if(m_diffs[i] < m_diffs[bestix]) bestix = i;
-					
+
 					// if difference smaller than 1 bin
 					float tempf = F -  m_binmax[bestix];
 					tempf = (tempf < 0 ? -tempf : tempf);
@@ -341,7 +352,7 @@ SinAnal::sinanalysis(){
 							// mark for discontinuation;  
 							m_contflag[j] = false;							
 						}
-						else {
+            else {
 							m_bndx[m_prev][j] = m_binmax[bestix];
 							m_pkmags[m_prev][j] = m_magmax[bestix];
 							// track index keeps track history
@@ -382,32 +393,28 @@ SinAnal::sinanalysis(){
 			}	
 				
 		} // for loop 
-		
+
+    // compress the arrays
+  	for(i=0, n=0; i < m_maxtracks; i++){
+  		if(m_contflag[i]){
+  			m_bndx[m_cur][n] = m_bndx[m_prev][i];
+  			m_pkmags[m_cur][n] = m_pkmags[m_prev][i];
+  			m_adthresh[m_cur][n] = m_adthresh[m_prev][i];
+  			m_tstart[m_cur][n] = m_tstart[m_prev][i];
+  			m_trkid[m_cur][n] = m_trkid[m_prev][i];
+  			m_lastpk[m_cur][n] = m_lastpk[m_prev][i];
+  			n++;
+  		}	// ID == -1 means zero'd track
+  		else 
+  		  m_trndx[i] = -1; 
+    }
+			
 		if(count < m_maxtracks){
-			
-			// if we have not exceeded available tracks.	
-			// compress the arrays
-			for(i=0, n=0; i < m_maxtracks; i++){
-				if(m_contflag[i]){
-					m_bndx[m_cur][n] = m_bndx[m_prev][i];
-					m_pkmags[m_cur][n] = m_pkmags[m_prev][i];
-					m_adthresh[m_cur][n] = m_adthresh[m_prev][i];
-					m_tstart[m_cur][n] = m_tstart[m_prev][i];
-					m_trkid[m_cur][n] = m_trkid[m_prev][i];
-					m_lastpk[m_cur][n] = m_lastpk[m_prev][i];
-					n++;
-				}	// ID == -1 means zero'd track
-				else
-					m_trndx[i] = -1; 
-			}
-			
-			// now current arrays are the compressed previous
-			// arrays
-			
+		  // if we have not exceeded available tracks.
 			// create new tracks for all new peaks 
 			
 			for(j=0; j< m_numbins && count < m_maxtracks; j++){
-				
+        
 				if(m_magmax[j] > startupThresh){
 					
 					m_bndx[m_cur][count] = m_binmax[j];    
@@ -435,7 +442,7 @@ SinAnal::sinanalysis(){
 		// count is the number of continuing tracks + new tracks
 		// now we check for tracks that have been there for more
 		// than minpoints hop periods and output them
-		
+    
 		m_tracks = 0;
 		for(i=0; i < count; i++){
 			int curpos = m_timecount-m_minpoints;
@@ -451,15 +458,13 @@ SinAnal::sinanalysis(){
 				m_tracks++;
 			}
 			
-		} 
+		}
 		// end track-selecting
 		// current arrays become previous
 	    //int tmp = m_prev;
 		m_prev = m_cur;
 		m_cur = (m_cur < m_minpoints+1 ? m_cur+1 : 0);
 		m_timecount++;
-			
-		
 }
 
 
@@ -510,9 +515,7 @@ SinAnal::DoProcess(){
 						m_output[m_vecpos+1] = a + frac*b;
 						// phase Interpolation
 						// m_output[2,5,8 ...] holds track phase
-						// a = m_phases[ndx];
-						// b = (m_bins[pos] < m_numbins-1 ? (m_phases[ndx - a) : 0);
-						m_output[m_vecpos+2] = m_phases[ndx];;// a + frac*b;
+						m_output[m_vecpos+2] = m_phases[ndx];
 						
 					}
 					else{ // empty tracks
